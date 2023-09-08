@@ -1,0 +1,82 @@
+{% load i18n %}
+
+<div class="border py-3 px-6 rounded-md shadow-sm dark:border-gray-800">
+    <div class="flex items-center py-3">
+        <div>
+            <h2 class="mb-1 text-sm">
+                {% trans "Total earnings" %}
+            </h2>
+
+            <span class="font-medium text-2xl text-gray-700 dark:text-gray-200">
+                $1,234.56
+            </span>
+        </div>
+
+        <div class="ml-auto">
+            <canvas id="sample-{{ id }}" width="90" height="40"></canvas>
+        </div>
+    </div>
+
+    <div class="border-t flex items-center -mb-3 -mx-6 mt-3 pb-3 pt-3 px-6 text-sm  dark:border-gray-800">
+        <span>
+            12 {% trans 'orders' %}
+        </span>
+
+        <span class="ml-auto">
+            <span class="font-medium text-emerald-500">+3.32%</span> from last month
+        </span>
+    </div>
+</div>
+
+<script>
+    var ctx = document.getElementById('sample-{{ id }}').getContext('2d');
+    var gradient = ctx.createLinearGradient(0, 0, 0, 40);
+    var style = getComputedStyle(document.body);
+    var colorBorder = `rgb(${style.getPropertyValue('--color-primary-600')})`
+    var colorGradient = `rgb(${style.getPropertyValue('--color-primary-300')})`
+
+    gradient.addColorStop(0, colorGradient);
+    gradient.addColorStop(1, "rgba(255, 255, 255, 0)");
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15'],
+            datasets: [{
+                data: [10, 4, 8, 5, 7, 8, 8, 6, 7, 4, 8, 10, 12, 12, 13].sort(() => Math.random() - 0.5),
+                backgroundColor: "transparent",
+                fill: true
+            }]
+        },
+        options: {
+            animation: false,
+            datasets: {
+                line: {
+                    borderColor: colorBorder,
+                    borderWidth: 2,
+                    pointRadius: 0,
+                    tension: 0.3,
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    enabled: false
+                }
+            },
+            responsive: false,
+            scales: {
+                x: {
+                    display: false
+                },
+                y: {
+                    beginAtZero: true,
+                    display: false
+                }
+            },
+            tooltips: false
+        }
+    });
+</script>

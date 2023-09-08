@@ -1,0 +1,12 @@
+{
+  "scripts": {
+    "tailwind:build": "tailwindcss -i src/formula/styles.css -o src/formula/static/css/styles.css --minify",
+    "tailwind:watch": "tailwindcss -i src/formula/styles.css -o src/formula/static/css/styles.css --watch --minify"
+  },
+  "dependencies": {
+    "tailwindcss": "^3.3.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/typography": "^0.5.9"
+  }
+}

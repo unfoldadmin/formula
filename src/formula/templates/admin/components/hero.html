@@ -1,0 +1,25 @@
+{% load i18n %}
+
+<div class="flex flex-col lg:items-center lg:flex-row">
+    <p class="leading-relaxed max-w-3xl mb-6 text-sm lg:mb-0 lg:text-base">
+        <span class="font-medium text-gray-700 dark:text-white">{% trans "Note" %}:</span>
+
+        {% trans "Hey, this is a custom dashboard which is possible to build with Unfold. Please be aware that this dashboard is not part of Unfold and this is just for showcase purposes." %}                
+
+        <a href="https://unfoldadmin.com" class="font-medium text-primary-500 text-sm underline">
+            {% trans "Return back to website"%}
+        </a>            
+    </p>
+        
+    <div class="lg:ml-auto">
+        <div class="flex flex-row">
+            <a href="https://github.com/unfoldadmin/django-unfold" class="bg-primary-600 border border-transparent flex flex-row font-medium items-center justify-center px-3 py-2 rounded-md text-sm text-white w-full lg:w-auto">
+                <span class="mr-2">
+                    {% include "helpers/github.html" %}
+                </span>
+
+                {% trans "View on GitHub" %}
+            </a>
+        </div>    
+    </div>
+</div>

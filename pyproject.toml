@@ -1,0 +1,42 @@
+[tool.poetry]
+name = "formula"
+version = "0.1.0"
+description = ""
+authors = []
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+django = "^4.2"
+django-import-export = "^3.2"
+django-unfold = "^0.7"
+whitenoise = "^6.5.0"
+django-celery-beat = "^2.5.0"
+gunicorn = "^21.2.0"
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.7"
+
+[tool.ruff]
+fix = true
+line-length = 88
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "C",  # flake8-comprehensions
+    "B",  # flake8-bugbear
+]
+ignore = [
+    "E501",  # line too long, handled by black
+    "B008",  # do not perform function calls in argument defaults
+    "C901",  # too complex
+]
+exclude = [
+    "**/migrations"
+]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

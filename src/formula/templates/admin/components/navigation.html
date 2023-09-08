@@ -1,0 +1,19 @@
+{% load i18n %}
+
+<nav class="bg-gray-100 flex gap-2 mb-9 p-1.5 rounded text-sm dark:bg-white/[.02]"> 
+    <a href="#" class="bg-white font-medium px-3 py-2 rounded shadow-sm text-gray-700 dark:bg-white/[.04] dark:text-gray-200">
+        {% trans 'Dashboard' %}
+    </a>
+
+    <a href="#" class="bg-transparent px-3 py-2 rounded text-gray-400 hover:text-gray-700 dark:hover:text-white">
+        {% trans 'Statistics' %}
+    </a>
+
+    <a href="#" class="bg-transparent px-3 py-2 rounded text-gray-400 hover:text-gray-700 dark:hover:text-white">
+        {% trans 'Analytics' %}
+    </a>
+
+    <a href="#" class="bg-transparent px-3 py-2 rounded text-gray-400 hover:text-gray-700 dark:hover:text-white">
+        {% trans 'Settings' %}
+    </a>
+</nav>

@@ -1,0 +1,59 @@
+{% extends 'unfold/layouts/base_simple.html' %}
+
+{% load i18n %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block title %}
+    {% trans 'Dashboard' %} | {{ site_title|default:_('Django site admin') }}
+{% endblock %}
+
+{% block branding %}
+    <h1 id="site-name">
+        <a href="{% url 'admin:index' %}">
+            {{ site_header }}
+        </a>
+    </h1>
+{% endblock %}
+
+{% block content_before %}    
+    <div class="border-b px-4 lg:px-12 dark:border-gray-800">        
+        <div class="container mx-auto my-4">
+            <div class="max-w-7xl mx-auto">
+                <div class="flex flex-row h-8 items-center">
+                    <h1 class="font-medium text-base text-gray-700 tracking-tight dark:text-gray-200">
+                        {% trans "Unfold Dashboard" %}
+                    </h1>
+
+                    <div class="flex flex-row gap-4 group items-center leading-none ml-auto relative">
+                        {% include "unfold/helpers/theme_switch.html" %}
+
+                        {% include "unfold/helpers/account_links.html" %}
+                    </div>            
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-gradient-to-t from-white to-gray-50 px-4 lg:px-12 -mb-10 dark:bg-gray-800 dark:from-gray-900 dark:to-gray-950">
+        <div class="container mx-auto py-12">
+            <div class="max-w-7xl mx-auto">
+                {% include "admin/components/hero.html" %}
+            </div>
+        </div>            
+    </div>
+{% endblock %}
+
+{% block content %}
+    <div class="max-w-7xl mx-auto">                
+        {% include "admin/components/navigation.html" %}
+
+        {% include "admin/components/stats.html" %}
+
+        {% include "admin/components/chart.html" %}      
+        
+        {% include "admin/components/activity.html" %}  
+
+        {% include "admin/components/actions.html" %}  
+    </div>
+{% endblock %}
