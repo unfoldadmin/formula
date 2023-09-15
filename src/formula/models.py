@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from djmoney.models.fields import MoneyField
 
 
 class User(AbstractUser):
@@ -42,6 +43,9 @@ class Driver(models.Model):
     first_name = models.CharField(_("first name"), max_length=255)
     last_name = models.CharField(_("last name"), max_length=255)
     code = models.CharField(_("code"), max_length=3)
+    salary = MoneyField(
+        max_digits=14, decimal_places=2, null=True, blank=True, default_currency=None
+    )
 
     class Meta:
         db_table = "drivers"
