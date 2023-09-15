@@ -172,6 +172,21 @@ UNFOLD = {
     ],
     "TABS": [
         {
+            "models": ["formula.driver", "formula.constructor"],
+            "items": [
+                {
+                    "title": _("Drivers"),
+                    "icon": "sports_motorsports",
+                    "link": reverse_lazy("admin:formula_driver_changelist"),
+                },
+                {
+                    "title": _("Consructors"),
+                    "icon": "precision_manufacturing",
+                    "link": reverse_lazy("admin:formula_constructor_changelist"),
+                },
+            ],
+        },
+        {
             "models": [
                 "django_celery_beat.clockedschedule",
                 "django_celery_beat.crontabschedule",
@@ -229,11 +244,6 @@ UNFOLD = {
                         "title": _("Dashboard"),
                         "icon": "dashboard",
                         "link": reverse_lazy("admin:index"),
-                    },
-                    {
-                        "title": _("Constructors"),
-                        "icon": "precision_manufacturing",
-                        "link": reverse_lazy("admin:formula_constructor_changelist"),
                     },
                     {
                         "title": _("Drivers"),
