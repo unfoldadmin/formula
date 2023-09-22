@@ -149,7 +149,14 @@ STATICFILES_DIRS = [BASE_DIR / "formula" / "static"]
 
 STATIC_ROOT = BASE_DIR / "static"
 
+MEDIA_ROOT = BASE_DIR / "media"
+
+MEDIA_URL = "/media/"
+
 STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
@@ -159,8 +166,8 @@ STORAGES = {
 # Unfold
 ######################################################################
 UNFOLD = {
-    "SITE_HEADER": "Formula Admin",
-    "SITE_TITLE": "Formula Admin",
+    "SITE_HEADER": _("Formula Admin"),
+    "SITE_TITLE": _("Formula Admin"),
     "SITE_SYMBOL": "settings",
     "LOGIN": {
         "image": lambda r: static("images/login-bg.jpg"),
@@ -181,7 +188,7 @@ UNFOLD = {
                     "link": reverse_lazy("admin:formula_driver_changelist"),
                 },
                 {
-                    "title": _("Consructors"),
+                    "title": _("Constructors"),
                     "icon": "precision_manufacturing",
                     "link": reverse_lazy("admin:formula_constructor_changelist"),
                 },

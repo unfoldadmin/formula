@@ -42,9 +42,13 @@ class Circuit(models.Model):
 class Driver(models.Model):
     first_name = models.CharField(_("first name"), max_length=255)
     last_name = models.CharField(_("last name"), max_length=255)
+    picture = models.ImageField(_("picture"), null=True, blank=True, default=None)
     code = models.CharField(_("code"), max_length=3)
     salary = MoneyField(
         max_digits=14, decimal_places=2, null=True, blank=True, default_currency=None
+    )
+    constructors = models.ManyToManyField(
+        "Constructor", verbose_name=_("constructors"), blank=True
     )
 
     class Meta:

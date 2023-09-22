@@ -1,5 +1,5 @@
-<div class="border-b border-gray-100 flex flex-row items-center py-3 lg:last:border-b-0 dark:border-gray-800">
-    <div class="bg-gray-100 bg-center bg-cover flex h-7 items-center justify-center mr-3 rounded-full w-7 dark:bg-gray-800">        
+<div class="border-b border-gray-100 flex flex-row items-center py-3 last:border-b-0 dark:border-gray-800">
+    <div class="bg-gray-100 bg-center bg-cover h-7 hidden items-center justify-center mr-3 rounded-full w-7 dark:bg-gray-800 xl:flex">        
         <span class="material-symbols-outlined text-gray-500 hover:text-gray-700 dark:text-gray-400 hover:dark:text-gray-200">person</span>
     </div>
 
@@ -8,7 +8,7 @@
     </div>
 
     {% if time %}
-        <div class="ml-6 text-gray-400 whitespace-nowrap dark:text-gray-500">
+        <div class="hidden ml-6 text-gray-400 whitespace-nowrap dark:text-gray-500 lg:block">
             {{ time }}
         </div>
     {% endif %}

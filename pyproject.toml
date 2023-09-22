@@ -9,11 +9,12 @@ readme = "README.md"
 python = "^3.10"
 django = "^4.2"
 django-import-export = "^3.2"
-django-unfold = "^0.9"
+django-unfold = "^0.10"
 whitenoise = "^6.5.0"
 django-celery-beat = "^2.5.0"
 gunicorn = "^21.2.0"
 django-money = "^3.2.0"
+pillow = "^10.0.1"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.7"

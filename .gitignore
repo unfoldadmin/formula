@@ -11,6 +11,7 @@ fly.toml
 .vscode
 Dockerfile
 src/static
+src/media
 requirements.txt
 .dockerignore
 database.sqlite

@@ -88,6 +88,10 @@ class UserAdmin(BaseUserAdmin, ModelAdmin):
         ),
         (_("Important dates"), {"fields": ("last_login", "date_joined")}),
     )
+    filter_horizontal = (
+        "groups",
+        "user_permissions",
+    )
     formfield_overrides = {
         models.TextField: {
             "widget": WysiwygWidget,
@@ -183,6 +187,7 @@ class DriverAdmin(ModelAdmin):
     list_filter_submit = True
     list_display = ["last_name", "first_name", "code"]
     inlines = [DriverStandingInline]
+    autocomplete_fields = ["constructors"]
 
 
 @admin.register(Race)
@@ -199,6 +204,7 @@ class RaceAdmin(ModelAdmin):
         ("laps", RangeNumericFilter),
         ("date", RangeDateFilter),
     ]
+    list_filter_submit = True
     list_display = ["circuit", "winner", "year", "laps", "date"]
     autocomplete_fields = ["circuit", "winner"]
 
