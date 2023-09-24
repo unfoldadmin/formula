@@ -22,6 +22,7 @@ from unfold.forms import AdminPasswordChangeForm, UserChangeForm, UserCreationFo
 
 from formula.models import Circuit, Constructor, Driver, Race, Standing, User
 from formula.resources import ConstructorResource
+from formula.sites import formula_admin_site
 
 admin.site.unregister(PeriodicTask)
 admin.site.unregister(IntervalSchedule)
@@ -31,32 +32,32 @@ admin.site.unregister(ClockedSchedule)
 admin.site.unregister(Group)
 
 
-@admin.register(PeriodicTask)
+@admin.register(PeriodicTask, site=formula_admin_site)
 class PeriodicTaskAdmin(ModelAdmin):
     pass
 
 
-@admin.register(IntervalSchedule)
+@admin.register(IntervalSchedule, site=formula_admin_site)
 class IntervalScheduleAdmin(ModelAdmin):
     pass
 
 
-@admin.register(CrontabSchedule)
+@admin.register(CrontabSchedule, site=formula_admin_site)
 class CrontabScheduleAdmin(ModelAdmin):
     pass
 
 
-@admin.register(SolarSchedule)
+@admin.register(SolarSchedule, site=formula_admin_site)
 class SolarScheduleAdmin(ModelAdmin):
     pass
 
 
-@admin.register(ClockedSchedule)
+@admin.register(ClockedSchedule, site=formula_admin_site)
 class ClockedScheduleAdmin(ModelAdmin):
     pass
 
 
-@admin.register(User)
+@admin.register(User, site=formula_admin_site)
 class UserAdmin(BaseUserAdmin, ModelAdmin):
     form = UserChangeForm
     add_form = UserCreationForm
@@ -115,7 +116,7 @@ class UserAdmin(BaseUserAdmin, ModelAdmin):
         return instance.created_at
 
 
-@admin.register(Group)
+@admin.register(Group, site=formula_admin_site)
 class GroupAdmin(BaseGroupAdmin, ModelAdmin):
     pass
 
@@ -124,7 +125,7 @@ class CircuitRaceInline(StackedInline):
     model = Race
 
 
-@admin.register(Circuit)
+@admin.register(Circuit, site=formula_admin_site)
 class CircuitAdmin(ModelAdmin):
     search_fields = ["name", "city", "country"]
     list_display = ["name", "city", "country"]
@@ -132,7 +133,7 @@ class CircuitAdmin(ModelAdmin):
     inlines = [CircuitRaceInline]
 
 
-@admin.register(Constructor)
+@admin.register(Constructor, site=formula_admin_site)
 class ConstructorAdmin(ModelAdmin, ImportExportModelAdmin):
     search_fields = ["name"]
     list_display = [
@@ -181,7 +182,7 @@ class DriverStandingInline(TabularInline):
     fields = ["race", "position", "number", "laps"]
 
 
-@admin.register(Driver)
+@admin.register(Driver, site=formula_admin_site)
 class DriverAdmin(ModelAdmin):
     search_fields = ["last_name", "first_name", "code"]
     list_filter_submit = True
@@ -190,7 +191,7 @@ class DriverAdmin(ModelAdmin):
     autocomplete_fields = ["constructors"]
 
 
-@admin.register(Race)
+@admin.register(Race, site=formula_admin_site)
 class RaceAdmin(ModelAdmin):
     search_fields = [
         "circuit__name",
@@ -209,7 +210,7 @@ class RaceAdmin(ModelAdmin):
     autocomplete_fields = ["circuit", "winner"]
 
 
-@admin.register(Standing)
+@admin.register(Standing, site=formula_admin_site)
 class StandingAdmin(ModelAdmin):
     search_fields = [
         "race__circuit__name",
