@@ -357,13 +357,13 @@ Django = ">=3.2,<5.0"
 
 [[package]]
 name = "django-unfold"
-version = "0.10.0"
+version = "0.11.0"
 description = "Clean & minimal Django admin theme based on Tailwind CSS"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "django_unfold-0.10.0-py3-none-any.whl", hash = "sha256:cb32f7c5ba79c3c69c472f542119a40e283d08f26413fcbd2a2a1b4994ac0f23"},
-    {file = "django_unfold-0.10.0.tar.gz", hash = "sha256:b144357d5a10da361eac35c24baf2ae5c1ebbdcd8798f90fe16776aa8f7a1a8a"},
+    {file = "django_unfold-0.11.0-py3-none-any.whl", hash = "sha256:35fcbe2cadf9983b81d56aecbd5fc8cd7e4b4b84193278fb8e12051429b7267f"},
+    {file = "django_unfold-0.11.0.tar.gz", hash = "sha256:fbf3498150acb1555e2585af1750243a9b7af9626363e37ce06dfc88e4b7a6ad"},
 ]
 
 [package.dependencies]
@@ -836,13 +836,13 @@ files = [
 
 [[package]]
 name = "wcwidth"
-version = "0.2.6"
+version = "0.2.8"
 description = "Measures the displayed width of unicode strings in a terminal"
 optional = false
 python-versions = "*"
 files = [
-    {file = "wcwidth-0.2.6-py2.py3-none-any.whl", hash = "sha256:795b138f6875577cd91bba52baf9e445cd5118fd32723b460e30a0af30ea230e"},
-    {file = "wcwidth-0.2.6.tar.gz", hash = "sha256:a5220780a404dbe3353789870978e472cfe477761f06ee55077256e509b156d0"},
+    {file = "wcwidth-0.2.8-py2.py3-none-any.whl", hash = "sha256:77f719e01648ed600dfa5402c347481c0992263b81a027344f3e1ba25493a704"},
+    {file = "wcwidth-0.2.8.tar.gz", hash = "sha256:8705c569999ffbb4f6a87c6d1b80f324bd6db952f5eb0b95bc07517f4c1813d4"},
 ]
 
 [[package]]
@@ -904,4 +904,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "621ef9ae81fe14a44c979cfa16d62c7db6ac657db1dc684a303218573a21331c"
+content-hash = "a76ec687e6f87cb7c482bf39e351888a618bbd3a0b6b663d72b5289f9424e99d"
