@@ -24,7 +24,7 @@ Run these commands inside `formula` directory, to install all dependencies and t
 ```bash
 pip install poetry
 poetry install
-poetry run python src/manage.py migrate
+poetry run env $(cat .env) python src/manage.py migrate
 ```
 
 Run the command below to start the local development server.

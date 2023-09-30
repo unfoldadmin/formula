@@ -266,7 +266,7 @@ UNFOLD = {
                         "title": _("Races"),
                         "icon": "stadium",
                         "link": reverse_lazy("admin:formula_race_changelist"),
-                        "badge": "+10",
+                        "badge": "formula.utils.badge_dynamic_value",
                     },
                     {
                         "title": _("Standings"),

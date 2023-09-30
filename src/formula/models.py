@@ -44,6 +44,7 @@ class Driver(models.Model):
     last_name = models.CharField(_("last name"), max_length=255)
     picture = models.ImageField(_("picture"), null=True, blank=True, default=None)
     code = models.CharField(_("code"), max_length=3)
+    color = models.CharField(_("color"), null=True, blank=True, max_length=255)
     salary = MoneyField(
         max_digits=14, decimal_places=2, null=True, blank=True, default_currency=None
     )

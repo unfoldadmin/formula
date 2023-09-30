@@ -14,11 +14,16 @@ from django_celery_beat.models import (
 )
 from import_export.admin import ImportExportModelAdmin
 from unfold.admin import ModelAdmin, StackedInline, TabularInline
-from unfold.contrib.filters.admin import RangeDateFilter, RangeNumericFilter
+from unfold.contrib.filters.admin import (
+    RangeDateFilter,
+    RangeNumericFilter,
+    SingleNumericFilter,
+)
 from unfold.contrib.forms.widgets import WysiwygWidget
 from unfold.contrib.import_export.forms import ExportForm, ImportForm
 from unfold.decorators import action, display
 from unfold.forms import AdminPasswordChangeForm, UserChangeForm, UserCreationForm
+from unfold.widgets import UnfoldAdminColorInputWidget
 
 from formula.models import Circuit, Constructor, Driver, Race, Standing, User
 from formula.resources import ConstructorResource
@@ -190,6 +195,11 @@ class DriverAdmin(ModelAdmin):
     inlines = [DriverStandingInline]
     autocomplete_fields = ["constructors"]
 
+    def get_form(self, request, obj=None, change=False, **kwargs):
+        form = super().get_form(request, obj, change, **kwargs)
+        form.base_fields["color"].widget = UnfoldAdminColorInputWidget()
+        return form
+
 
 @admin.register(Race, site=formula_admin_site)
 class RaceAdmin(ModelAdmin):
@@ -202,7 +212,7 @@ class RaceAdmin(ModelAdmin):
     ]
     list_filter = [
         ("year", RangeNumericFilter),
-        ("laps", RangeNumericFilter),
+        ("laps", SingleNumericFilter),
         ("date", RangeDateFilter),
     ]
     list_filter_submit = True
