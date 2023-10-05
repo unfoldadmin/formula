@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "whitenoise.runserver_nostatic",
     "django.contrib.staticfiles",
+    "debug_toolbar",
     "import_export",
     "django_celery_beat",
     "djmoney",
@@ -59,6 +60,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -312,3 +314,8 @@ CURRENCIES = ("USD", "EUR")
 LOGIN_USERNAME = environ.get("LOGIN_USERNAME")
 
 LOGIN_PASSWORD = environ.get("LOGIN_PASSWORD")
+
+############################################################################
+# Debug toolbar
+############################################################################
+DEBUG_TOOLBAR_CONFIG = {"SHOW_TOOLBAR_CALLBACK": lambda r: DEBUG}

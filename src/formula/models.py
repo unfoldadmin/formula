@@ -39,6 +39,11 @@ class Circuit(models.Model):
         return self.name
 
 
+class DriverStatus(models.TextChoices):
+    ACTIVE = "ACTIVE", _("Active")
+    INACTIVE = "INACTIVE", _("Inactive")
+
+
 class Driver(models.Model):
     first_name = models.CharField(_("first name"), max_length=255)
     last_name = models.CharField(_("last name"), max_length=255)
@@ -47,6 +52,9 @@ class Driver(models.Model):
     color = models.CharField(_("color"), null=True, blank=True, max_length=255)
     salary = MoneyField(
         max_digits=14, decimal_places=2, null=True, blank=True, default_currency=None
+    )
+    status = models.CharField(
+        _("status"), choices=DriverStatus.choices, null=True, blank=True, max_length=255
     )
     constructors = models.ManyToManyField(
         "Constructor", verbose_name=_("constructors"), blank=True
@@ -64,6 +72,13 @@ class Driver(models.Model):
     def full_name(self):
         if self.first_name and self.last_name:
             return f"{self.last_name}, {self.first_name}"
+
+        return None
+
+    @property
+    def initials(self):
+        if self.first_name and self.last_name:
+            return f"{self.first_name[0]}{self.last_name[1]}"
 
         return None
 

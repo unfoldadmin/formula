@@ -3,6 +3,7 @@ from django.contrib.auth.admin import GroupAdmin as BaseGroupAdmin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import Group
 from django.db import models
+from django.db.models import OuterRef, Sum
 from django.shortcuts import redirect
 from django.utils.translation import gettext_lazy as _
 from django_celery_beat.models import (
@@ -25,7 +26,15 @@ from unfold.decorators import action, display
 from unfold.forms import AdminPasswordChangeForm, UserChangeForm, UserCreationForm
 from unfold.widgets import UnfoldAdminColorInputWidget
 
-from formula.models import Circuit, Constructor, Driver, Race, Standing, User
+from formula.models import (
+    Circuit,
+    Constructor,
+    Driver,
+    DriverStatus,
+    Race,
+    Standing,
+    User,
+)
 from formula.resources import ConstructorResource
 from formula.sites import formula_admin_site
 
@@ -184,21 +193,80 @@ class ConstructorAdmin(ModelAdmin, ImportExportModelAdmin):
 
 class DriverStandingInline(TabularInline):
     model = Standing
-    fields = ["race", "position", "number", "laps"]
+    fields = ["race", "position", "points", "laps"]
+    readonly_fields = ["race"]
+    max_num = 0
 
 
 @admin.register(Driver, site=formula_admin_site)
 class DriverAdmin(ModelAdmin):
     search_fields = ["last_name", "first_name", "code"]
     list_filter_submit = True
-    list_display = ["last_name", "first_name", "code"]
+    list_display = [
+        "display_header",
+        "display_total_points",
+        "display_total_wins",
+        "display_status",
+        "display_code",
+    ]
     inlines = [DriverStandingInline]
-    autocomplete_fields = ["constructors"]
+    autocomplete_fields = [
+        "constructors",
+    ]
 
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, change, **kwargs)
         form.base_fields["color"].widget = UnfoldAdminColorInputWidget()
         return form
+
+    def get_queryset(self, request):
+        return (
+            super()
+            .get_queryset(request)
+            .annotate(total_points=Sum("standing__points"))
+            .annotate(
+                constructor_name=Constructor.objects.filter(
+                    standing__driver_id=OuterRef("pk")
+                ).values("name")[:1]
+            )
+            .prefetch_related("race_set")
+        )
+
+    @display(description=_("Driver"), header=True)
+    def display_header(self, instance: Driver):
+        standing = instance.standing_set.all().first()
+
+        if standing:
+            return [
+                instance.full_name,
+                instance.constructor_name,
+                instance.initials,
+            ]
+
+    @display(description=_("Total points"), ordering="total_points")
+    def display_total_points(self, instance: Driver):
+        return instance.total_points
+
+    @display(description=_("Total wins"), ordering="total_wins")
+    def display_total_wins(self, instance: Driver):
+        return instance.race_set.count()
+
+    @display(
+        description=_("Status"),
+        label={
+            DriverStatus.INACTIVE: "danger",
+            DriverStatus.ACTIVE: "success",
+        },
+    )
+    def display_status(self, instance: Driver):
+        if instance.status:
+            return instance.status
+
+        return _("Undefined")
+
+    @display(description=_("Code"), label=True)
+    def display_code(self, instance: Driver):
+        return instance.code
 
 
 @admin.register(Race, site=formula_admin_site)
