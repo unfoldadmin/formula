@@ -27,6 +27,12 @@ poetry install
 poetry run env $(cat .env) python src/manage.py migrate
 ```
 
+Create the admin user or you can't access to the instance.
+
+```bash
+poetry run env $(cat .env) python src/manage.py createsuperuser
+```
+
 Run the command below to start the local development server.
 
 ```bash
