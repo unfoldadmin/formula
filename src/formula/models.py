@@ -3,6 +3,8 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from djmoney.models.fields import MoneyField
 
+from formula.encoders import PrettyJSONEncoder
+
 
 class User(AbstractUser):
     biography = models.TextField(_("biography"), null=True, blank=True, default=None)
@@ -59,6 +61,7 @@ class Driver(models.Model):
     constructors = models.ManyToManyField(
         "Constructor", verbose_name=_("constructors"), blank=True
     )
+    data = models.JSONField(_("data"), null=True, blank=True, encoder=PrettyJSONEncoder)
 
     class Meta:
         db_table = "drivers"
