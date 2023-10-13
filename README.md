@@ -8,6 +8,7 @@ The Formula repository contains a sample project build upon the Unfold theme for
 ## Table of contents <!-- omit from toc -->
 
 - [Installation](#installation)
+- [Loading sample data](#loading-sample-data)
 - [Custom Dashboard](#custom-dashboard)
 - [Compiling Styles](#compiling-styles)
 
@@ -37,6 +38,14 @@ Run the command below to start the local development server.
 
 ```bash
 poetry run env $(cat .env) python src/manage.py runserver --nostatic
+```
+
+## Loading sample data
+
+After successful installation, database will be empty and there will be no data to observe through the admin area. Unfold provides some sample data available under `src/formula/fixtures`. These data can be loaded via commands below. It is important to run this command against empty database so primary keys will match.
+
+```bash
+poetry run env $(cat .env) python src/manage.py loaddata src/formula/fixtures/*
 ```
 
 ## Custom Dashboard

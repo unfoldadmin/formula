@@ -1,0 +1,515 @@
+[
+  {
+    "model": "formula.circuit",
+    "pk": 1,
+    "fields": {
+      "name": "Bahrain International Circuit",
+      "city": " Sakhir",
+      "country": "Bahrain"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 2,
+    "fields": {
+      "name": "Jeddah Corniche Circuit",
+      "city": " Jeddah",
+      "country": "Saudi Arabia"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 3,
+    "fields": {
+      "name": "Circuit de Barcelona-Catalunya",
+      "city": " Barcelona",
+      "country": "Spain"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 4,
+    "fields": {
+      "name": "Circuit Gilles-Villeneuve",
+      "city": " Montréal",
+      "country": "Canada"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 5,
+    "fields": {
+      "name": "Circuit de Monaco",
+      "city": " Monaco",
+      "country": "Monaco"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 6,
+    "fields": {
+      "name": "Hungaroring",
+      "city": " Budapest",
+      "country": "Hungary"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 7,
+    "fields": {
+      "name": "Red Bull Ring",
+      "city": " Spielberg",
+      "country": "Austria"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 8,
+    "fields": {
+      "name": "Circuit Zandvoort",
+      "city": " Zandvoort",
+      "country": "Netherlands"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 9,
+    "fields": {
+      "name": "Circuit de Spa-Francorchamps",
+      "city": " Spa-Francorchamps",
+      "country": "Belgium"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 10,
+    "fields": {
+      "name": "Silverstone Circuit",
+      "city": " Silverstone",
+      "country": "Great Britain"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 11,
+    "fields": {
+      "name": "Miami International Autodrome",
+      "city": " Miami",
+      "country": "United States"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 12,
+    "fields": {
+      "name": "Baku City Circuit",
+      "city": " Baku",
+      "country": "Azerbaijan"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 13,
+    "fields": {
+      "name": "Albert Park Circuit",
+      "city": " Melbourne",
+      "country": "Australia"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 14,
+    "fields": {
+      "name": "Circuit Paul Ricard",
+      "city": " Le Castellet",
+      "country": "France"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 15,
+    "fields": {
+      "name": "Autodromo Enzo e Dino Ferrari",
+      "city": " Imola",
+      "country": "Emilia Romagna"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 16,
+    "fields": {
+      "name": "Yas Marina Circuit",
+      "city": " Yas Marina",
+      "country": "United Arab Emirates"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 17,
+    "fields": {
+      "name": "Circuit of The Americas",
+      "city": " Austin",
+      "country": "United States"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 18,
+    "fields": {
+      "name": "Autódromo José Carlos Pace",
+      "city": " São Paulo",
+      "country": "Brazil"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 19,
+    "fields": {
+      "name": "Yas Marina Circuit",
+      "city": " Yas Island",
+      "country": "Abu Dhabi"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 20,
+    "fields": {
+      "name": "Bahrain International Circuit – Outer Track",
+      "city": " Sakhir",
+      "country": "Sakhir"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 21,
+    "fields": {
+      "name": "Intercity Istanbul Park",
+      "city": " Istanbul",
+      "country": "Turkey"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 22,
+    "fields": {
+      "name": "Autódromo Internacional do Algarve",
+      "city": " Portimão",
+      "country": "Portugal"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 23,
+    "fields": {
+      "name": "Nürburgring",
+      "city": " Nürburgring",
+      "country": "Eifel"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 24,
+    "fields": {
+      "name": "Autodromo Nazionale Monza",
+      "city": " Monza",
+      "country": "Italy"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 25,
+    "fields": {
+      "name": "Autódromo Hermanos Rodríguez",
+      "city": " Mexico City",
+      "country": "Mexico"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 26,
+    "fields": {
+      "name": "Sochi Autodrom",
+      "city": " Sochi",
+      "country": "Russia"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 27,
+    "fields": {
+      "name": "Marina Bay Street Circuit",
+      "city": " Singapore",
+      "country": "Singapore"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 28,
+    "fields": {
+      "name": "Suzuka International Racing Course",
+      "city": " Suzuka",
+      "country": "Japan"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 29,
+    "fields": {
+      "name": "Melbourne Grand Prix Circuit",
+      "city": " Melbourne",
+      "country": "Australia"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 30,
+    "fields": {
+      "name": "Circuit de Monaco",
+      "city": " Monte Carlo",
+      "country": "Monaco"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 31,
+    "fields": {
+      "name": "Circuit de Barcelona-Catalunya",
+      "city": " Catalunya",
+      "country": "Spain"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 32,
+    "fields": {
+      "name": "Shanghai International Circuit",
+      "city": " Shanghai",
+      "country": "China"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 33,
+    "fields": {
+      "name": "Sepang International Circuit",
+      "city": " Kuala Lumpur",
+      "country": "Malaysia"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 34,
+    "fields": {
+      "name": "Silverstone Circuit",
+      "city": " Silverstone",
+      "country": "70th Anniversary"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 35,
+    "fields": {
+      "name": "Mugello",
+      "city": " Mugello",
+      "country": "Tuscany"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 36,
+    "fields": {
+      "name": "Lusail International Circuit",
+      "city": " Lusail",
+      "country": "Qatar"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 37,
+    "fields": {
+      "name": "Red Bull Ring",
+      "city": " Spielberg",
+      "country": "Styria"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 38,
+    "fields": {
+      "name": "Hockenheimring",
+      "city": " Hockenheim",
+      "country": "Germany"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 39,
+    "fields": {
+      "name": "Baku City Circuit",
+      "city": " Baku",
+      "country": "Europe"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 40,
+    "fields": {
+      "name": "Yas Marina Circuit",
+      "city": " Abu Dhabi",
+      "country": "United Arab Emirates"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 41,
+    "fields": {
+      "name": "Autódromo José Carlos Pace",
+      "city": " Brazil",
+      "country": "Brazil"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 42,
+    "fields": {
+      "name": "Circuit of The Americas",
+      "city": " United States",
+      "country": "United States"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 43,
+    "fields": {
+      "name": "Sochi Autodrom",
+      "city": " Russia",
+      "country": "Russia"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 44,
+    "fields": {
+      "name": "Suzuka International Racing Course",
+      "city": " Japan",
+      "country": "Japan"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 45,
+    "fields": {
+      "name": "Autodromo Nazionale Monza",
+      "city": " Italy",
+      "country": "Italy"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 46,
+    "fields": {
+      "name": "Circuit de Spa-Francorchamps",
+      "city": " Belgium",
+      "country": "Belgium"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 47,
+    "fields": {
+      "name": "Red Bull Ring",
+      "city": " Austria",
+      "country": "Austria"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 48,
+    "fields": {
+      "name": "Silverstone Circuit",
+      "city": " Great Britain",
+      "country": "Great Britain"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 49,
+    "fields": {
+      "name": "Hockenheimring",
+      "city": " Germany",
+      "country": "Germany"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 50,
+    "fields": {
+      "name": "Hungaroring",
+      "city": " Hungary",
+      "country": "Hungary"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 51,
+    "fields": {
+      "name": "Circuit de Barcelona-Catalunya",
+      "city": " Spain",
+      "country": "Spain"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 52,
+    "fields": {
+      "name": "Shanghai International Circuit",
+      "city": " China",
+      "country": "China"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 53,
+    "fields": {
+      "name": "Circuit Gilles-Villeneuve",
+      "city": " Canada",
+      "country": "Canada"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 54,
+    "fields": {
+      "name": "Sepang International Circuit",
+      "city": " Malaysia",
+      "country": "Malaysia"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 55,
+    "fields": {
+      "name": "Bahrain International Circuit",
+      "city": " Bahrain",
+      "country": "Bahrain"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 56,
+    "fields": {
+      "name": "Melbourne Grand Prix Circuit",
+      "city": " Australia",
+      "country": "Australia"
+    }
+  },
+  {
+    "model": "formula.circuit",
+    "pk": 57,
+    "fields": {
+      "name": "Marina Bay Street Circuit",
+      "city": " Marina Bay",
+      "country": "Singapore"
+    }
+  }
+]
