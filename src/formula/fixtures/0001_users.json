@@ -1,0 +1,23 @@
+[
+  {
+    "model": "formula.user",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$lDFsnIkq4q8f1z98UjxI6o$vDnxj2Fp1xdl/ECFPvn1PU0vTmI1h8+SOVf//1HSaTI=",
+      "last_login": "2012-12-12T12:00:00.000Z",
+      "is_superuser": true,
+      "username": "demo",
+      "first_name": "Sample",
+      "last_name": "Example",
+      "email": "sample@example.com",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2012-12-12T12:00:00.000Z",
+      "biography": "",
+      "created_at": "2012-12-12T12:00:00.000Z",
+      "modified_at": "2012-12-12T12:00:00.000Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  }
+]

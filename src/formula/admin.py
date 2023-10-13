@@ -213,6 +213,7 @@ class DriverAdmin(ModelAdmin):
     autocomplete_fields = [
         "constructors",
     ]
+    radio_fields = {"status": admin.VERTICAL}
 
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, change, **kwargs)
