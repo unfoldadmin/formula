@@ -13,7 +13,9 @@ from django_celery_beat.models import (
     PeriodicTask,
     SolarSchedule,
 )
+from guardian.admin import GuardedModelAdmin
 from import_export.admin import ImportExportModelAdmin
+from simple_history.admin import SimpleHistoryAdmin
 from unfold.admin import ModelAdmin, StackedInline, TabularInline
 from unfold.contrib.filters.admin import (
     RangeDateFilter,
@@ -112,6 +114,7 @@ class UserAdmin(BaseUserAdmin, ModelAdmin):
             "widget": WysiwygWidget,
         }
     }
+    readonly_fields = ["last_login", "date_joined"]
 
     @display(description=_("User"), header=True)
     def display_header(self, instance: User):
@@ -199,7 +202,7 @@ class DriverStandingInline(TabularInline):
 
 
 @admin.register(Driver, site=formula_admin_site)
-class DriverAdmin(ModelAdmin):
+class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, ModelAdmin):
     search_fields = ["last_name", "first_name", "code"]
     list_filter_submit = True
     list_display = [
@@ -214,6 +217,7 @@ class DriverAdmin(ModelAdmin):
         "constructors",
     ]
     radio_fields = {"status": admin.VERTICAL}
+    readonly_fields = ["data"]
 
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, change, **kwargs)

@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     "unfold",
     "unfold.contrib.filters",
     "unfold.contrib.import_export",
+    "unfold.contrib.guardian",
+    "unfold.contrib.simple_history",
     "unfold.contrib.forms",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -49,6 +51,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "debug_toolbar",
     "import_export",
+    "guardian",
+    "simple_history",
     "django_celery_beat",
     "djmoney",
     "formula",
@@ -67,6 +71,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "simple_history.middleware.HistoryRequestMiddleware",
     "formula.middleware.ReadonlyExceptionHandlerMiddleware",
 ]
 
@@ -110,6 +115,11 @@ DATABASES = {
 # Authentication
 ######################################################################
 AUTH_USER_MODEL = "formula.User"
+
+AUTHENTICATION_BACKENDS = (
+    "django.contrib.auth.backends.ModelBackend",
+    "guardian.backends.ObjectPermissionBackend",
+)
 
 AUTH_PASSWORD_VALIDATORS = [
     {

@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from djmoney.models.fields import MoneyField
+from simple_history.models import HistoricalRecords
 
 from formula.encoders import PrettyJSONEncoder
 
@@ -62,11 +63,13 @@ class Driver(models.Model):
         "Constructor", verbose_name=_("constructors"), blank=True
     )
     data = models.JSONField(_("data"), null=True, blank=True, encoder=PrettyJSONEncoder)
+    objects = HistoricalRecords()
 
     class Meta:
         db_table = "drivers"
         verbose_name = _("driver")
         verbose_name_plural = _("drivers")
+        permissions = (("update_statistics", _("Update statistics")),)
 
     def __str__(self):
         return self.full_name
