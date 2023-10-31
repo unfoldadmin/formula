@@ -84,7 +84,7 @@ class Driver(models.Model):
     @property
     def initials(self):
         if self.first_name and self.last_name:
-            return f"{self.first_name[0]}{self.last_name[1]}"
+            return f"{self.first_name[0]}{self.last_name[0]}"
 
         return None
 
