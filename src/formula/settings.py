@@ -180,6 +180,7 @@ UNFOLD = {
     "SITE_HEADER": _("Formula Admin"),
     "SITE_TITLE": _("Formula Admin"),
     "SITE_SYMBOL": "settings",
+    "DASHBOARD_CALLBACK": "formula.views.dashboard_callback",
     "LOGIN": {
         "image": lambda r: static("images/login-bg.jpg"),
     },
@@ -187,7 +188,7 @@ UNFOLD = {
         lambda request: static("css/styles.css"),
     ],
     "SCRIPTS": [
-        lambda request: static("js/chart.min.js"),
+        # lambda request: static("js/chart.min.js"),
     ],
     "TABS": [
         {
