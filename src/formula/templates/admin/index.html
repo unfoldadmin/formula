@@ -47,7 +47,7 @@
         
         {% trans "Product performance in last 28 days" as title %}
         {% component "unfold/components/card.html" with class="mb-8" title=title %}
-            {% component "unfold/components/chart/bar.html" with data=chart class="h-96" %}{% endcomponent %}
+            {% component "unfold/components/chart/bar.html" with data=chart height=320 %}{% endcomponent %}
         {% endcomponent %}
 
         {% component "unfold/components/flex.html" with class="gap-8 mb-8 flex-col lg:flex-row" %}
