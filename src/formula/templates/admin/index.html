@@ -16,15 +16,15 @@
     </h1>
 {% endblock %}
 
-{% block content_before %}    
-    {% component "unfold/components/header.html" %}
-        {% trans "Unfold Dashboard" %}
-    {% endcomponent %}
+{% block extrahead %}
+    {% if plausible_domain %}
+        <script defer data-domain="{{ plausible_domain }}" src="https://plausible.io/js/script.js"></script>
+    {% endif %}    
 {% endblock %}
 
 {% block content %}
     {% component "unfold/components/container.html" %}
-        {% component "unfold/components/flex.html" with class="gap-4"%}
+        {% component "unfold/components/flex.html" with class="gap-4" %}
             {% component "unfold/components/navigation.html" with items=navigation %}{% endcomponent %}
 
             {% component "unfold/components/navigation.html" with class="ml-auto" items=filters %}{% endcomponent %}
