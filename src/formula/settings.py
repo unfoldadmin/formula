@@ -96,6 +96,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "formula.context_processors.variables",
             ],
         },
     },
@@ -180,9 +181,10 @@ UNFOLD = {
     "SITE_HEADER": _("Formula Admin"),
     "SITE_TITLE": _("Formula Admin"),
     "SITE_SYMBOL": "settings",
+    "ENVIRONMENT": "formula.utils.environment_callback",
     "DASHBOARD_CALLBACK": "formula.views.dashboard_callback",
     "LOGIN": {
-        "image": lambda r: static("images/login-bg.jpg"),
+        "image": lambda request: static("images/login-bg.jpg"),
     },
     "STYLES": [
         lambda request: static("css/styles.css"),
@@ -279,7 +281,7 @@ UNFOLD = {
                         "title": _("Races"),
                         "icon": "stadium",
                         "link": reverse_lazy("admin:formula_race_changelist"),
-                        "badge": "formula.utils.badge_dynamic_value",
+                        "badge": "formula.utils.badge_callback",
                     },
                     {
                         "title": _("Standings"),
@@ -329,4 +331,9 @@ LOGIN_PASSWORD = environ.get("LOGIN_PASSWORD")
 ############################################################################
 # Debug toolbar
 ############################################################################
-DEBUG_TOOLBAR_CONFIG = {"SHOW_TOOLBAR_CALLBACK": lambda r: DEBUG}
+DEBUG_TOOLBAR_CONFIG = {"SHOW_TOOLBAR_CALLBACK": lambda request: DEBUG}
+
+######################################################################
+# Plausible
+######################################################################
+PLAUSIBLE_DOMAIN = environ.get("PLAUSIBLE_DOMAIN")

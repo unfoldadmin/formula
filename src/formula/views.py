@@ -30,31 +30,17 @@ def dashboard_callback(request, context):
     context.update(
         {
             "navigation": [
-                {
-                    "title": _("Dashboard"),
-                    "link": "/",
-                    "active": True
-                },
-                {
-                    "title": _("Analytics"),
-                    "link": "#"
-                },
-                {
-                    "title": _("Settings"),
-                    "link": "#"
-                },                                                
+                {"title": _("Dashboard"), "link": "/", "active": True},
+                {"title": _("Analytics"), "link": "#"},
+                {"title": _("Settings"), "link": "#"},
             ],
             "filters": [
-                {
-                    "title": _("All"),
-                    "link": "#",                    
-                    "active": True
-                },
+                {"title": _("All"), "link": "#", "active": True},
                 {
                     "title": _("New"),
                     "link": "#",
-                },                                             
-            ],            
+                },
+            ],
             "kpi": [
                 {
                     "title": "Product A Performance",
@@ -62,7 +48,12 @@ def dashboard_callback(request, context):
                     "footer": mark_safe(
                         '<strong class="text-green-600 font-medium">+3.14%</strong>&nbsp;progress from last week'
                     ),
-                    "chart": json.dumps({"labels": [WEEKDAYS[day % 7] for day in range(1, 28)], "datasets": [{"data": average, "borderColor": "#9333ea"}]}),
+                    "chart": json.dumps(
+                        {
+                            "labels": [WEEKDAYS[day % 7] for day in range(1, 28)],
+                            "datasets": [{"data": average, "borderColor": "#9333ea"}],
+                        }
+                    ),
                 },
                 {
                     "title": "Product B Performance",
@@ -80,11 +71,31 @@ def dashboard_callback(request, context):
                 },
             ],
             "progress": [
-                {"title": "Social marketing e-book", "description": " $1,234.56", "value": random.randint(10, 90)},                
-                {"title": "Freelancing tasks", "description": " $1,234.56", "value": random.randint(10, 90)},
-                {"title": "Development coaching", "description": " $1,234.56", "value": random.randint(10, 90)},
-                {"title": "Product consulting", "description": " $1,234.56", "value": random.randint(10, 90)},
-                {"title": "Other income", "description": " $1,234.56", "value": random.randint(10, 90)},
+                {
+                    "title": "Social marketing e-book",
+                    "description": " $1,234.56",
+                    "value": random.randint(10, 90),
+                },
+                {
+                    "title": "Freelancing tasks",
+                    "description": " $1,234.56",
+                    "value": random.randint(10, 90),
+                },
+                {
+                    "title": "Development coaching",
+                    "description": " $1,234.56",
+                    "value": random.randint(10, 90),
+                },
+                {
+                    "title": "Product consulting",
+                    "description": " $1,234.56",
+                    "value": random.randint(10, 90),
+                },
+                {
+                    "title": "Other income",
+                    "description": " $1,234.56",
+                    "value": random.randint(10, 90),
+                },
             ],
             "chart": json.dumps(
                 {
@@ -117,7 +128,14 @@ def dashboard_callback(request, context):
                     "footer": mark_safe(
                         '<strong class="text-green-600 font-medium">+3.14%</strong>&nbsp;progress from last week'
                     ),
-                    "chart": json.dumps({"labels": [WEEKDAYS[day % 7] for day in range(1, 28)], "datasets": [{"data": performance_positive, "borderColor": "#9333ea"}]}),
+                    "chart": json.dumps(
+                        {
+                            "labels": [WEEKDAYS[day % 7] for day in range(1, 28)],
+                            "datasets": [
+                                {"data": performance_positive, "borderColor": "#9333ea"}
+                            ],
+                        }
+                    ),
                 },
                 {
                     "title": _("Last week expenses"),
@@ -125,9 +143,16 @@ def dashboard_callback(request, context):
                     "footer": mark_safe(
                         '<strong class="text-green-600 font-medium">+3.14%</strong>&nbsp;progress from last week'
                     ),
-                    "chart": json.dumps({"labels": [WEEKDAYS[day % 7] for day in range(1, 28)], "datasets": [{"data": performance_negative, "borderColor": "#f43f5e"}]}),
-                },                                
-            ]
+                    "chart": json.dumps(
+                        {
+                            "labels": [WEEKDAYS[day % 7] for day in range(1, 28)],
+                            "datasets": [
+                                {"data": performance_negative, "borderColor": "#f43f5e"}
+                            ],
+                        }
+                    ),
+                },
+            ],
         },
     )
 
