@@ -217,7 +217,7 @@ class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, ModelAdmin):
         "constructors",
     ]
     radio_fields = {"status": admin.VERTICAL}
-    readonly_fields = ["data"]
+    # readonly_fields = ["data"]
 
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, change, **kwargs)
@@ -267,7 +267,7 @@ class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, ModelAdmin):
         if instance.status:
             return instance.status
 
-        return _("Undefined")
+        return None
 
     @display(description=_("Code"), label=True)
     def display_code(self, instance: Driver):
@@ -303,4 +303,5 @@ class StandingAdmin(ModelAdmin):
         "driver__last_name",
     ]
     list_display = ["race", "driver", "constructor", "position", "points"]
+    list_filter = ["driver"]
     autocomplete_fields = ["driver", "constructor", "race"]

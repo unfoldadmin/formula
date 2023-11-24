@@ -1,6 +1,7 @@
 from os import environ, path
 from pathlib import Path
 
+import sentry_sdk
 from django.core.management.utils import get_random_secret_key
 from django.templatetags.static import static
 from django.urls import reverse_lazy
@@ -337,3 +338,14 @@ DEBUG_TOOLBAR_CONFIG = {"SHOW_TOOLBAR_CALLBACK": lambda request: DEBUG}
 # Plausible
 ######################################################################
 PLAUSIBLE_DOMAIN = environ.get("PLAUSIBLE_DOMAIN")
+
+######################################################################
+# Sentry
+######################################################################
+SENTRY_DSN = environ.get("SENTRY_DSN")
+
+if SENTRY_DSN:
+    sentry_sdk.init(
+        dsn=SENTRY_DSN,
+        enable_tracing=True,
+    )
