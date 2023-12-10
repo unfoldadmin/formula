@@ -37,7 +37,7 @@ poetry run env $(cat .env) python src/manage.py createsuperuser
 Run the command below to start the local development server.
 
 ```bash
-poetry run env $(cat .env) python src/manage.py runserver --nostatic
+poetry run env $(cat .env) python src/manage.py runserver
 ```
 
 ## Loading sample data
