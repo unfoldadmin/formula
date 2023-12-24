@@ -140,6 +140,7 @@ class GroupAdmin(BaseGroupAdmin, ModelAdmin):
 
 class CircuitRaceInline(StackedInline):
     model = Race
+    autocomplete_fields = ["winner"]
 
 
 @admin.register(Circuit, site=formula_admin_site)
@@ -217,7 +218,7 @@ class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, ModelAdmin):
         "constructors",
     ]
     radio_fields = {"status": admin.VERTICAL}
-    # readonly_fields = ["data"]
+    readonly_fields = ["data"]
 
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, change, **kwargs)

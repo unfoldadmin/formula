@@ -288,6 +288,8 @@ UNFOLD = {
                         "title": _("Standings"),
                         "icon": "grade",
                         "link": reverse_lazy("admin:formula_standing_changelist"),
+                        "permission": "formula.utils.permission_callback",
+                        # "permission": lambda request: request.user.is_superuser,
                     },
                 ],
             },
