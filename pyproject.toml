@@ -7,18 +7,20 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-django = "^4.2"
-django-import-export = "^3.3.5"
-django-unfold = "^0.18.1"
-whitenoise = "^6.6.0"
-django-celery-beat = "^2.5.0"
-gunicorn = "^21.2.0"
-django-money = "^3.4.1"
-pillow = "^10.1.0"
-django-debug-toolbar = "^4.2.0"
-django-guardian = "^2.4.0"
-django-simple-history = "^3.4.0"
-sentry-sdk = {extras = ["django"], version = "^1.39.1"}
+django = "^5.0"
+django-import-export = "^3.3"
+django-unfold = "^0.20.0"
+whitenoise = "^6.6"
+gunicorn = "^21.2"
+django-money = "^3.4"
+pillow = "^10.1"
+django-debug-toolbar = "^4.2"
+django-guardian = "^2.4"
+django-simple-history = "^3.4"
+sentry-sdk = { extras = ["django"], version = "^1.39" }
+django-celery-beat = "2.1"
+django-modeltranslation = "^0.18"
+django-svelte-jsoneditor = "^0.4.0"
 
 [tool.ruff]
 fix = true
@@ -33,13 +35,11 @@ select = [
     "UP", # pyupgrade
 ]
 ignore = [
-    "E501",  # line too long, handled by black
-    "B008",  # do not perform function calls in argument defaults
-    "C901",  # too complex
+    "E501", # line too long, handled by black
+    "B008", # do not perform function calls in argument defaults
+    "C901", # too complex
 ]
-exclude = [
-    "**/migrations"
-]
+exclude = ["**/migrations"]
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

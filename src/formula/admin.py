@@ -13,8 +13,10 @@ from django_celery_beat.models import (
     PeriodicTask,
     SolarSchedule,
 )
+from django_svelte_jsoneditor.widgets import SvelteJSONEditorWidget
 from guardian.admin import GuardedModelAdmin
 from import_export.admin import ImportExportModelAdmin
+from modeltranslation.admin import TabbedTranslationAdmin
 from simple_history.admin import SimpleHistoryAdmin
 from unfold.admin import ModelAdmin, StackedInline, TabularInline
 from unfold.contrib.filters.admin import (
@@ -144,11 +146,16 @@ class CircuitRaceInline(StackedInline):
 
 
 @admin.register(Circuit, site=formula_admin_site)
-class CircuitAdmin(ModelAdmin):
+class CircuitAdmin(ModelAdmin, TabbedTranslationAdmin):
     search_fields = ["name", "city", "country"]
     list_display = ["name", "city", "country"]
     list_filter = ["country"]
     inlines = [CircuitRaceInline]
+    formfield_overrides = {
+        models.JSONField: {
+            "widget": SvelteJSONEditorWidget,
+        }
+    }
 
 
 @admin.register(Constructor, site=formula_admin_site)

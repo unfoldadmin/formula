@@ -37,6 +37,7 @@ CSRF_TRUSTED_ORIGINS = environ.get(
 # Apps
 ######################################################################
 INSTALLED_APPS = [
+    "modeltranslation",
     "unfold",
     "unfold.contrib.filters",
     "unfold.contrib.import_export",
@@ -55,6 +56,7 @@ INSTALLED_APPS = [
     "guardian",
     "simple_history",
     "django_celery_beat",
+    "django_svelte_jsoneditor",
     "djmoney",
     "formula",
 ]
@@ -153,6 +155,11 @@ USE_I18N = True
 
 USE_TZ = True
 
+LANGUAGES = (
+    ("de", _("German")),
+    ("en", _("English")),
+)
+
 ######################################################################
 # Static
 ######################################################################
@@ -171,7 +178,7 @@ STORAGES = {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
     },
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
     },
 }
 
@@ -182,6 +189,7 @@ UNFOLD = {
     "SITE_HEADER": _("Formula Admin"),
     "SITE_TITLE": _("Formula Admin"),
     "SITE_SYMBOL": "settings",
+    "SHOW_HISTORY": False,
     "ENVIRONMENT": "formula.utils.environment_callback",
     "DASHBOARD_CALLBACK": "formula.views.dashboard_callback",
     "LOGIN": {
@@ -271,7 +279,10 @@ UNFOLD = {
                     {
                         "title": _("Drivers"),
                         "icon": "sports_motorsports",
-                        "link": reverse_lazy("admin:formula_driver_changelist"),
+                        "link": lambda request: reverse_lazy(
+                            "admin:formula_driver_changelist"
+                        ),
+                        # "link": reverse_lazy("admin:formula_driver_changelist"),
                     },
                     {
                         "title": _("Circuits"),

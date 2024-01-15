@@ -32,6 +32,7 @@ class Circuit(models.Model):
     name = models.CharField(_("name"), max_length=255)
     city = models.CharField(_("city"), max_length=255)
     country = models.CharField(_("country"), max_length=255)
+    data = models.JSONField(_("data"), null=True, blank=True)
 
     class Meta:
         db_table = "circuits"
