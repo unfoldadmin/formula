@@ -237,6 +237,7 @@ class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, ModelAdmin):
             super()
             .get_queryset(request)
             .annotate(total_points=Sum("standing__points"))
+            .annotate(total_wins=Sum("race__winner"))
             .annotate(
                 constructor_name=Constructor.objects.filter(
                     standing__driver_id=OuterRef("pk")
