@@ -56,7 +56,6 @@ INSTALLED_APPS = [
     "guardian",
     "simple_history",
     "django_celery_beat",
-    "django_svelte_jsoneditor",
     "djmoney",
     "formula",
 ]

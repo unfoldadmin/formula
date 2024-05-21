@@ -2,9 +2,11 @@ from django.contrib import admin, messages
 from django.contrib.auth.admin import GroupAdmin as BaseGroupAdmin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import Group
+from django.core.validators import EMPTY_VALUES
 from django.db import models
-from django.db.models import OuterRef, Sum
+from django.db.models import OuterRef, Q, Sum
 from django.shortcuts import redirect
+from django.templatetags.static import static
 from django.utils.translation import gettext_lazy as _
 from django_celery_beat.models import (
     ClockedSchedule,
@@ -13,16 +15,18 @@ from django_celery_beat.models import (
     PeriodicTask,
     SolarSchedule,
 )
-from django_svelte_jsoneditor.widgets import SvelteJSONEditorWidget
 from guardian.admin import GuardedModelAdmin
 from import_export.admin import ImportExportModelAdmin
 from modeltranslation.admin import TabbedTranslationAdmin
 from simple_history.admin import SimpleHistoryAdmin
 from unfold.admin import ModelAdmin, StackedInline, TabularInline
 from unfold.contrib.filters.admin import (
+    ChoicesDropdownFilter,
     RangeDateFilter,
     RangeNumericFilter,
+    RelatedDropdownFilter,
     SingleNumericFilter,
+    TextFilter,
 )
 from unfold.contrib.forms.widgets import WysiwygWidget
 from unfold.contrib.import_export.forms import ExportForm, ImportForm
@@ -151,11 +155,6 @@ class CircuitAdmin(ModelAdmin, TabbedTranslationAdmin):
     list_display = ["name", "city", "country"]
     list_filter = ["country"]
     inlines = [CircuitRaceInline]
-    formfield_overrides = {
-        models.JSONField: {
-            "widget": SvelteJSONEditorWidget,
-        }
-    }
 
 
 @admin.register(Constructor, site=formula_admin_site)
@@ -209,12 +208,31 @@ class DriverStandingInline(TabularInline):
     max_num = 0
 
 
+class FullNameFilter(TextFilter):
+    title = _("full name")
+    parameter_name = "fullname"
+
+    def queryset(self, request, queryset):
+        if self.value() in EMPTY_VALUES:
+            return queryset
+
+        return queryset.filter(
+            Q(first_name__icontains=self.value()) | Q(last_name__icontains=self.value())
+        )
+
+
 @admin.register(Driver, site=formula_admin_site)
 class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, ModelAdmin):
     search_fields = ["last_name", "first_name", "code"]
+    list_filter = [
+        FullNameFilter,
+        ("status", ChoicesDropdownFilter),
+        ("constructors", RelatedDropdownFilter),
+    ]
     list_filter_submit = True
     list_display = [
         "display_header",
+        "display_constructor",
         "display_total_points",
         "display_total_wins",
         "display_status",
@@ -252,9 +270,17 @@ class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, ModelAdmin):
         if standing:
             return [
                 instance.full_name,
-                instance.constructor_name,
+                None,
                 instance.initials,
+                {
+                    "path": static("images/avatar.jpg"),
+                    # "squared": True,
+                },
             ]
+
+    @display(description=_("Constructor"))
+    def display_constructor(self, instance: Driver):
+        return instance.constructor_name
 
     @display(description=_("Total points"), ordering="total_points")
     def display_total_points(self, instance: Driver):
