@@ -359,5 +359,5 @@ SENTRY_DSN = environ.get("SENTRY_DSN")
 if SENTRY_DSN:
     sentry_sdk.init(
         dsn=SENTRY_DSN,
-        enable_tracing=True,
+        enable_tracing=False,
     )
