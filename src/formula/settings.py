@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "unfold.contrib.guardian",
     "unfold.contrib.simple_history",
     "unfold.contrib.forms",
+    "unfold.contrib.inlines",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -75,6 +76,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "simple_history.middleware.HistoryRequestMiddleware",
     "formula.middleware.ReadonlyExceptionHandlerMiddleware",
+    "formula.middleware.ServiceMiddleware",
 ]
 
 ######################################################################
@@ -188,7 +190,7 @@ UNFOLD = {
     "SITE_HEADER": _("Formula Admin"),
     "SITE_TITLE": _("Formula Admin"),
     "SITE_SYMBOL": "settings",
-    "SHOW_HISTORY": False,
+    # "SHOW_HISTORY": True,
     "ENVIRONMENT": "formula.utils.environment_callback",
     "DASHBOARD_CALLBACK": "formula.views.dashboard_callback",
     "LOGIN": {

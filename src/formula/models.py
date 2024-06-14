@@ -49,11 +49,20 @@ class DriverStatus(models.TextChoices):
 
 
 class Driver(models.Model):
+    author = models.ForeignKey(
+        "User",
+        verbose_name=_("author"),
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+    )
     first_name = models.CharField(_("first name"), max_length=255)
     last_name = models.CharField(_("last name"), max_length=255)
+    resume = models.FileField(_("resume"), null=True, blank=True, default=None)
     picture = models.ImageField(_("picture"), null=True, blank=True, default=None)
     code = models.CharField(_("code"), max_length=3)
     color = models.CharField(_("color"), null=True, blank=True, max_length=255)
+    link = models.URLField(_("link"), null=True, blank=True)
     salary = MoneyField(
         max_digits=14, decimal_places=2, null=True, blank=True, default_currency=None
     )

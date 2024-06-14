@@ -23,6 +23,8 @@
 {% endblock %}
 
 {% block content %}
+    {% include "unfold/helpers/messages.html" %}
+    
     {% component "unfold/components/container.html" %}
         {% component "unfold/components/flex.html" with class="gap-4" %}
             {% component "unfold/components/navigation.html" with items=navigation %}{% endcomponent %}

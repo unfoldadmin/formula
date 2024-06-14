@@ -1,0 +1,19 @@
+{% load i18n %}
+
+<div class="flex flex-col gap-4 lg:flex-row lg:items-center">
+    <div class="flex flex-col">
+        <strong class="block font-semibold">
+            {% trans "Let's work together" %}
+        </strong>
+
+        <p class="leading-relaxed max-w-3xl mt-2">
+            {% trans "Did you decide to start using Unfold in your application but you need help with integration? Feel free to get in touch for consulting, priority support on specific tickets or development services." %}
+        </p>
+    </div>
+
+    <div class="lg:ml-auto">
+        <a href="https://unfoldadmin.com?utm_medium=referral&utm_source=formula#contact" class="bg-white shadow-sm block border border-transparent font-semibold px-3 py-2 rounded-md text-sm text-center text-blue-500 w-full whitespace-nowrap lg:w-auto dark:bg-blue-500/20 dark:text-white" target="_blank">
+            {% trans "Get in touch" %}
+        </a>
+    </div>
+</div>

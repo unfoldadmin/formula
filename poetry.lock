@@ -114,13 +114,13 @@ zstd = ["zstandard (==0.22.0)"]
 
 [[package]]
 name = "certifi"
-version = "2024.2.2"
+version = "2024.6.2"
 description = "Python package for providing Mozilla's CA Bundle."
 optional = false
 python-versions = ">=3.6"
 files = [
-    {file = "certifi-2024.2.2-py3-none-any.whl", hash = "sha256:dc383c07b76109f368f6106eee2b593b04a011ea4d55f652c6ca24a754d1cdd1"},
-    {file = "certifi-2024.2.2.tar.gz", hash = "sha256:0569859f95fc761b18b45ef421b1290a0f65f147e92a1e5eb3e635f9a5e4e66f"},
+    {file = "certifi-2024.6.2-py3-none-any.whl", hash = "sha256:ddc6c8ce995e6987e7faf5e3f1b02b302836a0e5d98ece18392cb1a36c72ad56"},
+    {file = "certifi-2024.6.2.tar.gz", hash = "sha256:3cd43f1c6fa7dedc5899d69d3ad0398fd018ad1a17fba83ddaf78aa46c747516"},
 ]
 
 [[package]]
@@ -265,17 +265,17 @@ tzdata = "*"
 
 [[package]]
 name = "django-debug-toolbar"
-version = "4.3.0"
+version = "4.4.2"
 description = "A configurable set of panels that display various debug information about the current request/response."
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "django_debug_toolbar-4.3.0-py3-none-any.whl", hash = "sha256:e09b7dcb8417b743234dfc57c95a7c1d1d87a88844abd13b4c5387f807b31bf6"},
-    {file = "django_debug_toolbar-4.3.0.tar.gz", hash = "sha256:0b0dddee5ea29b9cb678593bc0d7a6d76b21d7799cb68e091a2148341a80f3c4"},
+    {file = "django_debug_toolbar-4.4.2-py3-none-any.whl", hash = "sha256:5d7afb2ea5f8730241e5b0735396e16cd1fd8c6b53a2f3e1e30bbab9abb23728"},
+    {file = "django_debug_toolbar-4.4.2.tar.gz", hash = "sha256:9204050fcb1e4f74216c5b024bc76081451926a6303993d6c513f5e142675927"},
 ]
 
 [package.dependencies]
-django = ">=3.2.4"
+django = ">=4.2.9"
 sqlparse = ">=0.2"
 
 [[package]]
@@ -294,13 +294,13 @@ Django = ">=2.2"
 
 [[package]]
 name = "django-import-export"
-version = "4.0.3"
+version = "4.0.8"
 description = "Django application and library for importing and exporting data with included admin integration."
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "django_import_export-4.0.3-py3-none-any.whl", hash = "sha256:d55193414cb86994a2dfef47670c6887ee1ab8e5efab4ff0a7335c9cad6418c0"},
-    {file = "django_import_export-4.0.3.tar.gz", hash = "sha256:9762babf66e34da194f96ada2d133585f25c065d237d749a424319a0ddef7e23"},
+    {file = "django_import_export-4.0.8-py3-none-any.whl", hash = "sha256:0c9cbc4f973ddf1cc0d88f075974d44645c34f45e896a02a6d358c3e9bd8bb6d"},
+    {file = "django_import_export-4.0.8.tar.gz", hash = "sha256:3caf9fd57304eac78d3ac0bde216fb03f388a96b4d55a71889734bc92ea6dd69"},
 ]
 
 [package.dependencies]
@@ -319,13 +319,13 @@ yaml = ["tablib[yaml] (==3.5.0)"]
 
 [[package]]
 name = "django-modeltranslation"
-version = "0.18.13"
+version = "0.19.3"
 description = "Translates Django models using a registration approach."
 optional = false
 python-versions = "*"
 files = [
-    {file = "django_modeltranslation-0.18.13-py3-none-any.whl", hash = "sha256:5da153f8eb08adbd63d2d41be7aa15aa250adec8034b0553eea6e6746bfcd3c9"},
-    {file = "django_modeltranslation-0.18.13.tar.gz", hash = "sha256:4665ff19617e3a868f4c8173fe1b359d6a50362552165e665a0d32f78edafddd"},
+    {file = "django_modeltranslation-0.19.3-py3-none-any.whl", hash = "sha256:0c8aa2eedf44f1c7c4d4eb99ede8993e152f14b00edcb3de32d43c895aa5c016"},
+    {file = "django_modeltranslation-0.19.3.tar.gz", hash = "sha256:0670cb1b09cbd8069f2829d95e5eabfe17d62b5eaed0a34011f5554d04f5d5e8"},
 ]
 
 [package.dependencies]
@@ -354,17 +354,17 @@ test = ["django-stubs", "mixer", "mypy", "pytest (>=8.2,<8.3)", "pytest-cov", "p
 
 [[package]]
 name = "django-simple-history"
-version = "3.5.0"
+version = "3.7.0"
 description = "Store model history and view/revert changes from admin site."
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "django-simple-history-3.5.0.tar.gz", hash = "sha256:eef2943d7c846270f11c8136f38a3ba00de2bebd7b1b89037de5d9b148ed677a"},
-    {file = "django_simple_history-3.5.0-py3-none-any.whl", hash = "sha256:0030b3bb5ed219d6453320213e75cfa00dab7a381946124df9411729101c8874"},
+    {file = "django_simple_history-3.7.0-py3-none-any.whl", hash = "sha256:282cb2c4aa63f51547f17da7f2130abaa81ba01694676d19b88d52c94a57a52c"},
+    {file = "django_simple_history-3.7.0.tar.gz", hash = "sha256:ac3b7ca8b0d33f7ea6be8fe7fc98cf43415efa500ff5dfe736fbd1ebc0cf39f9"},
 ]
 
 [package.dependencies]
-asgiref = ">=3.6"
+django = ">=4.2"
 
 [[package]]
 name = "django-timezone-field"
@@ -382,13 +382,13 @@ Django = ">=3.2,<6.0"
 
 [[package]]
 name = "django-unfold"
-version = "0.24.0"
+version = "0.28.1"
 description = "Modern Django admin theme for seamless interface development"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "django_unfold-0.24.0-py3-none-any.whl", hash = "sha256:8d3b02d166b6700cd77cd6ebcf28f007f6325167da00512594ce167c2a53685f"},
-    {file = "django_unfold-0.24.0.tar.gz", hash = "sha256:90522496f63cbe6665ad664c9372ca2227b06343b7477f5b9818b46b6dd09686"},
+    {file = "django_unfold-0.28.1-py3-none-any.whl", hash = "sha256:73a48b13e022ad8779b2e3fbf21dfed94c71228d841cc7af4bc32ff8f152ba74"},
+    {file = "django_unfold-0.28.1.tar.gz", hash = "sha256:502acc2d1f01aa6c1d1dba7cd2f1881121b002b7a66f4d27a573c65f22c4947e"},
 ]
 
 [package.dependencies]
@@ -449,13 +449,13 @@ zookeeper = ["kazoo (>=2.8.0)"]
 
 [[package]]
 name = "packaging"
-version = "24.0"
+version = "24.1"
 description = "Core utilities for Python packages"
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.8"
 files = [
-    {file = "packaging-24.0-py3-none-any.whl", hash = "sha256:2ddfb553fdf02fb784c234c7ba6ccc288296ceabec964ad2eae3777778130bc5"},
-    {file = "packaging-24.0.tar.gz", hash = "sha256:eb82c5e3e56209074766e6885bb04b8c38a0c015d0a30036ebe7ece34c9989e9"},
+    {file = "packaging-24.1-py3-none-any.whl", hash = "sha256:5b8f2217dbdbd2f7f384c41c628544e6d52f2d0f53c6d0c3ea61aa5d1d7ff124"},
+    {file = "packaging-24.1.tar.gz", hash = "sha256:026ed72c8ed3fcce5bf8950572258698927fd1dbda10a5e981cdf0ac37f4f002"},
 ]
 
 [[package]]
@@ -546,13 +546,13 @@ xmp = ["defusedxml"]
 
 [[package]]
 name = "prompt-toolkit"
-version = "3.0.43"
+version = "3.0.47"
 description = "Library for building powerful interactive command lines in Python"
 optional = false
 python-versions = ">=3.7.0"
 files = [
-    {file = "prompt_toolkit-3.0.43-py3-none-any.whl", hash = "sha256:a11a29cb3bf0a28a387fe5122cdb649816a957cd9261dcedf8c9f1fef33eacf6"},
-    {file = "prompt_toolkit-3.0.43.tar.gz", hash = "sha256:3527b7af26106cbc65a040bcc84839a3566ec1b051bb0bfe953631e704b0ff7d"},
+    {file = "prompt_toolkit-3.0.47-py3-none-any.whl", hash = "sha256:0d7bfa67001d5e39d02c224b663abc33687405033a8c422d0d675a5a13361d10"},
+    {file = "prompt_toolkit-3.0.47.tar.gz", hash = "sha256:1e1b29cb58080b1e69f207c893a1a7bf16d127a5c30c9d17a25a5d77792e5360"},
 ]
 
 [package.dependencies]
@@ -578,14 +578,27 @@ tests = ["pytest (>=2.3.0)", "tox (>=1.6.0)"]
 type-tests = ["mypy (>=0.812)", "pytest (>=2.3.0)", "pytest-mypy-plugins"]
 
 [[package]]
+name = "pygments"
+version = "2.18.0"
+description = "Pygments is a syntax highlighting package written in Python."
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "pygments-2.18.0-py3-none-any.whl", hash = "sha256:b8e6aca0523f3ab76fee51799c488e38782ac06eafcf95e7ba832985c8e7b13a"},
+    {file = "pygments-2.18.0.tar.gz", hash = "sha256:786ff802f32e91311bff3889f6e9a86e81505fe99f2735bb6d60ae0c5004f199"},
+]
+
+[package.extras]
+windows-terminal = ["colorama (>=0.4.6)"]
+
+[[package]]
 name = "python-crontab"
-version = "3.0.0"
+version = "3.1.0"
 description = "Python Crontab API"
 optional = false
 python-versions = "*"
 files = [
-    {file = "python-crontab-3.0.0.tar.gz", hash = "sha256:79fb7465039ddfd4fb93d072d6ee0d45c1ac8bf1597f0686ea14fd4361dba379"},
-    {file = "python_crontab-3.0.0-py3-none-any.whl", hash = "sha256:6d5ba3c190ec76e4d252989a1644fcb233dbf53fbc8fceeb9febe1657b9fb1d4"},
+    {file = "python-crontab-3.1.0.tar.gz", hash = "sha256:f4ea1605d24533b67fa7a634ef26cb59a5f2e7954f6e677d2d7a2229959a2fc8"},
 ]
 
 [package.dependencies]
@@ -611,13 +624,13 @@ six = ">=1.5"
 
 [[package]]
 name = "sentry-sdk"
-version = "2.2.0"
+version = "2.5.1"
 description = "Python client for Sentry (https://sentry.io)"
 optional = false
 python-versions = ">=3.6"
 files = [
-    {file = "sentry_sdk-2.2.0-py2.py3-none-any.whl", hash = "sha256:674f58da37835ea7447fe0e34c57b4a4277fad558b0a7cb4a6c83bcb263086be"},
-    {file = "sentry_sdk-2.2.0.tar.gz", hash = "sha256:70eca103cf4c6302365a9d7cf522e7ed7720828910eb23d43ada8e50d1ecda9d"},
+    {file = "sentry_sdk-2.5.1-py2.py3-none-any.whl", hash = "sha256:1f87acdce4a43a523ae5aa21a3fc37522d73ebd9ec04b1dbf01aa3d173852def"},
+    {file = "sentry_sdk-2.5.1.tar.gz", hash = "sha256:fbc40a78a8a9c6675133031116144f0d0940376fa6e4e1acd5624c90b0aaf58b"},
 ]
 
 [package.dependencies]
@@ -640,7 +653,7 @@ django = ["django (>=1.8)"]
 falcon = ["falcon (>=1.4)"]
 fastapi = ["fastapi (>=0.79.0)"]
 flask = ["blinker (>=1.1)", "flask (>=0.11)", "markupsafe"]
-grpcio = ["grpcio (>=1.21.1)"]
+grpcio = ["grpcio (>=1.21.1)", "protobuf (>=3.8.0)"]
 httpx = ["httpx (>=0.16.0)"]
 huey = ["huey (>=2)"]
 huggingface-hub = ["huggingface-hub (>=0.22)"]
@@ -662,19 +675,18 @@ tornado = ["tornado (>=5)"]
 
 [[package]]
 name = "setuptools"
-version = "69.5.1"
+version = "70.0.0"
 description = "Easily download, build, install, upgrade, and uninstall Python packages"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "setuptools-69.5.1-py3-none-any.whl", hash = "sha256:c636ac361bc47580504644275c9ad802c50415c7522212252c033bd15f301f32"},
-    {file = "setuptools-69.5.1.tar.gz", hash = "sha256:6c1fccdac05a97e598fb0ae3bbed5904ccb317337a51139dcd51453611bbb987"},
+    {file = "setuptools-70.0.0-py3-none-any.whl", hash = "sha256:54faa7f2e8d2d11bcd2c07bed282eef1046b5c080d1c32add737d7b5817b1ad4"},
+    {file = "setuptools-70.0.0.tar.gz", hash = "sha256:f211a66637b8fa059bb28183da127d4e86396c991a942b028c6650d4319c3fd0"},
 ]
 
 [package.extras]
-docs = ["furo", "jaraco.packaging (>=9.3)", "jaraco.tidelift (>=1.4)", "pygments-github-lexers (==0.0.5)", "rst.linker (>=1.9)", "sphinx (>=3.5)", "sphinx-favicon", "sphinx-inline-tabs", "sphinx-lint", "sphinx-notfound-page (>=1,<2)", "sphinx-reredirects", "sphinxcontrib-towncrier"]
-testing = ["build[virtualenv]", "filelock (>=3.4.0)", "importlib-metadata", "ini2toml[lite] (>=0.9)", "jaraco.develop (>=7.21)", "jaraco.envs (>=2.2)", "jaraco.path (>=3.2.0)", "mypy (==1.9)", "packaging (>=23.2)", "pip (>=19.1)", "pytest (>=6,!=8.1.1)", "pytest-checkdocs (>=2.4)", "pytest-cov", "pytest-enabler (>=2.2)", "pytest-home (>=0.5)", "pytest-mypy", "pytest-perf", "pytest-ruff (>=0.2.1)", "pytest-timeout", "pytest-xdist (>=3)", "tomli", "tomli-w (>=1.0.0)", "virtualenv (>=13.0.0)", "wheel"]
-testing-integration = ["build[virtualenv] (>=1.0.3)", "filelock (>=3.4.0)", "jaraco.envs (>=2.2)", "jaraco.path (>=3.2.0)", "packaging (>=23.2)", "pytest", "pytest-enabler", "pytest-xdist", "tomli", "virtualenv (>=13.0.0)", "wheel"]
+docs = ["furo", "jaraco.packaging (>=9.3)", "jaraco.tidelift (>=1.4)", "pygments-github-lexers (==0.0.5)", "pyproject-hooks (!=1.1)", "rst.linker (>=1.9)", "sphinx (>=3.5)", "sphinx-favicon", "sphinx-inline-tabs", "sphinx-lint", "sphinx-notfound-page (>=1,<2)", "sphinx-reredirects", "sphinxcontrib-towncrier"]
+testing = ["build[virtualenv] (>=1.0.3)", "filelock (>=3.4.0)", "importlib-metadata", "ini2toml[lite] (>=0.14)", "jaraco.develop (>=7.21)", "jaraco.envs (>=2.2)", "jaraco.path (>=3.2.0)", "mypy (==1.9)", "packaging (>=23.2)", "pip (>=19.1)", "pyproject-hooks (!=1.1)", "pytest (>=6,!=8.1.1)", "pytest-checkdocs (>=2.4)", "pytest-cov", "pytest-enabler (>=2.2)", "pytest-home (>=0.5)", "pytest-mypy", "pytest-perf", "pytest-ruff (>=0.2.1)", "pytest-subprocess", "pytest-timeout", "pytest-xdist (>=3)", "tomli", "tomli-w (>=1.0.0)", "virtualenv (>=13.0.0)", "wheel"]
 
 [[package]]
 name = "six"
@@ -725,13 +737,13 @@ yaml = ["pyyaml"]
 
 [[package]]
 name = "typing-extensions"
-version = "4.11.0"
+version = "4.12.2"
 description = "Backported and Experimental Type Hints for Python 3.8+"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "typing_extensions-4.11.0-py3-none-any.whl", hash = "sha256:c1f94d72897edaf4ce775bb7558d5b79d8126906a14ea5ed1635921406c0387a"},
-    {file = "typing_extensions-4.11.0.tar.gz", hash = "sha256:83f085bd5ca59c80295fc2a82ab5dac679cbe02b9f33f7d83af68e241bea51b0"},
+    {file = "typing_extensions-4.12.2-py3-none-any.whl", hash = "sha256:04e5ca0351e0f3f85c6853954072df659d0d13fac324d0072316b67d7794700d"},
+    {file = "typing_extensions-4.12.2.tar.gz", hash = "sha256:1a7ead55c7e559dd4dee8856e3a88b41225abfe1ce8df57b7c13915fe121ffb8"},
 ]
 
 [[package]]
@@ -801,4 +813,4 @@ brotli = ["Brotli"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "1764a5d5ca700f5a44887027cb1199e9fca8a2f65389f4598410c6b540d7efb7"
+content-hash = "28820024097b1c9ddd283b4c8d45355378e5fb6fc4fd9cf8b335d9157ac7d263"

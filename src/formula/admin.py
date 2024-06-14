@@ -8,6 +8,10 @@ from django.db.models import OuterRef, Q, Sum
 from django.shortcuts import redirect
 from django.templatetags.static import static
 from django.utils.translation import gettext_lazy as _
+from django_celery_beat.admin import ClockedScheduleAdmin as BaseClockedScheduleAdmin
+from django_celery_beat.admin import CrontabScheduleAdmin as BaseCrontabScheduleAdmin
+from django_celery_beat.admin import PeriodicTaskAdmin as BasePeriodicTaskAdmin
+from django_celery_beat.admin import PeriodicTaskForm, TaskSelectWidget
 from django_celery_beat.models import (
     ClockedSchedule,
     CrontabSchedule,
@@ -16,10 +20,17 @@ from django_celery_beat.models import (
     SolarSchedule,
 )
 from guardian.admin import GuardedModelAdmin
-from import_export.admin import ImportExportModelAdmin
+from import_export.admin import (
+    ExportActionModelAdmin,
+    ImportExportModelAdmin,
+)
 from modeltranslation.admin import TabbedTranslationAdmin
 from simple_history.admin import SimpleHistoryAdmin
-from unfold.admin import ModelAdmin, StackedInline, TabularInline
+from unfold.admin import (
+    ModelAdmin,
+    StackedInline,
+    TabularInline,
+)
 from unfold.contrib.filters.admin import (
     ChoicesDropdownFilter,
     RangeDateFilter,
@@ -30,9 +41,14 @@ from unfold.contrib.filters.admin import (
 )
 from unfold.contrib.forms.widgets import WysiwygWidget
 from unfold.contrib.import_export.forms import ExportForm, ImportForm
+from unfold.contrib.inlines.admin import NonrelatedStackedInline
 from unfold.decorators import action, display
 from unfold.forms import AdminPasswordChangeForm, UserChangeForm, UserCreationForm
-from unfold.widgets import UnfoldAdminColorInputWidget
+from unfold.widgets import (
+    UnfoldAdminColorInputWidget,
+    UnfoldAdminSelectWidget,
+    UnfoldAdminTextInputWidget,
+)
 
 from formula.models import (
     Circuit,
@@ -43,7 +59,7 @@ from formula.models import (
     Standing,
     User,
 )
-from formula.resources import ConstructorResource
+from formula.resources import AnotherConstructorResource, ConstructorResource
 from formula.sites import formula_admin_site
 
 admin.site.unregister(PeriodicTask)
@@ -54,9 +70,20 @@ admin.site.unregister(ClockedSchedule)
 admin.site.unregister(Group)
 
 
-@admin.register(PeriodicTask, site=formula_admin_site)
-class PeriodicTaskAdmin(ModelAdmin):
+class UnfoldTaskSelectWidget(UnfoldAdminSelectWidget, TaskSelectWidget):
     pass
+
+
+class UnfoldPeriodicTaskForm(PeriodicTaskForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["task"].widget = UnfoldAdminTextInputWidget()
+        self.fields["regtask"].widget = UnfoldTaskSelectWidget()
+
+
+@admin.register(PeriodicTask, site=formula_admin_site)
+class PeriodicTaskAdmin(BasePeriodicTaskAdmin, ModelAdmin):
+    form = UnfoldPeriodicTaskForm
 
 
 @admin.register(IntervalSchedule, site=formula_admin_site)
@@ -65,7 +92,7 @@ class IntervalScheduleAdmin(ModelAdmin):
 
 
 @admin.register(CrontabSchedule, site=formula_admin_site)
-class CrontabScheduleAdmin(ModelAdmin):
+class CrontabScheduleAdmin(BaseCrontabScheduleAdmin, ModelAdmin):
     pass
 
 
@@ -75,8 +102,20 @@ class SolarScheduleAdmin(ModelAdmin):
 
 
 @admin.register(ClockedSchedule, site=formula_admin_site)
-class ClockedScheduleAdmin(ModelAdmin):
+class ClockedScheduleAdmin(BaseClockedScheduleAdmin, ModelAdmin):
     pass
+
+
+class CircuitNonrelatedStackedInline(NonrelatedStackedInline):
+    model = Circuit
+    fields = ["name", "city", "country"]
+    extra = 1
+
+    def get_form_queryset(self, obj):
+        return self.model.objects.all().distinct()
+
+    def save_new_instance(self, parent, instance):
+        pass
 
 
 @admin.register(User, site=formula_admin_site)
@@ -84,6 +123,7 @@ class UserAdmin(BaseUserAdmin, ModelAdmin):
     form = UserChangeForm
     add_form = UserCreationForm
     change_password_form = AdminPasswordChangeForm
+    inlines = [CircuitNonrelatedStackedInline]
     list_display = [
         "display_header",
         "is_active",
@@ -95,7 +135,10 @@ class UserAdmin(BaseUserAdmin, ModelAdmin):
         (None, {"fields": ("username", "password")}),
         (
             _("Personal info"),
-            {"fields": (("first_name", "last_name"), "email", "biography")},
+            {
+                "fields": (("first_name", "last_name"), "email", "biography"),
+                "classes": ["tab"],
+            },
         ),
         (
             _("Permissions"),
@@ -107,9 +150,16 @@ class UserAdmin(BaseUserAdmin, ModelAdmin):
                     "groups",
                     "user_permissions",
                 ),
+                "classes": ["tab"],
             },
         ),
-        (_("Important dates"), {"fields": ("last_login", "date_joined")}),
+        (
+            _("Important dates"),
+            {
+                "fields": ("last_login", "date_joined"),
+                "classes": ["tab"],
+            },
+        ),
     )
     filter_horizontal = (
         "groups",
@@ -122,9 +172,9 @@ class UserAdmin(BaseUserAdmin, ModelAdmin):
     }
     readonly_fields = ["last_login", "date_joined"]
 
-    @display(description=_("User"), header=True)
+    @display(description=_("User"))
     def display_header(self, instance: User):
-        return instance.full_name, instance.email
+        return instance.username
 
     @display(description=_("Staff"), boolean=True)
     def display_staff(self, instance: User):
@@ -158,15 +208,14 @@ class CircuitAdmin(ModelAdmin, TabbedTranslationAdmin):
 
 
 @admin.register(Constructor, site=formula_admin_site)
-class ConstructorAdmin(ModelAdmin, ImportExportModelAdmin):
+class ConstructorAdmin(ModelAdmin, ImportExportModelAdmin, ExportActionModelAdmin):
     search_fields = ["name"]
-    list_display = [
-        "name",
-    ]
-    resource_classes = [ConstructorResource]
+    list_display = ["name"]
+    resource_classes = [ConstructorResource, AnotherConstructorResource]
 
     import_form_class = ImportForm
     export_form_class = ExportForm
+    # export_form_class = SelectableFieldsExportForm
 
     actions_list = ["custom_actions_list"]
     actions_row = ["custom_actions_row"]
@@ -224,6 +273,7 @@ class FullNameFilter(TextFilter):
 @admin.register(Driver, site=formula_admin_site)
 class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, ModelAdmin):
     search_fields = ["last_name", "first_name", "code"]
+    compressed_fields = True
     list_filter = [
         FullNameFilter,
         ("status", ChoicesDropdownFilter),
@@ -237,13 +287,19 @@ class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, ModelAdmin):
         "display_total_wins",
         "display_status",
         "display_code",
+        "color",
+        "salary",
+        "first_name",
+        "last_name",
+        "code",
+        "status",
     ]
     inlines = [DriverStandingInline]
     autocomplete_fields = [
         "constructors",
     ]
     radio_fields = {"status": admin.VERTICAL}
-    readonly_fields = ["data"]
+    readonly_fields = ["author", "link", "data"]
 
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, change, **kwargs)
@@ -322,6 +378,7 @@ class RaceAdmin(ModelAdmin):
         ("laps", SingleNumericFilter),
         ("date", RangeDateFilter),
     ]
+    raw_id_fields = ["circuit", "winner"]
     list_filter_submit = True
     list_display = ["circuit", "winner", "year", "laps", "date"]
     autocomplete_fields = ["circuit", "winner"]
