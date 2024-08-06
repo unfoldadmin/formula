@@ -37,5 +37,6 @@ class ServiceMiddleware:
         return response
 
     def process_template_response(self, request, response):
-        messages.info(request, render_to_string("formula/service.html"))
+        if request.user.is_authenticated:
+            messages.info(request, render_to_string("formula/service.html"))
         return response

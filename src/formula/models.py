@@ -1,4 +1,6 @@
 from django.contrib.auth.models import AbstractUser
+from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from djmoney.models.fields import MoneyField
@@ -7,8 +9,30 @@ from simple_history.models import HistoricalRecords
 from formula.encoders import PrettyJSONEncoder
 
 
+class Tag(models.Model):
+    title = models.CharField(_("title"), max_length=255)
+    slug = models.CharField(_("slug"), max_length=255)
+    content_type = models.ForeignKey(
+        ContentType, on_delete=models.CASCADE, verbose_name=_("content type")
+    )
+    object_id = models.PositiveIntegerField(_("object id"))
+    content_object = GenericForeignKey("content_type", "object_id")
+
+    def __str__(self):
+        return self.tag
+
+    class Meta:
+        db_table = "tags"
+        verbose_name = _("tag")
+        verbose_name_plural = _("tags")
+        indexes = [
+            models.Index(fields=["content_type", "object_id"]),
+        ]
+
+
 class User(AbstractUser):
     biography = models.TextField(_("biography"), null=True, blank=True, default=None)
+    tags = GenericRelation(Tag)
     created_at = models.DateTimeField(_("created at"), auto_now_add=True)
     modified_at = models.DateTimeField(_("modified at"), auto_now=True)
 

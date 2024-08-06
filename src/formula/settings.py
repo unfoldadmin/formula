@@ -218,52 +218,6 @@ UNFOLD = {
                 },
             ],
         },
-        {
-            "models": [
-                "django_celery_beat.clockedschedule",
-                "django_celery_beat.crontabschedule",
-                "django_celery_beat.intervalschedule",
-                "django_celery_beat.periodictask",
-                "django_celery_beat.solarschedule",
-            ],
-            "items": [
-                {
-                    "title": _("Clocked"),
-                    "icon": "hourglass_bottom",
-                    "link": reverse_lazy(
-                        "admin:django_celery_beat_clockedschedule_changelist"
-                    ),
-                },
-                {
-                    "title": _("Crontabs"),
-                    "icon": "update",
-                    "link": reverse_lazy(
-                        "admin:django_celery_beat_crontabschedule_changelist"
-                    ),
-                },
-                {
-                    "title": _("Intervals"),
-                    "icon": "arrow_range",
-                    "link": reverse_lazy(
-                        "admin:django_celery_beat_intervalschedule_changelist"
-                    ),
-                },
-                {
-                    "title": _("Periodic tasks"),
-                    "icon": "task",
-                    "link": reverse_lazy(
-                        "admin:django_celery_beat_periodictask_changelist"
-                    ),
-                },
-                {
-                    "title": _("Solar events"),
-                    "icon": "event",
-                    "link": reverse_lazy(
-                        "admin:django_celery_beat_solarschedule_changelist"
-                    ),
-                },
-            ],
-        },
     ],
     "SIDEBAR": {
         "show_search": True,
@@ -306,7 +260,8 @@ UNFOLD = {
                 ],
             },
             {
-                "separator": True,
+                "title": _("Users & Groups"),
+                "collapsible": True,
                 "items": [
                     {
                         "title": _("Users"),
@@ -318,11 +273,45 @@ UNFOLD = {
                         "icon": "group",
                         "link": reverse_lazy("admin:auth_group_changelist"),
                     },
+                ],
+            },
+            {
+                "title": _("Celery Tasks"),
+                "collapsible": True,
+                "items": [
                     {
-                        "title": _("Tasks"),
-                        "icon": "task_alt",
+                        "title": _("Clocked"),
+                        "icon": "hourglass_bottom",
                         "link": reverse_lazy(
                             "admin:django_celery_beat_clockedschedule_changelist"
+                        ),
+                    },
+                    {
+                        "title": _("Crontabs"),
+                        "icon": "update",
+                        "link": reverse_lazy(
+                            "admin:django_celery_beat_crontabschedule_changelist"
+                        ),
+                    },
+                    {
+                        "title": _("Intervals"),
+                        "icon": "arrow_range",
+                        "link": reverse_lazy(
+                            "admin:django_celery_beat_intervalschedule_changelist"
+                        ),
+                    },
+                    {
+                        "title": _("Periodic tasks"),
+                        "icon": "task",
+                        "link": reverse_lazy(
+                            "admin:django_celery_beat_periodictask_changelist"
+                        ),
+                    },
+                    {
+                        "title": _("Solar events"),
+                        "icon": "event",
+                        "link": reverse_lazy(
+                            "admin:django_celery_beat_solarschedule_changelist"
                         ),
                     },
                 ],
