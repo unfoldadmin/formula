@@ -2,6 +2,7 @@ from django.contrib import admin, messages
 from django.contrib.auth.admin import GroupAdmin as BaseGroupAdmin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import Group
+from django.contrib.contenttypes.admin import GenericTabularInline
 from django.core.validators import EMPTY_VALUES
 from django.db import models
 from django.db.models import OuterRef, Q, Sum
@@ -26,16 +27,11 @@ from import_export.admin import (
 )
 from modeltranslation.admin import TabbedTranslationAdmin
 from simple_history.admin import SimpleHistoryAdmin
-from unfold.admin import (
-    ModelAdmin,
-    StackedInline,
-    TabularInline,
-)
+from unfold.admin import ModelAdmin, StackedInline, TabularInline
 from unfold.contrib.filters.admin import (
     ChoicesDropdownFilter,
     RangeDateFilter,
     RangeNumericFilter,
-    RelatedDropdownFilter,
     SingleNumericFilter,
     TextFilter,
 )
@@ -57,6 +53,7 @@ from formula.models import (
     DriverStatus,
     Race,
     Standing,
+    Tag,
     User,
 )
 from formula.resources import AnotherConstructorResource, ConstructorResource
@@ -110,6 +107,7 @@ class CircuitNonrelatedStackedInline(NonrelatedStackedInline):
     model = Circuit
     fields = ["name", "city", "country"]
     extra = 1
+    tab = True
 
     def get_form_queryset(self, obj):
         return self.model.objects.all().distinct()
@@ -118,12 +116,16 @@ class CircuitNonrelatedStackedInline(NonrelatedStackedInline):
         pass
 
 
+class TagGenericTabularInline(TabularInline, GenericTabularInline):
+    model = Tag
+
+
 @admin.register(User, site=formula_admin_site)
 class UserAdmin(BaseUserAdmin, ModelAdmin):
     form = UserChangeForm
     add_form = UserCreationForm
     change_password_form = AdminPasswordChangeForm
-    inlines = [CircuitNonrelatedStackedInline]
+    inlines = [CircuitNonrelatedStackedInline, TagGenericTabularInline]
     list_display = [
         "display_header",
         "is_active",
@@ -191,7 +193,32 @@ class UserAdmin(BaseUserAdmin, ModelAdmin):
 
 @admin.register(Group, site=formula_admin_site)
 class GroupAdmin(BaseGroupAdmin, ModelAdmin):
-    pass
+    def changelist_view(self, request, extra_context=None):
+        messages.success(
+            request,
+            _(
+                "Donec tristique risus ut lobortis consequat. Vestibulum ac volutpat magna. Quisque dictum mauris a rutrum tincidunt. "
+            ),
+        )
+        messages.info(
+            request,
+            _(
+                "Donec tristique risus ut lobortis consequat. Vestibulum ac volutpat magna. Quisque dictum mauris a rutrum tincidunt. "
+            ),
+        )
+        messages.warning(
+            request,
+            _(
+                "Donec tristique risus ut lobortis consequat. Vestibulum ac volutpat magna. Quisque dictum mauris a rutrum tincidunt. "
+            ),
+        )
+        messages.error(
+            request,
+            _(
+                "Donec tristique risus ut lobortis consequat. Vestibulum ac volutpat magna. Quisque dictum mauris a rutrum tincidunt. "
+            ),
+        )
+        return super().changelist_view(request, extra_context=extra_context)
 
 
 class CircuitRaceInline(StackedInline):
@@ -234,7 +261,11 @@ class ConstructorAdmin(ModelAdmin, ImportExportModelAdmin, ExportActionModelAdmi
         )
         return redirect(request.META["HTTP_REFERER"])
 
-    @action(description="Custom detail action", url_path="actions-detail-custom-url")
+    @action(
+        description="Custom detail action",
+        url_path="actions-detail-custom-url",
+        permissions=["custom_actions_detail"],
+    )
     def custom_actions_detail(self, request, object_id):
         messages.success(
             request,
@@ -242,19 +273,15 @@ class ConstructorAdmin(ModelAdmin, ImportExportModelAdmin, ExportActionModelAdmi
         )
         return redirect(request.META["HTTP_REFERER"])
 
+    def has_custom_actions_detail_permission(self, request, object_id):
+        return True
+
     @action(description="Custom submit line action")
     def custom_actions_submit_line(self, request, obj):
         messages.success(
             request,
             f"Detail action has been successfully executed. Object ID {obj.pk}",
         )
-
-
-class DriverStandingInline(TabularInline):
-    model = Standing
-    fields = ["race", "position", "points", "laps"]
-    readonly_fields = ["race"]
-    max_num = 0
 
 
 class FullNameFilter(TextFilter):
@@ -270,6 +297,22 @@ class FullNameFilter(TextFilter):
         )
 
 
+class DriverStandingInline(TabularInline):
+    model = Standing
+    fields = ["position", "points", "laps", "race"]
+    readonly_fields = ["race"]
+    max_num = 0
+    show_change_link = True
+    tab = True
+
+
+class RaceWinnerInline(StackedInline):
+    model = Race
+    fields = ["winner", "year", "laps"]
+    readonly_fields = ["winner", "year", "laps"]
+    max_num = 0
+
+
 @admin.register(Driver, site=formula_admin_site)
 class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, ModelAdmin):
     search_fields = ["last_name", "first_name", "code"]
@@ -277,9 +320,9 @@ class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, ModelAdmin):
     list_filter = [
         FullNameFilter,
         ("status", ChoicesDropdownFilter),
-        ("constructors", RelatedDropdownFilter),
     ]
     list_filter_submit = True
+    list_fullwidth = True
     list_display = [
         "display_header",
         "display_constructor",
@@ -287,14 +330,8 @@ class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, ModelAdmin):
         "display_total_wins",
         "display_status",
         "display_code",
-        "color",
-        "salary",
-        "first_name",
-        "last_name",
-        "code",
-        "status",
     ]
-    inlines = [DriverStandingInline]
+    inlines = [DriverStandingInline, RaceWinnerInline]
     autocomplete_fields = [
         "constructors",
     ]
@@ -342,7 +379,7 @@ class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, ModelAdmin):
     def display_total_points(self, instance: Driver):
         return instance.total_points
 
-    @display(description=_("Total wins"), ordering="total_wins")
+    @display(description=_("Total wins"))
     def display_total_wins(self, instance: Driver):
         return instance.race_set.count()
 
@@ -386,6 +423,7 @@ class RaceAdmin(ModelAdmin):
 
 @admin.register(Standing, site=formula_admin_site)
 class StandingAdmin(ModelAdmin):
+    list_disable_select_all = True
     search_fields = [
         "race__circuit__name",
         "race__circuit__city",

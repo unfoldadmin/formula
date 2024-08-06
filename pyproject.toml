@@ -8,18 +8,18 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.10"
 django = "^5.0"
-django-import-export = "^4.0"
-django-unfold = "^0.28"
-whitenoise = "^6.6"
-gunicorn = "^22.0"
-django-money = "^3.5"
-pillow = "^10.3"
+django-celery-beat = "2.6"
 django-debug-toolbar = "^4.4"
 django-guardian = "^2.4"
+django-import-export = "^4.0"
 django-simple-history = "^3.7"
-sentry-sdk = { extras = ["django"], version = "^2.5" }
-django-celery-beat = "2.6"
 django-modeltranslation = "^0.19"
+django-money = "^3.5"
+django-unfold = { git = "https://github.com/unfoldadmin/django-unfold.git" }
+whitenoise = "^6.6"
+gunicorn = "^22.0"
+pillow = "^10.3"
+sentry-sdk = { extras = ["django"], version = "^2.5" }
 pygments = "^2.18.0"
 
 [tool.ruff]
