@@ -335,8 +335,7 @@ LOGIN_PASSWORD = environ.get("LOGIN_PASSWORD")
 ############################################################################
 # Debug toolbar
 ############################################################################
-# DEBUG_TOOLBAR_CONFIG = {"SHOW_TOOLBAR_CALLBACK": lambda request: DEBUG}
-DEBUG_TOOLBAR_CONFIG = {"SHOW_TOOLBAR_CALLBACK": lambda request: False}
+DEBUG_TOOLBAR_CONFIG = {"SHOW_TOOLBAR_CALLBACK": lambda request: DEBUG}
 
 ######################################################################
 # Plausible
