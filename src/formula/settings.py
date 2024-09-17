@@ -76,7 +76,6 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "simple_history.middleware.HistoryRequestMiddleware",
     "formula.middleware.ReadonlyExceptionHandlerMiddleware",
-    "formula.middleware.ServiceMiddleware",
 ]
 
 ######################################################################
@@ -215,6 +214,11 @@ UNFOLD = {
                     "title": _("Constructors"),
                     "icon": "precision_manufacturing",
                     "link": reverse_lazy("admin:formula_constructor_changelist"),
+                },
+                {
+                    "title": _("Custom page"),
+                    "icon": "grade",
+                    "link": reverse_lazy("admin:custom_view"),
                 },
             ],
         },

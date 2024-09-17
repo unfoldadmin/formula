@@ -97,7 +97,7 @@ class Driver(models.Model):
         "Constructor", verbose_name=_("constructors"), blank=True
     )
     data = models.JSONField(_("data"), null=True, blank=True, encoder=PrettyJSONEncoder)
-    objects = HistoricalRecords()
+    history = HistoricalRecords()
 
     class Meta:
         db_table = "drivers"

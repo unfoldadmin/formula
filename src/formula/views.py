@@ -1,16 +1,27 @@
 import json
 import random
 
+from django.contrib import messages
+from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import RedirectView
+from django.views.generic import RedirectView, TemplateView
+from unfold.views import UnfoldModelAdminViewMixin
 
 
 class HomeView(RedirectView):
     pattern_name = "admin:index"
 
 
+class MyClassBasedView(UnfoldModelAdminViewMixin, TemplateView):
+    title = "Custom Title"  # required: custom page header title
+    permission_required = ()  # required: tuple of permissions
+    template_name = "formula/driver_custom_page.html"
+
+
 def dashboard_callback(request, context):
+    messages.info(request, render_to_string("formula/service.html"))
+
     WEEKDAYS = [
         "Mon",
         "Tue",

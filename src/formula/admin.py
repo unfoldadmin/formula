@@ -1,3 +1,4 @@
+from django import forms
 from django.contrib import admin, messages
 from django.contrib.auth.admin import GroupAdmin as BaseGroupAdmin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
@@ -6,8 +7,9 @@ from django.contrib.contenttypes.admin import GenericTabularInline
 from django.core.validators import EMPTY_VALUES
 from django.db import models
 from django.db.models import OuterRef, Q, Sum
-from django.shortcuts import redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.templatetags.static import static
+from django.urls import path, reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django_celery_beat.admin import ClockedScheduleAdmin as BaseClockedScheduleAdmin
 from django_celery_beat.admin import CrontabScheduleAdmin as BaseCrontabScheduleAdmin
@@ -30,8 +32,10 @@ from simple_history.admin import SimpleHistoryAdmin
 from unfold.admin import ModelAdmin, StackedInline, TabularInline
 from unfold.contrib.filters.admin import (
     ChoicesDropdownFilter,
+    MultipleRelatedDropdownFilter,
     RangeDateFilter,
     RangeNumericFilter,
+    RelatedDropdownFilter,
     SingleNumericFilter,
     TextFilter,
 )
@@ -41,8 +45,10 @@ from unfold.contrib.inlines.admin import NonrelatedStackedInline
 from unfold.decorators import action, display
 from unfold.forms import AdminPasswordChangeForm, UserChangeForm, UserCreationForm
 from unfold.widgets import (
+    UnfoldAdminCheckboxSelectMultiple,
     UnfoldAdminColorInputWidget,
     UnfoldAdminSelectWidget,
+    UnfoldAdminSplitDateTimeWidget,
     UnfoldAdminTextInputWidget,
 )
 
@@ -58,6 +64,7 @@ from formula.models import (
 )
 from formula.resources import AnotherConstructorResource, ConstructorResource
 from formula.sites import formula_admin_site
+from formula.views import MyClassBasedView
 
 admin.site.unregister(PeriodicTask)
 admin.site.unregister(IntervalSchedule)
@@ -228,6 +235,7 @@ class CircuitRaceInline(StackedInline):
 
 @admin.register(Circuit, site=formula_admin_site)
 class CircuitAdmin(ModelAdmin, TabbedTranslationAdmin):
+    show_facets = admin.ShowFacets.ALLOW
     search_fields = ["name", "city", "country"]
     list_display = ["name", "city", "country"]
     list_filter = ["country"]
@@ -239,7 +247,7 @@ class ConstructorAdmin(ModelAdmin, ImportExportModelAdmin, ExportActionModelAdmi
     search_fields = ["name"]
     list_display = ["name"]
     resource_classes = [ConstructorResource, AnotherConstructorResource]
-
+    save_as = True
     import_form_class = ImportForm
     export_form_class = ExportForm
     # export_form_class = SelectableFieldsExportForm
@@ -313,9 +321,24 @@ class RaceWinnerInline(StackedInline):
     max_num = 0
 
 
+class DriverAdminForm(forms.ModelForm):
+    flags = forms.MultipleChoiceField(
+        label=_("Flags"),
+        choices=[
+            ("POPULAR", _("Popular")),
+            ("FASTEST", _("Fastest")),
+            ("TALENTED", _("Talented")),
+        ],
+        required=False,
+        widget=UnfoldAdminCheckboxSelectMultiple,
+    )
+
+
 @admin.register(Driver, site=formula_admin_site)
 class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, ModelAdmin):
+    form = DriverAdminForm
     search_fields = ["last_name", "first_name", "code"]
+    warn_unsaved_form = True
     compressed_fields = True
     list_filter = [
         FullNameFilter,
@@ -336,12 +359,24 @@ class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, ModelAdmin):
         "constructors",
     ]
     radio_fields = {"status": admin.VERTICAL}
-    readonly_fields = ["author", "link", "data"]
+    readonly_fields = ["author", "data"]
+    actions_detail = ["change_detail_action"]
+    change_form_before_template = "formula/driver_before.html"
+    change_form_after_template = "formula/driver_after.html"
 
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, change, **kwargs)
         form.base_fields["color"].widget = UnfoldAdminColorInputWidget()
         return form
+
+    def get_urls(self):
+        return super().get_urls() + [
+            path(
+                "custom-url-path",
+                MyClassBasedView.as_view(model_admin=self),
+                name="custom_view",
+            ),
+        ]
 
     def get_queryset(self, request):
         return (
@@ -354,6 +389,51 @@ class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, ModelAdmin):
                 ).values("name")[:1]
             )
             .prefetch_related("race_set")
+        )
+
+    @action(description=_("Change detail action"), url_path="change-detail-action")
+    def change_detail_action(self, request, object_id):
+        object = get_object_or_404(Driver, pk=object_id)
+
+        class SomeForm(forms.Form):
+            # It is important to set a widget coming from Unfold
+            from_date = forms.SplitDateTimeField(
+                label="From Date", widget=UnfoldAdminSplitDateTimeWidget, required=False
+            )
+            to_date = forms.SplitDateTimeField(
+                label="To Date", widget=UnfoldAdminSplitDateTimeWidget, required=False
+            )
+            note = forms.CharField(label=_("Note"), widget=UnfoldAdminTextInputWidget)
+
+            class Media:
+                js = [
+                    "admin/js/vendor/jquery/jquery.js",
+                    "admin/js/jquery.init.js",
+                    "admin/js/calendar.js",
+                    "admin/js/admin/DateTimeShortcuts.js",
+                    "admin/js/core.js",
+                ]
+
+        form = SomeForm(request.POST or None)
+
+        if request.method == "POST" and form.is_valid():
+            # form.cleaned_data["note"]
+
+            messages.success(request, _("Change detail action has been successful."))
+
+            return redirect(
+                reverse_lazy("admin:formula_driver_change", args=[object_id])
+            )
+
+        return render(
+            request,
+            "formula/driver_action.html",
+            {
+                "form": form,
+                "object": object,
+                "title": _("Change detail action for {}").format(object),
+                **self.admin_site.each_context(request),
+            },
         )
 
     @display(description=_("Driver"), header=True)
@@ -411,6 +491,8 @@ class RaceAdmin(ModelAdmin):
         "winner__last_name",
     ]
     list_filter = [
+        ("circuit", MultipleRelatedDropdownFilter),
+        ("winner", RelatedDropdownFilter),
         ("year", RangeNumericFilter),
         ("laps", SingleNumericFilter),
         ("date", RangeDateFilter),
@@ -419,6 +501,7 @@ class RaceAdmin(ModelAdmin):
     list_filter_submit = True
     list_display = ["circuit", "winner", "year", "laps", "date"]
     autocomplete_fields = ["circuit", "winner"]
+    list_editable = ["date"]
 
 
 @admin.register(Standing, site=formula_admin_site)
