@@ -253,7 +253,13 @@ class ConstructorAdmin(ModelAdmin, ImportExportModelAdmin, ExportActionModelAdmi
     # export_form_class = SelectableFieldsExportForm
 
     actions_list = ["custom_actions_list"]
-    actions_row = ["custom_actions_row"]
+    actions_row = [
+        "custom_actions_row",
+        "custom_actions_row2",
+        "custom_actions_row3",
+        "custom_actions_row4",
+        "custom_actions_row5",
+    ]
     actions_detail = ["custom_actions_detail"]
     actions_submit_line = ["custom_actions_submit_line"]
 
@@ -264,6 +270,34 @@ class ConstructorAdmin(ModelAdmin, ImportExportModelAdmin, ExportActionModelAdmi
 
     @action(description="Custom row action", url_path="actions-row-custom-url")
     def custom_actions_row(self, request, object_id):
+        messages.success(
+            request, f"Row action has been successfully executed. Object ID {object_id}"
+        )
+        return redirect(request.META["HTTP_REFERER"])
+
+    @action(description="Custom row action", url_path="actions-row-custom-url")
+    def custom_actions_row2(self, request, object_id):
+        messages.success(
+            request, f"Row action has been successfully executed. Object ID {object_id}"
+        )
+        return redirect(request.META["HTTP_REFERER"])
+
+    @action(description="Custom row action", url_path="actions-row-custom-url")
+    def custom_actions_row3(self, request, object_id):
+        messages.success(
+            request, f"Row action has been successfully executed. Object ID {object_id}"
+        )
+        return redirect(request.META["HTTP_REFERER"])
+
+    @action(description="Custom row action", url_path="actions-row-custom-url")
+    def custom_actions_row4(self, request, object_id):
+        messages.success(
+            request, f"Row action has been successfully executed. Object ID {object_id}"
+        )
+        return redirect(request.META["HTTP_REFERER"])
+
+    @action(description="Custom row action", url_path="actions-row-custom-url")
+    def custom_actions_row5(self, request, object_id):
         messages.success(
             request, f"Row action has been successfully executed. Object ID {object_id}"
         )
@@ -361,8 +395,10 @@ class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, ModelAdmin):
     radio_fields = {"status": admin.VERTICAL}
     readonly_fields = ["author", "data"]
     actions_detail = ["change_detail_action"]
-    change_form_before_template = "formula/driver_before.html"
-    change_form_after_template = "formula/driver_after.html"
+    list_before_template = "formula/driver_list_before.html"
+    list_after_template = "formula/driver_list_after.html"
+    change_form_before_template = "formula/driver_change_form_before.html"
+    change_form_after_template = "formula/driver_change_form_after.html"
 
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, change, **kwargs)

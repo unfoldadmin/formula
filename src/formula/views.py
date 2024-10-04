@@ -1,8 +1,7 @@
 import json
 import random
 
-from django.contrib import messages
-from django.template.loader import render_to_string
+from django.contrib.humanize.templatetags.humanize import intcomma
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import RedirectView, TemplateView
@@ -20,8 +19,6 @@ class MyClassBasedView(UnfoldModelAdminViewMixin, TemplateView):
 
 
 def dashboard_callback(request, context):
-    messages.info(request, render_to_string("formula/service.html"))
-
     WEEKDAYS = [
         "Mon",
         "Tue",
@@ -55,9 +52,9 @@ def dashboard_callback(request, context):
             "kpi": [
                 {
                     "title": "Product A Performance",
-                    "metric": "$1,234.56",
+                    "metric": f"${intcomma(f"{random.uniform(1000, 9999):.02f}")}",
                     "footer": mark_safe(
-                        '<strong class="text-green-600 font-medium">+3.14%</strong>&nbsp;progress from last week'
+                        f'<strong class="text-green-700 font-semibold dark:text-green-400">+{intcomma(f"{random.uniform(1, 9):.02f}")}%</strong>&nbsp;progress from last week'
                     ),
                     "chart": json.dumps(
                         {
@@ -68,43 +65,53 @@ def dashboard_callback(request, context):
                 },
                 {
                     "title": "Product B Performance",
-                    "metric": "$1,234.56",
+                    "metric": f"${intcomma(f"{random.uniform(1000, 9999):.02f}")}",
                     "footer": mark_safe(
-                        '<strong class="text-green-600 font-medium">+3.14%</strong>&nbsp;progress from last week'
+                        f'<strong class="text-green-700 font-semibold dark:text-green-400">+{intcomma(f"{random.uniform(1, 9):.02f}")}%</strong>&nbsp;progress from last week'
                     ),
                 },
                 {
                     "title": "Product C Performance",
-                    "metric": "$1,234.56",
+                    "metric": f"${intcomma(f"{random.uniform(1000, 9999):.02f}")}",
                     "footer": mark_safe(
-                        '<strong class="text-green-600 font-medium">+3.14%</strong>&nbsp;progress from last week'
+                        f'<strong class="text-green-700 font-semibold dark:text-green-400">+{intcomma(f"{random.uniform(1, 9):.02f}")}%</strong>&nbsp;progress from last week'
                     ),
                 },
             ],
             "progress": [
                 {
-                    "title": "Social marketing e-book",
-                    "description": " $1,234.56",
+                    "title": "🦆 Social marketing e-book",
+                    "description": f"${intcomma(f"{random.uniform(1000, 9999):.02f}")}",
                     "value": random.randint(10, 90),
                 },
                 {
-                    "title": "Freelancing tasks",
-                    "description": " $1,234.56",
+                    "title": "🦍 Freelancing tasks",
+                    "description": f"${intcomma(f"{random.uniform(1000, 9999):.02f}")}",
                     "value": random.randint(10, 90),
                 },
                 {
-                    "title": "Development coaching",
-                    "description": " $1,234.56",
+                    "title": "🐋 Development coaching",
+                    "description": f"${intcomma(f"{random.uniform(1000, 9999):.02f}")}",
                     "value": random.randint(10, 90),
                 },
                 {
-                    "title": "Product consulting",
-                    "description": " $1,234.56",
+                    "title": "🦑 Product consulting",
+                    "description": f"${intcomma(f"{random.uniform(1000, 9999):.02f}")}",
                     "value": random.randint(10, 90),
                 },
                 {
-                    "title": "Other income",
-                    "description": " $1,234.56",
+                    "title": "🐨 Other income",
+                    "description": f"${intcomma(f"{random.uniform(1000, 9999):.02f}")}",
+                    "value": random.randint(10, 90),
+                },
+                {
+                    "title": "🐶 Course sales",
+                    "description": f"${intcomma(f"{random.uniform(1000, 9999):.02f}")}",
+                    "value": random.randint(10, 90),
+                },
+                {
+                    "title": "🐻‍❄️ Ads revenue",
+                    "description": f"${intcomma(f"{random.uniform(1000, 9999):.02f}")}",
                     "value": random.randint(10, 90),
                 },
             ],

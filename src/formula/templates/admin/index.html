@@ -32,6 +32,8 @@
             {% component "unfold/components/navigation.html" with class="ml-auto" items=filters %}{% endcomponent %}
         {% endcomponent %}
 
+        {% include "formula/service.html" %}
+
         {% component "unfold/components/flex.html" with class="gap-8 mb-8 flex-col lg:flex-row" %}
             {% for stats in kpi %}
                 {% trans "Last 7 days" as label %}
@@ -55,23 +57,29 @@
         {% component "unfold/components/flex.html" with class="gap-8 mb-8 flex-col lg:flex-row" %}
             {% trans "The most trending products in last 2 weeks" as title %}
             {% component "unfold/components/card.html" with class="lg:w-1/2" title=title %}
-                {% component "unfold/components/card.html" %}
                     {% component "unfold/components/title.html" with class="mb-2" %}
                         $1,234,567.89
                     {% endcomponent %}
                 
-                    {% component "unfold/components/text.html" %}
+                    {% component "unfold/components/text.html" %}                    
                         {% blocktrans %}
-                            Total revenue between <span class="font-medium text-gray-700 dark:text-white">1 - 31 October</span>. Increase <span class="text-green-600 font-medium">+3.14%</span> comparing to previous month <span class="font-medium text-gray-700 dark:text-white">1 - 30 September</span>. <a href="#" class="text-primary-500 underline">View detailed analytics.</a>
+                            Total revenue between <strong class="font-semibold text-font-important-light dark:text-font-important-dark dark:text-white">1 - 31 October</strong>. Increase <span class="text-green-700 font-semibold dark:text-green-400">+3.14%</span> comparing to previous month <strong class="font-semibold text-font-important-light dark:text-font-important-dark dark:text-white">1 - 30 September</strong>.
                         {% endblocktrans %}
                     {% endcomponent %}                
-                {% endcomponent %}
                 {% component "unfold/components/separator.html" %}{% endcomponent %}
-                
-                {% component "unfold/components/flex.html" with col=1 class="gap-8" %}
+
+                {% component "unfold/components/flex.html" with col=1 class="gap-5" %}
                     {% for metric in progress %}
                         {% component "unfold/components/progress.html" with title=metric.title description=metric.description value=metric.value %}{% endcomponent %}
-                    {% endfor %}
+                    {% endfor %}                    
+                {% endcomponent %}
+
+                {% component "unfold/components/separator.html" %}{% endcomponent %}
+
+                {% component "unfold/components/flex.html" with class="mt-6 justify-center" %}
+                    {% component "unfold/components/button.html" with href="#" variant="default" %}
+                        {% trans "View detailed analytics" %}
+                    {% endcomponent %}
                 {% endcomponent %}
             {% endcomponent %}    
 
@@ -88,7 +96,7 @@
 
                         {% component "unfold/components/chart/line.html" with data=stats.chart %}{% endcomponent %}
                     {% endcomponent %}
-                {% endfor %}
+                {% endfor %}                                
             {% endcomponent %}        
         {% endcomponent %}    
     {% endcomponent %}
