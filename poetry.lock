@@ -383,7 +383,7 @@ Django = ">=3.2,<6.0"
 
 [[package]]
 name = "django-unfold"
-version = "0.39.0"
+version = "0.40.0"
 description = "Modern Django admin theme for seamless interface development"
 optional = false
 python-versions = ">=3.8"
@@ -397,7 +397,7 @@ django = ">=3.2"
 type = "git"
 url = "https://github.com/unfoldadmin/django-unfold.git"
 reference = "HEAD"
-resolved_reference = "1405687603eebac2c691a5107a25e718e2ccb1bb"
+resolved_reference = "2b1153e43dd65ea81578df0aa3bb4c07a203d3d0"
 
 [[package]]
 name = "gunicorn"

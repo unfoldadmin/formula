@@ -393,7 +393,7 @@ class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, ModelAdmin):
         "constructors",
     ]
     radio_fields = {"status": admin.VERTICAL}
-    readonly_fields = ["author", "data"]
+    readonly_fields = ["author", "data", "is_active", "is_hidden"]
     actions_detail = ["change_detail_action"]
     list_before_template = "formula/driver_list_before.html"
     list_after_template = "formula/driver_list_after.html"

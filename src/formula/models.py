@@ -98,6 +98,8 @@ class Driver(models.Model):
     )
     data = models.JSONField(_("data"), null=True, blank=True, encoder=PrettyJSONEncoder)
     history = HistoricalRecords()
+    is_active = models.BooleanField(_("active"), default=False)
+    is_hidden = models.BooleanField(_("hidden"), default=False)
 
     class Meta:
         db_table = "drivers"
@@ -145,11 +147,13 @@ class Race(models.Model):
     year = models.PositiveIntegerField(_("year"))
     laps = models.PositiveIntegerField(_("laps"))
     date = models.DateField(_("date"))
+    weight = models.PositiveIntegerField(_("weight"), default=0, db_index=True)
 
     class Meta:
         db_table = "races"
         verbose_name = _("race")
         verbose_name_plural = _("races")
+        ordering = ["weight"]
 
     def __str__(self):
         return f"{self.circuit.name}, {self.year}"
@@ -167,11 +171,13 @@ class Standing(models.Model):
     number = models.PositiveIntegerField(_("number"))
     laps = models.PositiveIntegerField(_("laps"))
     points = models.DecimalField(_("points"), decimal_places=2, max_digits=4)
+    weight = models.PositiveIntegerField(_("weight"), default=0, db_index=True)
 
     class Meta:
         db_table = "standings"
         verbose_name = _("standing")
         verbose_name_plural = _("standings")
+        ordering = ["weight"]
 
     def __str__(self):
         return f"{self.driver.full_name}, {self.position}"
