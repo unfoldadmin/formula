@@ -69,6 +69,7 @@ MIDDLEWARE = [
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -148,7 +149,7 @@ LOGIN_REDIRECT_URL = reverse_lazy("admin:index")
 ######################################################################
 # Localization
 ######################################################################
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "en"
 
 TIME_ZONE = "Europe/Bratislava"
 
@@ -160,6 +161,36 @@ LANGUAGES = (
     ("de", _("German")),
     ("en", _("English")),
 )
+
+# https://docs.djangoproject.com/en/5.1/ref/settings/#date-input-formats
+DATE_INPUT_FORMATS = [
+    "%d.%m.%Y",  # Custom input
+    "%Y-%m-%d",  # '2006-10-25'
+    "%m/%d/%Y",  # '10/25/2006'
+    "%m/%d/%y",  # '10/25/06'
+    "%b %d %Y",  # 'Oct 25 2006'
+    "%b %d, %Y",  # 'Oct 25, 2006'
+    "%d %b %Y",  # '25 Oct 2006'
+    "%d %b, %Y",  # '25 Oct, 2006'
+    "%B %d %Y",  # 'October 25 2006'
+    "%B %d, %Y",  # 'October 25, 2006'
+    "%d %B %Y",  # '25 October 2006'
+    "%d %B, %Y",  # '25 October, 2006'
+]
+
+# https://docs.djangoproject.com/en/5.1/ref/settings/#datetime-input-formats
+DATETIME_INPUT_FORMATS = [
+    "%d.%m.%Y %H:%M:%S",  # Custom input
+    "%Y-%m-%d %H:%M:%S",  # '2006-10-25 14:30:59'
+    "%Y-%m-%d %H:%M:%S.%f",  # '2006-10-25 14:30:59.000200'
+    "%Y-%m-%d %H:%M",  # '2006-10-25 14:30'
+    "%m/%d/%Y %H:%M:%S",  # '10/25/2006 14:30:59'
+    "%m/%d/%Y %H:%M:%S.%f",  # '10/25/2006 14:30:59.000200'
+    "%m/%d/%Y %H:%M",  # '10/25/2006 14:30'
+    "%m/%d/%y %H:%M:%S",  # '10/25/06 14:30:59'
+    "%m/%d/%y %H:%M:%S.%f",  # '10/25/06 14:30:59.000200'
+    "%m/%d/%y %H:%M",  # '10/25/06 14:30'
+]
 
 ######################################################################
 # Static
@@ -191,6 +222,7 @@ UNFOLD = {
     "SITE_TITLE": _("Formula Admin"),
     "SITE_SYMBOL": "settings",
     # "SHOW_HISTORY": True,
+    "SHOW_LANGUAGES": True,
     "ENVIRONMENT": "formula.utils.environment_callback",
     "DASHBOARD_CALLBACK": "formula.views.dashboard_callback",
     "LOGIN": {
@@ -210,6 +242,20 @@ UNFOLD = {
                     "title": _("Drivers"),
                     "icon": "sports_motorsports",
                     "link": reverse_lazy("admin:formula_driver_changelist"),
+                },
+                {
+                    "title": _("Active drivers"),
+                    "icon": "sports_motorsports",
+                    "link": lambda request: f"{reverse_lazy(
+                        "admin:formula_driver_changelist"
+                    )}?status__exact=ACTIVE",
+                },
+                {
+                    "title": _("Inactive drivers"),
+                    "icon": "sports_motorsports",
+                    "link": lambda request: f"{reverse_lazy(
+                        "admin:formula_driver_changelist"
+                    )}?status__exact=INACTIVE",
                 },
                 {
                     "title": _("Constructors"),

@@ -34,6 +34,7 @@ from unfold.contrib.filters.admin import (
     ChoicesDropdownFilter,
     MultipleRelatedDropdownFilter,
     RangeDateFilter,
+    RangeDateTimeFilter,
     RangeNumericFilter,
     RelatedDropdownFilter,
     SingleNumericFilter,
@@ -341,8 +342,9 @@ class FullNameFilter(TextFilter):
 
 class DriverStandingInline(TabularInline):
     model = Standing
-    fields = ["position", "points", "laps", "race"]
+    fields = ["position", "points", "laps", "race", "weight"]
     readonly_fields = ["race"]
+    ordering_field = "weight"
     max_num = 0
     show_change_link = True
     tab = True
@@ -350,9 +352,11 @@ class DriverStandingInline(TabularInline):
 
 class RaceWinnerInline(StackedInline):
     model = Race
-    fields = ["winner", "year", "laps"]
+    fields = ["winner", "year", "laps", "picture", "weight"]
     readonly_fields = ["winner", "year", "laps"]
-    max_num = 0
+    ordering_field = "weight"
+    extra = 1
+    classes = ["collapse"]
 
 
 class DriverAdminForm(forms.ModelForm):
@@ -379,6 +383,7 @@ class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, ModelAdmin):
         ("status", ChoicesDropdownFilter),
     ]
     list_filter_submit = True
+    list_filter_sheet = False
     list_fullwidth = True
     list_display = [
         "display_header",
@@ -532,12 +537,14 @@ class RaceAdmin(ModelAdmin):
         ("year", RangeNumericFilter),
         ("laps", SingleNumericFilter),
         ("date", RangeDateFilter),
+        ("created_at", RangeDateTimeFilter),
     ]
-    raw_id_fields = ["circuit", "winner"]
+    list_filter_sheet = False
     list_filter_submit = True
+    raw_id_fields = ["circuit", "winner"]
     list_display = ["circuit", "winner", "year", "laps", "date"]
+    list_fullwidth = True
     autocomplete_fields = ["circuit", "winner"]
-    list_editable = ["date"]
 
 
 @admin.register(Standing, site=formula_admin_site)

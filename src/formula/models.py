@@ -9,7 +9,20 @@ from simple_history.models import HistoricalRecords
 from formula.encoders import PrettyJSONEncoder
 
 
-class Tag(models.Model):
+class DriverStatus(models.TextChoices):
+    ACTIVE = "ACTIVE", _("Active")
+    INACTIVE = "INACTIVE", _("Inactive")
+
+
+class AuditedModel(models.Model):
+    created_at = models.DateTimeField(_("created at"), auto_now_add=True)
+    modified_at = models.DateTimeField(_("modified at"), auto_now=True)
+
+    class Meta:
+        abstract = True
+
+
+class Tag(AuditedModel):
     title = models.CharField(_("title"), max_length=255)
     slug = models.CharField(_("slug"), max_length=255)
     content_type = models.ForeignKey(
@@ -30,11 +43,9 @@ class Tag(models.Model):
         ]
 
 
-class User(AbstractUser):
+class User(AbstractUser, AuditedModel):
     biography = models.TextField(_("biography"), null=True, blank=True, default=None)
     tags = GenericRelation(Tag)
-    created_at = models.DateTimeField(_("created at"), auto_now_add=True)
-    modified_at = models.DateTimeField(_("modified at"), auto_now=True)
 
     class Meta:
         db_table = "users"
@@ -52,7 +63,7 @@ class User(AbstractUser):
         return None
 
 
-class Circuit(models.Model):
+class Circuit(AuditedModel):
     name = models.CharField(_("name"), max_length=255)
     city = models.CharField(_("city"), max_length=255)
     country = models.CharField(_("country"), max_length=255)
@@ -67,12 +78,7 @@ class Circuit(models.Model):
         return self.name
 
 
-class DriverStatus(models.TextChoices):
-    ACTIVE = "ACTIVE", _("Active")
-    INACTIVE = "INACTIVE", _("Inactive")
-
-
-class Driver(models.Model):
+class Driver(AuditedModel):
     author = models.ForeignKey(
         "User",
         verbose_name=_("author"),
@@ -125,7 +131,7 @@ class Driver(models.Model):
         return None
 
 
-class Constructor(models.Model):
+class Constructor(AuditedModel):
     name = models.CharField(_("name"), max_length=255)
 
     class Meta:
@@ -137,13 +143,14 @@ class Constructor(models.Model):
         return self.name
 
 
-class Race(models.Model):
+class Race(AuditedModel):
     circuit = models.ForeignKey(
         Circuit, verbose_name=_("circuit"), on_delete=models.PROTECT
     )
     winner = models.ForeignKey(
         Driver, verbose_name=_("winner"), on_delete=models.PROTECT
     )
+    picture = models.ImageField(_("picture"), null=True, blank=True, default=None)
     year = models.PositiveIntegerField(_("year"))
     laps = models.PositiveIntegerField(_("laps"))
     date = models.DateField(_("date"))
@@ -159,7 +166,7 @@ class Race(models.Model):
         return f"{self.circuit.name}, {self.year}"
 
 
-class Standing(models.Model):
+class Standing(AuditedModel):
     race = models.ForeignKey(Race, verbose_name=_("race"), on_delete=models.PROTECT)
     driver = models.ForeignKey(
         Driver, verbose_name=_("driver"), on_delete=models.PROTECT
