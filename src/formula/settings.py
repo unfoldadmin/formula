@@ -285,10 +285,10 @@ UNFOLD = {
                     {
                         "title": _("Drivers"),
                         "icon": "sports_motorsports",
-                        "link": lambda request: reverse_lazy(
-                            "admin:formula_driver_changelist"
-                        ),
-                        # "link": reverse_lazy("admin:formula_driver_changelist"),
+                        # "link": lambda request: reverse_lazy(
+                        #     "admin:formula_driver_changelist"
+                        # ),
+                        "link": reverse_lazy("admin:formula_driver_changelist"),
                     },
                     {
                         "title": _("Circuits"),

@@ -247,6 +247,7 @@ class CircuitAdmin(ModelAdmin, TabbedTranslationAdmin):
 class ConstructorAdmin(ModelAdmin, ImportExportModelAdmin, ExportActionModelAdmin):
     search_fields = ["name"]
     list_display = ["name"]
+    list_fullwidth = True
     resource_classes = [ConstructorResource, AnotherConstructorResource]
     save_as = True
     import_form_class = ImportForm
@@ -524,6 +525,7 @@ class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, ModelAdmin):
 
 @admin.register(Race, site=formula_admin_site)
 class RaceAdmin(ModelAdmin):
+    date_hierarchy = "date"
     search_fields = [
         "circuit__name",
         "circuit__city",
