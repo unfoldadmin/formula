@@ -114,6 +114,21 @@ def dashboard_callback(request, context):
                     "description": f"${intcomma(f"{random.uniform(1000, 9999):.02f}")}",
                     "value": random.randint(10, 90),
                 },
+                {
+                    "title": "🦩 Customer Retention Rate",
+                    "description": f"${intcomma(f"{random.uniform(1000, 9999):.02f}")}",
+                    "value": random.randint(10, 90),
+                },
+                {
+                    "title": "🦊 Marketing ROI",
+                    "description": f"${intcomma(f"{random.uniform(1000, 9999):.02f}")}",
+                    "value": random.randint(10, 90),
+                },
+                {
+                    "title": "🦁 Affiliate partnerships",
+                    "description": f"${intcomma(f"{random.uniform(1000, 9999):.02f}")}",
+                    "value": random.randint(10, 90),
+                },
             ],
             "chart": json.dumps(
                 {

@@ -24,39 +24,41 @@
 
 {% block content %}
     {% include "unfold/helpers/messages.html" %}
-    
-    {% component "unfold/components/container.html" %}
-        {% component "unfold/components/flex.html" with class="gap-4" %}
-            {% component "unfold/components/navigation.html" with items=navigation %}{% endcomponent %}
 
-            {% component "unfold/components/navigation.html" with class="ml-auto" items=filters %}{% endcomponent %}
-        {% endcomponent %}
+    {% component "unfold/components/container.html" %}        
+        <div class="flex flex-col gap-8 mb-12">
+            <div class="flex gap-4">
+                {% component "unfold/components/navigation.html" with items=navigation %}{% endcomponent %}
 
-        {% include "formula/service.html" %}
+                {% component "unfold/components/navigation.html" with class="ml-auto" items=filters %}{% endcomponent %}
+            </div>
 
-        {% component "unfold/components/flex.html" with class="gap-8 mb-8 flex-col lg:flex-row" %}
-            {% for stats in kpi %}
-                {% trans "Last 7 days" as label %}
-                {% component "unfold/components/card.html" with class="lg:w-1/3" label=label footer=stats.footer %}
-                    {% component "unfold/components/text.html" %}
-                        {{ stats.title }}
-                    {% endcomponent %}   
+            {% include "formula/service.html" %}
 
-                    {% component "unfold/components/title.html" %}
-                        {{ stats.metric }}
-                    {% endcomponent %}                                  
-                {% endcomponent %}
-            {% endfor %}
-        {% endcomponent %}
-        
-        {% trans "Product performance in last 28 days" as title %}
-        {% component "unfold/components/card.html" with class="mb-8" title=title %}
-            {% component "unfold/components/chart/bar.html" with data=chart height=320 %}{% endcomponent %}
-        {% endcomponent %}
+            <div class="flex flex-col gap-8 lg:flex-row">
+                {% for stats in kpi %}                
+                    {% component "unfold/components/card.html" with class="lg:w-1/3" label=_("Last 7 days") footer=stats.footer %}
+                        {% component "unfold/components/text.html" %}
+                            {{ stats.title }}
+                        {% endcomponent %}   
 
-        {% component "unfold/components/flex.html" with class="gap-8 mb-8 flex-col lg:flex-row" %}
-            {% trans "The most trending products in last 2 weeks" as title %}
-            {% component "unfold/components/card.html" with class="lg:w-1/2" title=title %}
+                        {% component "unfold/components/title.html" %}
+                            {{ stats.metric }}
+                        {% endcomponent %}                                  
+                    {% endcomponent %}
+                {% endfor %}
+            </div>
+            
+            {% component "unfold/components/card.html" %}
+                {% component "unfold/components/chart/cohort.html" with component_class="CohortComponent" %}{% endcomponent %}
+            {% endcomponent %}
+
+            {% component "unfold/components/card.html" with title=_("Product performance in last 28 days") %}
+                {% component "unfold/components/chart/bar.html" with data=chart height=320 %}{% endcomponent %}
+            {% endcomponent %}
+            
+            <div class="flex flex-col gap-8 lg:flex-row">            
+                {% component "unfold/components/card.html" with class="lg:w-1/2" title=_("The most trending products in last 2 weeks") %}
                     {% component "unfold/components/title.html" with class="mb-2" %}
                         $1,234,567.89
                     {% endcomponent %}
@@ -65,39 +67,56 @@
                         {% blocktrans %}
                             Total revenue between <strong class="font-semibold text-font-important-light dark:text-font-important-dark dark:text-white">1 - 31 October</strong>. Increase <span class="text-green-700 font-semibold dark:text-green-400">+3.14%</span> comparing to previous month <strong class="font-semibold text-font-important-light dark:text-font-important-dark dark:text-white">1 - 30 September</strong>.
                         {% endblocktrans %}
-                    {% endcomponent %}                
-                {% component "unfold/components/separator.html" %}{% endcomponent %}
+                    {% endcomponent %}     
 
-                {% component "unfold/components/flex.html" with col=1 class="gap-5" %}
-                    {% for metric in progress %}
-                        {% component "unfold/components/progress.html" with title=metric.title description=metric.description value=metric.value %}{% endcomponent %}
-                    {% endfor %}                    
-                {% endcomponent %}
+                    {% component "unfold/components/separator.html" %}{% endcomponent %}
 
-                {% component "unfold/components/separator.html" %}{% endcomponent %}
+                    <div class="flex flex-col gap-5">                
+                        {% for metric in progress %}
+                            {% component "unfold/components/progress.html" with title=metric.title description=metric.description value=metric.value %}{% endcomponent %}
+                        {% endfor %}                                    
+                    </div>
 
-                {% component "unfold/components/flex.html" with class="mt-6 justify-center" %}
-                    {% component "unfold/components/button.html" with href="#" variant="default" %}
-                        {% trans "View detailed analytics" %}
+                    {% component "unfold/components/separator.html" %}{% endcomponent %}
+
+                    <div class="flex flex-row mt-6 justify-center">
+                        {% component "unfold/components/button.html" with href="#" variant="default" %}
+                            {% trans "View detailed analytics" %}
+                        {% endcomponent %}
+                    </div>
+                {% endcomponent %}    
+
+                
+                <div class="flex flex-col gap-8 lg:w-1/2">
+                    {% component "unfold/components/card.html" with class="grow-0" %}
+                        <div class="flex flex-row items-center mb-2">
+                            <h3 class="font-semibold text-font-important-light dark:text-font-important-dark">
+                                {% trans "Current system health" %}
+                            </h3>
+
+                            <div class="ml-auto">
+                                83%
+                            </div>
+                        </div>
+
+                        {% component "unfold/components/tracker.html" with component_class="TrackerComponent" %}{% endcomponent %}
                     {% endcomponent %}
-                {% endcomponent %}
-            {% endcomponent %}    
 
-            {% component "unfold/components/flex.html" with class="gap-8 lg:w-1/2" col=1 %}
-                {% for stats in performance %}
-                    {% component "unfold/components/card.html" %}
-                        {% component "unfold/components/text.html" %}
-                            {{ stats.title }}
-                        {% endcomponent %}   
+                    {% for stats in performance %}
+                        {% component "unfold/components/card.html" %}
+                            {% component "unfold/components/text.html" %}
+                                {{ stats.title }}
+                            {% endcomponent %}   
 
-                        {% component "unfold/components/title.html" with class="mb-8" %}
-                            {{ stats.metric }}
-                        {% endcomponent %}                                  
+                            {% component "unfold/components/title.html" with class="mb-8" %}
+                                {{ stats.metric }}
+                            {% endcomponent %}                                  
 
-                        {% component "unfold/components/chart/line.html" with data=stats.chart %}{% endcomponent %}
-                    {% endcomponent %}
-                {% endfor %}                                
-            {% endcomponent %}        
-        {% endcomponent %}    
+                            {% component "unfold/components/chart/line.html" with data=stats.chart %}{% endcomponent %}
+                        {% endcomponent %}
+                    {% endfor %}                                
+                </div>            
+            </div>
+        </div>
     {% endcomponent %}
 {% endblock %}

@@ -1,3 +1,5 @@
+import random
+
 from django import forms
 from django.contrib import admin, messages
 from django.contrib.auth.admin import GroupAdmin as BaseGroupAdmin
@@ -10,6 +12,7 @@ from django.db.models import OuterRef, Q, Sum
 from django.shortcuts import get_object_or_404, redirect, render
 from django.templatetags.static import static
 from django.urls import path, reverse_lazy
+from django.utils.timezone import now, timedelta
 from django.utils.translation import gettext_lazy as _
 from django_celery_beat.admin import ClockedScheduleAdmin as BaseClockedScheduleAdmin
 from django_celery_beat.admin import CrontabScheduleAdmin as BaseCrontabScheduleAdmin
@@ -30,6 +33,7 @@ from import_export.admin import (
 from modeltranslation.admin import TabbedTranslationAdmin
 from simple_history.admin import SimpleHistoryAdmin
 from unfold.admin import ModelAdmin, StackedInline, TabularInline
+from unfold.components import BaseComponent, register_component
 from unfold.contrib.filters.admin import (
     ChoicesDropdownFilter,
     MultipleRelatedDropdownFilter,
@@ -381,7 +385,11 @@ class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, ModelAdmin):
     compressed_fields = True
     list_filter = [
         FullNameFilter,
+        "is_active",
+        "is_hidden",
+        ("salary", RangeNumericFilter),
         ("status", ChoicesDropdownFilter),
+        ("created_at", RangeDateTimeFilter),
     ]
     list_filter_submit = True
     list_filter_sheet = False
@@ -562,3 +570,103 @@ class StandingAdmin(ModelAdmin):
     list_display = ["race", "driver", "constructor", "position", "points"]
     list_filter = ["driver"]
     autocomplete_fields = ["driver", "constructor", "race"]
+
+
+@register_component
+class TrackerComponent(BaseComponent):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        data = []
+
+        for i in range(1, 72):
+            has_value = random.choice([True, True, True, True, False])
+            color = None
+            tooltip = None
+            if has_value:
+                value = random.randint(2, 6)
+                color = f"bg-primary-{value}00 dark:bg-primary-{9 - value}00"
+                tooltip = f"Value {value}"
+
+            data.append(
+                {
+                    "color": color,
+                    "tooltip": tooltip,
+                }
+            )
+
+        context["data"] = data
+        return context
+
+
+@register_component
+class CohortComponent(BaseComponent):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        rows = []
+        headers = []
+        cols = []
+
+        dates = reversed(
+            [(now() - timedelta(days=x)).strftime("%B %d, %Y") for x in range(8)]
+        )
+        groups = range(1, 10)
+
+        for row_index, date in enumerate(dates):
+            cols = []
+
+            for col_index, _col in enumerate(groups):
+                color_index = 8 - row_index - col_index
+                col_classes = []
+
+                if color_index > 0:
+                    col_classes.append(
+                        f"bg-primary-{color_index}00 dark:bg-primary-{9 - color_index}00"
+                    )
+
+                if color_index >= 4:
+                    col_classes.append("text-white dark:text-gray-600")
+
+                value = random.randint(
+                    4000 - (col_index * row_index * 225),
+                    5000 - (col_index * row_index * 225),
+                )
+
+                subtitle = f"{random.randint(10, 100)}%"
+
+                if value <= 0:
+                    value = 0
+                    subtitle = None
+
+                cols.append(
+                    {
+                        "value": value,
+                        "color": " ".join(col_classes),
+                        "subtitle": subtitle,
+                    }
+                )
+
+            rows.append(
+                {
+                    "header": {
+                        "title": date,
+                        "subtitle": f"Total {sum(col['value'] for col in cols):,}",
+                    },
+                    "cols": cols,
+                }
+            )
+
+        for index, group in enumerate(groups):
+            total = sum(row["cols"][index]["value"] for row in rows)
+
+            headers.append(
+                {
+                    "title": f"Group #{group}",
+                    "subtitle": f"Total {total:,}",
+                }
+            )
+        context["data"] = {
+            "headers": headers,
+            "rows": rows,
+        }
+
+        return context
