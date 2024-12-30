@@ -353,6 +353,7 @@ class DriverStandingInline(TabularInline):
     max_num = 0
     show_change_link = True
     tab = True
+    extra = 0
 
 
 class RaceWinnerInline(StackedInline):
@@ -497,6 +498,9 @@ class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, ModelAdmin):
                 instance.initials,
                 {
                     "path": static("images/avatar.jpg"),
+                    "height": 24,
+                    "width": 24,
+                    "borderless": True,
                     # "squared": True,
                 },
             ]
