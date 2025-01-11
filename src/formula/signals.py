@@ -1,11 +1,13 @@
 from django.conf import settings
-from django.db.backends.signals import connection_created
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
+
+from formula.exceptions import ReadonlyException
 
 
-def activate_foreign_keys(sender, connection, **kwargs):
-    if not settings.DEBUG and connection.vendor == "sqlite":
-        cursor = connection.cursor()
-        cursor.execute("PRAGMA query_only = ON;")
-
-
-connection_created.connect(activate_foreign_keys)
+@receiver(pre_save)
+def update_timestamp(sender, instance, **kwargs):
+    if not settings.DEBUG and sender._meta.db_table != "studio_options":
+        raise ReadonlyException(
+            "Database is operating in readonly mode. Not possible to save any data."
+        )

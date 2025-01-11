@@ -18,7 +18,7 @@ django-money = "^3.5"
 django-unfold = { git = "https://github.com/unfoldadmin/django-unfold.git" }
 whitenoise = "^6.7"
 gunicorn = "^22.0"
-pillow = "^10.4"
+pillow = "^11.1"
 sentry-sdk = { extras = ["django"], version = "^2.13" }
 pygments = "^2.18"
 
