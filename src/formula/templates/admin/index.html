@@ -1,4 +1,4 @@
-{% extends 'unfold/layouts/base_simple.html' %}
+{% extends 'admin/base.html' %} 
 
 {% load i18n unfold %}
 
@@ -8,18 +8,14 @@
     {% trans 'Dashboard' %} | {{ site_title|default:_('Django site admin') }}
 {% endblock %}
 
-{% block branding %}
-    <h1 id="site-name">
-        <a href="{% url 'admin:index' %}">
-            {{ site_header }}
-        </a>
-    </h1>
-{% endblock %}
-
 {% block extrahead %}
     {% if plausible_domain %}
         <script defer data-domain="{{ plausible_domain }}" src="https://plausible.io/js/script.js"></script>
     {% endif %}    
+{% endblock %}
+
+{% block branding %}
+    <h1 id="site-name"><a href="{% url 'admin:index' %}">{{ site_header|default:_('Django administration') }}</a></h1>
 {% endblock %}
 
 {% block content %}

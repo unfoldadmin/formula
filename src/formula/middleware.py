@@ -16,7 +16,7 @@ class ReadonlyExceptionHandlerMiddleware:
         if (
             exception
             and repr(exception)
-            == "OperationalError('attempt to write a readonly database')"
+            == "ReadonlyException('Database is operating in readonly mode. Not possible to save any data.')"
         ):
             messages.warning(
                 request,
@@ -24,4 +24,6 @@ class ReadonlyExceptionHandlerMiddleware:
                     "Database is operating in readonly mode. Not possible to save any data."
                 ),
             )
-            return redirect(reverse_lazy("admin:login"))
+            return redirect(
+                request.META.get("HTTP_REFERER", reverse_lazy("admin:login"))
+            )
