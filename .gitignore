@@ -15,3 +15,4 @@ src/media
 requirements.txt
 .dockerignore
 database.sqlite
+src/unfold_studio

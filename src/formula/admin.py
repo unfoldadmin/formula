@@ -57,8 +57,6 @@ from unfold.widgets import (
     UnfoldAdminSplitDateTimeWidget,
     UnfoldAdminTextInputWidget,
 )
-from unfold_studio.admin import StudioOptionAdmin
-from unfold_studio.models import StudioOption
 
 from formula.models import (
     Circuit,
@@ -579,8 +577,14 @@ class StandingAdmin(ModelAdmin):
     autocomplete_fields = ["driver", "constructor", "race"]
 
 
-@admin.register(StudioOption, site=formula_admin_site)
-class StudioOptionAdmin(StudioOptionAdmin, ModelAdmin):
+try:
+    from unfold_studio.admin import StudioOptionAdmin
+    from unfold_studio.models import StudioOption
+
+    @admin.register(StudioOption, site=formula_admin_site)
+    class StudioOptionAdmin(StudioOptionAdmin, ModelAdmin):
+        pass
+except ImportError:
     pass
 
 

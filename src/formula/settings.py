@@ -61,6 +61,9 @@ INSTALLED_APPS = [
     "formula",
 ]
 
+if environ.get("UNFOLD_STUDIO"):
+    INSTALLED_APPS.insert(0, "unfold_studio")
+
 ######################################################################
 # Middleware
 ######################################################################
@@ -370,6 +373,8 @@ UNFOLD = {
         ],
     },
 }
+
+UNFOLD_STUDIO_DEFAULT_FRAGMENT = "color-schemes"
 
 ######################################################################
 # Money
