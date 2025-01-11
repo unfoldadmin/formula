@@ -61,7 +61,7 @@ INSTALLED_APPS = [
     "formula",
 ]
 
-if environ.get("UNFOLD_STUDIO"):
+if environ.get("UNFOLD_STUDIO") == "1":
     INSTALLED_APPS.insert(0, "unfold_studio")
 
 ######################################################################
