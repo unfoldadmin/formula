@@ -376,6 +376,12 @@ UNFOLD = {
 
 UNFOLD_STUDIO_DEFAULT_FRAGMENT = "color-schemes"
 
+UNFOLD_STUDIO_ENABLE_SAVE = False
+
+UNFOLD_STUDIO_ENABLE_FILEUPLOAD = False
+
+UNFOLD_STUDIO_ALWAYS_OPEN = True
+
 ######################################################################
 # Money
 ######################################################################

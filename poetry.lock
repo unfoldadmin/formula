@@ -371,13 +371,13 @@ django = ">=4.2"
 
 [[package]]
 name = "django-timezone-field"
-version = "7.0"
+version = "7.1"
 description = "A Django app providing DB, form, and REST framework fields for zoneinfo and pytz timezone objects."
 optional = false
 python-versions = "<4.0,>=3.8"
 files = [
-    {file = "django_timezone_field-7.0-py3-none-any.whl", hash = "sha256:3232e7ecde66ba4464abb6f9e6b8cc739b914efb9b29dc2cf2eee451f7cc2acb"},
-    {file = "django_timezone_field-7.0.tar.gz", hash = "sha256:aa6f4965838484317b7f08d22c0d91a53d64e7bbbd34264468ae83d4023898a7"},
+    {file = "django_timezone_field-7.1-py3-none-any.whl", hash = "sha256:93914713ed882f5bccda080eda388f7006349f25930b6122e9b07bf8db49c4b4"},
+    {file = "django_timezone_field-7.1.tar.gz", hash = "sha256:b3ef409d88a2718b566fabe10ea996f2838bc72b22d3a2900c0aa905c761380c"},
 ]
 
 [package.dependencies]
@@ -399,7 +399,7 @@ django = ">=3.2"
 type = "git"
 url = "https://github.com/unfoldadmin/django-unfold.git"
 reference = "HEAD"
-resolved_reference = "df4b55bf6e375b7bd5f88a29950e9ea23e27e4b5"
+resolved_reference = "b43b15eca441bf9521ba742411ad82cab9c9bdb0"
 
 [[package]]
 name = "gunicorn"

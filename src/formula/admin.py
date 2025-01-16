@@ -10,6 +10,7 @@ from django.contrib.contenttypes.admin import GenericTabularInline
 from django.core.validators import EMPTY_VALUES
 from django.db import models
 from django.db.models import OuterRef, Q, Sum
+from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.templatetags.static import static
 from django.urls import path, reverse_lazy
@@ -351,10 +352,8 @@ class DriverStandingInline(TabularInline):
     fields = ["position", "points", "laps", "race", "weight"]
     readonly_fields = ["race"]
     ordering_field = "weight"
-    max_num = 0
     show_change_link = True
     tab = True
-    extra = 0
 
 
 class RaceWinnerInline(StackedInline):
@@ -445,6 +444,11 @@ class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, ModelAdmin):
 
     @action(description=_("Change detail action"), url_path="change-detail-action")
     def change_detail_action(self, request, object_id):
+        try:
+            object_id = int(object_id)
+        except (TypeError, ValueError) as e:
+            raise Http404 from e
+
         object = get_object_or_404(Driver, pk=object_id)
 
         class SomeForm(forms.Form):
@@ -584,7 +588,8 @@ try:
     @admin.register(StudioOption, site=formula_admin_site)
     class StudioOptionAdmin(StudioOptionAdmin, ModelAdmin):
         pass
-except ImportError:
+except (ImportError, RuntimeError):
+    # unfold_studio is not installed
     pass
 
 
