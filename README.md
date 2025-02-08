@@ -14,7 +14,7 @@ The Formula repository contains a sample project build upon the Unfold theme for
 
 ## Installation
 
-First of all, it is required to create new `.env` file containing environment variables for the project. In this case, there are just two most important variables needed to be configured. If you are on local machine, set `DEBUG=1` to enable debug mode for further development. Second variable is `SECRET_KEY` which needs to be configured with some random long and secure string. Project is quite simple and it should be possible to run it without Docker at all. Make sure Python 3.10 is installed together with Poetry and follow the commands below to install all required dependencies and run migrations.
+First of all, it is required to create new `.env` file containing environment variables for the project. In this case, there are just two most important variables needed to be configured. If you are on local machine, set `DEBUG=1` to enable debug mode for further development. Second variable is `SECRET_KEY` which needs to be configured with some random long and secure string. Project is quite simple and it should be possible to run it without Docker at all. Make sure Python 3.13 is installed together with Poetry and follow the commands below to install all required dependencies and run migrations.
 
 ```bash
 git clone git@github.com:unfoldadmin/formula.git
@@ -25,34 +25,34 @@ Run these commands inside `formula` directory, to install all dependencies and t
 ```bash
 pip install poetry
 poetry install
-poetry run env $(cat .env) python src/manage.py migrate
+poetry run python manage.py migrate
 ```
 
 Create the admin user or you can't access to the instance.
 
 ```bash
-poetry run env $(cat .env) python src/manage.py createsuperuser
+poetry run python manage.py createsuperuser
 ```
 
 Run the command below to start the local development server.
 
 ```bash
-poetry run env $(cat .env) python src/manage.py runserver
+poetry run python manage.py runserver
 ```
 
 ## Loading sample data
 
-After successful installation, database will be empty and there will be no data to observe through the admin area. Unfold provides some sample data available under `src/formula/fixtures`. These data can be loaded via commands below. It is important to run this command against empty database so primary keys will match.
+After successful installation, database will be empty and there will be no data to observe through the admin area. Unfold provides some sample data available under `formula/fixtures`. These data can be loaded via commands below. It is important to run this command against empty database so primary keys will match.
 
 ```bash
-poetry run env $(cat .env) python src/manage.py loaddata src/formula/fixtures/*
+poetry run python manage.py loaddata formula/fixtures/*
 ```
 
 ## Custom Dashboard
 
 The Formula demonstration project includes a custom dashboard. All components available in the dashboard are custom-made just for showcase and are not a part of Unfold. It means that any real data are used there and in case that real data are involved it is necessary to pass additional data into the template from the database.
 
-All custom widgets used in Formula are located inside `src/formula/templates/admin/components/`. The main layout for the dashboard is created by overriding `index.html` and the content can be found here `src/formula/templates/admin/index.html`. For more information check official Unfold documentation.
+All custom widgets used in Formula are located inside `formula/templates/admin/components/`. The main layout for the dashboard is created by overriding `index.html` and the content can be found here `formula/templates/admin/index.html`. For more information check official Unfold documentation.
 
 ## Compiling Styles
 

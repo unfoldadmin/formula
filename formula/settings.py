@@ -6,13 +6,14 @@ from django.core.management.utils import get_random_secret_key
 from django.templatetags.static import static
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
+from dotenv import load_dotenv
+
+load_dotenv()
 
 ######################################################################
 # General
 ######################################################################
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-ROOT_DIR = Path(__file__).resolve().parent.parent.parent
 
 SECRET_KEY = environ.get("SECRET_KEY", get_random_secret_key())
 
@@ -116,7 +117,7 @@ TEMPLATES = [
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": ROOT_DIR / "database.sqlite",
+        "NAME": BASE_DIR / "database.sqlite",
     },
 }
 
@@ -221,8 +222,26 @@ STORAGES = {
 # Unfold
 ######################################################################
 UNFOLD = {
-    "SITE_HEADER": _("Formula Admin"),
     "SITE_TITLE": _("Formula Admin"),
+    "SITE_HEADER": _("Formula Admin"),
+    "SITE_SUBHEADER": _("Unfold demo project"),
+    "SITE_DROPDOWN": [
+        {
+            "icon": "diamond",
+            "title": _("Unfold theme repository"),
+            "link": "https://github.com/unfoldadmin/django-unfold",
+        },
+        {
+            "icon": "rocket_launch",
+            "title": _("Turbo boilerplate repository"),
+            "link": lambda request: reverse_lazy("admin:index"),
+        },
+        {
+            "icon": "description",
+            "title": _("Technical documentation"),
+            "link": "https://unfoldadmin.com/docs/",
+        },
+    ],
     "SITE_SYMBOL": "settings",
     # "SHOW_HISTORY": True,
     "SHOW_LANGUAGES": True,
@@ -239,26 +258,30 @@ UNFOLD = {
     ],
     "TABS": [
         {
+            "page": "drivers",
             "models": ["formula.driver", "formula.constructor"],
             "items": [
                 {
                     "title": _("Drivers"),
                     "icon": "sports_motorsports",
                     "link": reverse_lazy("admin:formula_driver_changelist"),
+                    "active": lambda request: request.path
+                    == reverse_lazy("admin:formula_driver_changelist")
+                    and "status__exact" not in request.GET,
                 },
                 {
                     "title": _("Active drivers"),
                     "icon": "sports_motorsports",
-                    "link": lambda request: f"{reverse_lazy(
-                        "admin:formula_driver_changelist"
-                    )}?status__exact=ACTIVE",
+                    "link": lambda request: f"{
+                        reverse_lazy('admin:formula_driver_changelist')
+                    }?status__exact=ACTIVE",
                 },
                 {
                     "title": _("Inactive drivers"),
                     "icon": "sports_motorsports",
-                    "link": lambda request: f"{reverse_lazy(
-                        "admin:formula_driver_changelist"
-                    )}?status__exact=INACTIVE",
+                    "link": lambda request: f"{
+                        reverse_lazy('admin:formula_driver_changelist')
+                    }?status__exact=INACTIVE",
                 },
                 {
                     "title": _("Constructors"),

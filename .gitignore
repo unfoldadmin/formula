@@ -11,9 +11,9 @@ dist/
 fly.toml
 .vscode
 Dockerfile
-src/static
-src/media
+static
+media
 requirements.txt
 .dockerignore
 database.sqlite
-src/unfold_studio
+unfold_studio
