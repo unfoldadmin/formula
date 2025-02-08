@@ -12,10 +12,10 @@
 
                 {% url 'admin:formula_driver_changelist' as link %}
                 {% trans 'Drivers' as name %}
-                {% include 'unfold/helpers/breadcrumb_item.html' with link=link name=name %}                
+                {% include 'unfold/helpers/breadcrumb_item.html' with link=link name=name %}
 
                 {% trans 'Custom page' as name %}
-                {% include 'unfold/helpers/breadcrumb_item.html' with name=name %}                
+                {% include 'unfold/helpers/breadcrumb_item.html' with name=name %}
             </ul>
         </div>
     </div>
@@ -23,7 +23,7 @@
 
 {% block content %}
     {% tab_list "drivers" %}
-    
+
     <p>
         {% trans "Hello from custom page" %}
     </p>

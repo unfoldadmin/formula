@@ -4,7 +4,7 @@ services:
     env_file:
       - path: .env
     volumes:
-      - .:/code      
+      - .:/code
     build:
       context: .
       dockerfile: Dockerfile
