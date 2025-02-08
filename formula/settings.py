@@ -251,7 +251,7 @@ UNFOLD = {
         "image": lambda request: static("images/login-bg.jpg"),
     },
     "STYLES": [
-        lambda request: static("css/styles.css"),
+        # lambda request: static("css/styles.css"),
     ],
     "SCRIPTS": [
         # lambda request: static("js/chart.min.js"),
