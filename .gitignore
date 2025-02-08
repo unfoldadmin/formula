@@ -10,10 +10,10 @@ dist/
 .env
 fly.toml
 .vscode
-Dockerfile
 static
 media
 requirements.txt
 .dockerignore
 database.sqlite
 unfold_studio
+docker-compose.dev.yml

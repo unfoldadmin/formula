@@ -6,9 +6,6 @@ from django.core.management.utils import get_random_secret_key
 from django.templatetags.static import static
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
-from dotenv import load_dotenv
-
-load_dotenv()
 
 ######################################################################
 # General
@@ -17,7 +14,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = environ.get("SECRET_KEY", get_random_secret_key())
 
-DEBUG = environ.get("DEBUG", False)
+DEBUG = environ.get("DEBUG") == "1"
 
 ROOT_URLCONF = "formula.urls"
 

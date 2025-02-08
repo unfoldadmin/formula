@@ -448,7 +448,10 @@ class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, ModelAdmin):
 
     @action(description=_("Changelist action"), url_path="changelist-action")
     def changelist_action(self, request):
-        return redirect(reverse_lazy("admin:users_user_changelist"))
+        messages.success(
+            request, _("Changelist action has been successfully executed.")
+        )
+        return redirect(reverse_lazy("admin:formula_driver_changelist"))
 
     @action(description=_("Change detail action"), url_path="change-detail-action")
     def change_detail_action(self, request, object_id):

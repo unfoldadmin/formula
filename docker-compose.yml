@@ -1,0 +1,12 @@
+services:
+  web:
+    command: bash -c "poetry run python manage.py runserver 0.0.0.0:8000"
+    env_file:
+      - path: .env
+    volumes:
+      - .:/code      
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"

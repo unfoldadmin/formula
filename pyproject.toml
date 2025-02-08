@@ -21,7 +21,6 @@ gunicorn = "^23.0"
 pillow = "^11.1"
 sentry-sdk = { extras = ["django"], version = "^2.20" }
 pygments = "^2.19"
-python-dotenv = "^1.0.1"
 
 [tool.ruff]
 fix = true

@@ -23,29 +23,23 @@ git clone git@github.com:unfoldadmin/formula.git
 Run these commands inside `formula` directory, to install all dependencies and to run all migrations.
 
 ```bash
-pip install poetry
-poetry install
-poetry run python manage.py migrate
+docker compose up
 ```
 
 Create the admin user or you can't access to the instance.
 
 ```bash
-poetry run python manage.py createsuperuser
+docker compose exec web python manage.py createsuperuser
 ```
 
 Run the command below to start the local development server.
-
-```bash
-poetry run python manage.py runserver
-```
 
 ## Loading sample data
 
 After successful installation, database will be empty and there will be no data to observe through the admin area. Unfold provides some sample data available under `formula/fixtures`. These data can be loaded via commands below. It is important to run this command against empty database so primary keys will match.
 
 ```bash
-poetry run python manage.py loaddata formula/fixtures/*
+docker compose exec web python manage.py loaddata formula/fixtures/*
 ```
 
 ## Custom Dashboard
