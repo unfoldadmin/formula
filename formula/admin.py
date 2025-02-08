@@ -37,12 +37,12 @@ from simple_history.admin import SimpleHistoryAdmin
 from unfold.admin import ModelAdmin, StackedInline, TabularInline
 from unfold.components import BaseComponent, register_component
 from unfold.contrib.filters.admin import (
+    AutocompleteSelectMultipleFilter,
     ChoicesDropdownFilter,
     MultipleRelatedDropdownFilter,
     RangeDateFilter,
     RangeDateTimeFilter,
     RangeNumericFilter,
-    RelatedDropdownFilter,
     SingleNumericFilter,
     TextFilter,
 )
@@ -253,7 +253,6 @@ class CircuitAdmin(ModelAdmin, TabbedTranslationAdmin):
 class ConstructorAdmin(ModelAdmin, ImportExportModelAdmin, ExportActionModelAdmin):
     search_fields = ["name"]
     list_display = ["name"]
-    list_fullwidth = True
     resource_classes = [ConstructorResource, AnotherConstructorResource]
     save_as = True
     import_form_class = ImportForm
@@ -381,11 +380,13 @@ class DriverAdminForm(forms.ModelForm):
 @admin.register(Driver, site=formula_admin_site)
 class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, ModelAdmin):
     form = DriverAdminForm
+    history_list_per_page = 10
     search_fields = ["last_name", "first_name", "code"]
     warn_unsaved_form = True
     compressed_fields = True
     list_filter = [
         FullNameFilter,
+        ("constructors", AutocompleteSelectMultipleFilter),
         "is_active",
         "is_hidden",
         ("salary", RangeNumericFilter),
@@ -393,8 +394,6 @@ class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, ModelAdmin):
         ("created_at", RangeDateTimeFilter),
     ]
     list_filter_submit = True
-    list_filter_sheet = False
-    list_fullwidth = True
     list_display = [
         "display_header",
         "display_constructor",
@@ -404,20 +403,25 @@ class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, ModelAdmin):
         "display_code",
     ]
     inlines = [DriverStandingInline, RaceWinnerInline]
-    autocomplete_fields = [
-        "constructors",
-    ]
+    autocomplete_fields = ["constructors"]
     radio_fields = {"status": admin.VERTICAL}
     readonly_fields = ["author", "data", "is_active", "is_hidden"]
+    actions_list = [
+        "changelist_action",
+    ]
     actions_detail = ["change_detail_action"]
     list_before_template = "formula/driver_list_before.html"
     list_after_template = "formula/driver_list_after.html"
+    change_form_show_cancel_button = True
     change_form_before_template = "formula/driver_change_form_before.html"
     change_form_after_template = "formula/driver_change_form_after.html"
 
     def get_form(self, request, obj=None, change=False, **kwargs):
         form = super().get_form(request, obj, change, **kwargs)
         form.base_fields["color"].widget = UnfoldAdminColorInputWidget()
+        form.base_fields["first_name"].widget = UnfoldAdminTextInputWidget(
+            attrs={"class": "first-name-input"}
+        )
         return form
 
     def get_urls(self):
@@ -439,8 +443,12 @@ class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, ModelAdmin):
                     standing__driver_id=OuterRef("pk")
                 ).values("name")[:1]
             )
-            .prefetch_related("race_set")
+            .prefetch_related("race_set", "standing_set")
         )
+
+    @action(description=_("Changelist action"), url_path="changelist-action")
+    def changelist_action(self, request):
+        return redirect(reverse_lazy("admin:users_user_changelist"))
 
     @action(description=_("Change detail action"), url_path="change-detail-action")
     def change_detail_action(self, request, object_id):
@@ -552,7 +560,6 @@ class RaceAdmin(ModelAdmin):
     ]
     list_filter = [
         ("circuit", MultipleRelatedDropdownFilter),
-        ("winner", RelatedDropdownFilter),
         ("year", RangeNumericFilter),
         ("laps", SingleNumericFilter),
         ("date", RangeDateFilter),
