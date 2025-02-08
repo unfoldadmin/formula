@@ -409,16 +409,6 @@ class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, ModelAdmin):
     actions_list = [
         "changelist_action",
     ]
-    # actions_list = [
-    #     "changelist_action",
-    #     {
-    #         "title": "My Dropdown",
-    #         "items": [
-    #             "changelist_action",
-    #         ],
-    #     },
-    #     "changelist_action",
-    # ]
     actions_detail = ["change_detail_action"]
     list_before_template = "formula/driver_list_before.html"
     list_after_template = "formula/driver_list_after.html"
