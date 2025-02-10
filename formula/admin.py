@@ -270,40 +270,70 @@ class ConstructorAdmin(ModelAdmin, ImportExportModelAdmin, ExportActionModelAdmi
     actions_detail = ["custom_actions_detail"]
     actions_submit_line = ["custom_actions_submit_line"]
 
-    @action(description="Custom list action", url_path="actions-list-custom-url")
+    @action(
+        description="Custom list action",
+        url_path="actions-list-custom-url",
+        permissions=[
+            "custom_actions_list",
+            "another_custom_actions_list",
+        ],
+    )
     def custom_actions_list(self, request):
         messages.success(request, "List action has been successfully executed.")
         return redirect(request.META["HTTP_REFERER"])
 
-    @action(description="Custom row action", url_path="actions-row-custom-url")
+    def has_custom_actions_list_permission(self, request):
+        return request.user.is_superuser
+
+    def has_another_custom_actions_list_permission(self, request):
+        return request.user.is_staff
+
+    @action(
+        description=_("Activate turbo boost mode"),
+        url_path="actions-row-custom-url",
+        permissions=[
+            "custom_actions_row",
+            "another_custom_actions_row",
+        ],
+    )
     def custom_actions_row(self, request, object_id):
         messages.success(
             request, f"Row action has been successfully executed. Object ID {object_id}"
         )
         return redirect(request.META["HTTP_REFERER"])
 
-    @action(description="Custom row action", url_path="actions-row-custom-url")
+    def has_custom_actions_row_permission(self, request, object_id=None):
+        return request.user.is_superuser
+
+    def has_another_custom_actions_row_permission(self, request, object_id=None):
+        return request.user.is_staff
+
+    @action(description=_("Engage warp drive"), url_path="actions-row-engage-warp")
     def custom_actions_row2(self, request, object_id):
         messages.success(
             request, f"Row action has been successfully executed. Object ID {object_id}"
         )
         return redirect(request.META["HTTP_REFERER"])
 
-    @action(description="Custom row action", url_path="actions-row-custom-url")
+    @action(
+        description=_("Initiate hyperdrive sequence"), url_path="actions-row-hyperdrive"
+    )
     def custom_actions_row3(self, request, object_id):
         messages.success(
             request, f"Row action has been successfully executed. Object ID {object_id}"
         )
         return redirect(request.META["HTTP_REFERER"])
 
-    @action(description="Custom row action", url_path="actions-row-custom-url")
+    @action(
+        description=_("Deploy quantum shields"), url_path="actions-row-quantum-shields"
+    )
     def custom_actions_row4(self, request, object_id):
         messages.success(
             request, f"Row action has been successfully executed. Object ID {object_id}"
         )
         return redirect(request.META["HTTP_REFERER"])
 
-    @action(description="Custom row action", url_path="actions-row-custom-url")
+    @action(description=_("Launch space lasers"), url_path="actions-row-space-lasers")
     def custom_actions_row5(self, request, object_id):
         messages.success(
             request, f"Row action has been successfully executed. Object ID {object_id}"
@@ -313,7 +343,7 @@ class ConstructorAdmin(ModelAdmin, ImportExportModelAdmin, ExportActionModelAdmi
     @action(
         description="Custom detail action",
         url_path="actions-detail-custom-url",
-        permissions=["custom_actions_detail"],
+        permissions=["custom_actions_detail", "another_custom_actions_detail"],
     )
     def custom_actions_detail(self, request, object_id):
         messages.success(
@@ -323,14 +353,29 @@ class ConstructorAdmin(ModelAdmin, ImportExportModelAdmin, ExportActionModelAdmi
         return redirect(request.META["HTTP_REFERER"])
 
     def has_custom_actions_detail_permission(self, request, object_id):
-        return True
+        return request.user.is_superuser
 
-    @action(description="Custom submit line action")
+    def has_another_custom_actions_detail_permission(self, request, object_id):
+        return request.user.is_staff
+
+    @action(
+        description="Custom submit line action",
+        permissions=[
+            "custom_actions_submit_line",
+            "another_custom_actions_submit_line",
+        ],
+    )
     def custom_actions_submit_line(self, request, obj):
         messages.success(
             request,
             f"Detail action has been successfully executed. Object ID {obj.pk}",
         )
+
+    def has_custom_actions_submit_line_permission(self, request, obj):
+        return request.user.is_superuser
+
+    def has_another_custom_actions_submit_line_permission(self, request, obj):
+        return request.user.is_staff
 
 
 class FullNameFilter(TextFilter):

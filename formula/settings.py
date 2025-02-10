@@ -231,7 +231,7 @@ UNFOLD = {
         {
             "icon": "rocket_launch",
             "title": _("Turbo boilerplate repository"),
-            "link": lambda request: reverse_lazy("admin:index"),
+            "link": "https://github.com/unfoldadmin/turbo",
         },
         {
             "icon": "description",
