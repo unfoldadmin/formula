@@ -12,6 +12,7 @@ from django.db import models
 from django.db.models import OuterRef, Q, Sum
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
+from django.template.loader import render_to_string
 from django.templatetags.static import static
 from django.urls import path, reverse_lazy
 from django.utils.timezone import now, timedelta
@@ -289,7 +290,7 @@ class ConstructorAdmin(ModelAdmin, ImportExportModelAdmin, ExportActionModelAdmi
         return request.user.is_staff
 
     @action(
-        description=_("Activate turbo boost mode"),
+        description=_("Rebuild Index"),
         url_path="actions-row-custom-url",
         permissions=[
             "custom_actions_row",
@@ -300,7 +301,10 @@ class ConstructorAdmin(ModelAdmin, ImportExportModelAdmin, ExportActionModelAdmi
         messages.success(
             request, f"Row action has been successfully executed. Object ID {object_id}"
         )
-        return redirect(request.META["HTTP_REFERER"])
+        return redirect(
+            request.META.get("HTTP_REFERER")
+            or reverse_lazy("admin:formula_constructor_changelist")
+        )
 
     def has_custom_actions_row_permission(self, request, object_id=None):
         return request.user.is_superuser
@@ -308,37 +312,55 @@ class ConstructorAdmin(ModelAdmin, ImportExportModelAdmin, ExportActionModelAdmi
     def has_another_custom_actions_row_permission(self, request, object_id=None):
         return request.user.is_staff
 
-    @action(description=_("Engage warp drive"), url_path="actions-row-engage-warp")
+    @action(description=_("Reindex Cache"), url_path="actions-row-reindex-cache")
     def custom_actions_row2(self, request, object_id):
         messages.success(
             request, f"Row action has been successfully executed. Object ID {object_id}"
         )
-        return redirect(request.META["HTTP_REFERER"])
+        return redirect(
+            request.META.get("HTTP_REFERER")
+            or reverse_lazy("admin:formula_constructor_changelist")
+        )
 
-    @action(
-        description=_("Initiate hyperdrive sequence"), url_path="actions-row-hyperdrive"
-    )
+    @action(description=_("Deploy Hypervisor"), url_path="actions-row-hyperdrive")
     def custom_actions_row3(self, request, object_id):
         messages.success(
             request, f"Row action has been successfully executed. Object ID {object_id}"
         )
-        return redirect(request.META["HTTP_REFERER"])
+        return redirect(
+            request.META.get("HTTP_REFERER")
+            or reverse_lazy("admin:formula_constructor_changelist")
+        )
 
-    @action(
-        description=_("Deploy quantum shields"), url_path="actions-row-quantum-shields"
-    )
+    @action(description=_("Sync Containers"), url_path="actions-row-sync-containers")
     def custom_actions_row4(self, request, object_id):
         messages.success(
             request, f"Row action has been successfully executed. Object ID {object_id}"
         )
-        return redirect(request.META["HTTP_REFERER"])
+        return redirect(
+            request.META.get("HTTP_REFERER")
+            or reverse_lazy("admin:formula_constructor_changelist")
+        )
 
-    @action(description=_("Launch space lasers"), url_path="actions-row-space-lasers")
+    @action(
+        description=_("Never visible"),
+        url_path="actions-row-deploy-containers",
+        permissions=["custom_row_action_false", "custom_row_action_true"],
+    )
     def custom_actions_row5(self, request, object_id):
         messages.success(
             request, f"Row action has been successfully executed. Object ID {object_id}"
         )
-        return redirect(request.META["HTTP_REFERER"])
+        return redirect(
+            request.META.get("HTTP_REFERER")
+            or reverse_lazy("admin:formula_constructor_changelist")
+        )
+
+    def has_custom_row_action_false_permission(self, request):
+        return False
+
+    def has_custom_row_action_true_permission(self, request):
+        return True
 
     @action(
         description="Custom detail action",
@@ -452,9 +474,29 @@ class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, ModelAdmin):
     radio_fields = {"status": admin.VERTICAL}
     readonly_fields = ["author", "data", "is_active", "is_hidden"]
     actions_list = [
-        "changelist_action",
+        "changelist_action_should_not_be_visible",
+        "changelist_action1",
+        "changelist_action4",
+        {
+            "title": _("More"),
+            "items": [
+                "changelist_action3",
+                "changelist_action4",
+                "changelist_action5",
+            ],
+        },
     ]
-    actions_detail = ["change_detail_action"]
+    actions_detail = [
+        "change_detail_action3",
+        "change_detail_action",
+        {
+            "title": _("More"),
+            "items": [
+                "change_detail_action1",
+                "change_detail_action2",
+            ],
+        },
+    ]
     list_before_template = "formula/driver_list_before.html"
     list_after_template = "formula/driver_list_after.html"
     change_form_show_cancel_button = True
@@ -473,7 +515,7 @@ class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, ModelAdmin):
         return super().get_urls() + [
             path(
                 "custom-url-path",
-                MyClassBasedView.as_view(model_admin=self),
+                self.admin_site.admin_view(MyClassBasedView.as_view(model_admin=self)),
                 name="custom_view",
             ),
         ]
@@ -491,14 +533,54 @@ class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, ModelAdmin):
             .prefetch_related("race_set", "standing_set")
         )
 
-    @action(description=_("Changelist action"), url_path="changelist-action")
-    def changelist_action(self, request):
+    @action(description=_("Initialize nodes"), icon="hub")
+    def changelist_action1(self, request):
         messages.success(
             request, _("Changelist action has been successfully executed.")
         )
         return redirect(reverse_lazy("admin:formula_driver_changelist"))
 
-    @action(description=_("Change detail action"), url_path="change-detail-action")
+    @action(
+        description=_("Sync DB replicas"),
+        icon="sync",
+    )
+    def changelist_action3(self, request):
+        messages.success(
+            request, _("Changelist action has been successfully executed.")
+        )
+        return redirect(reverse_lazy("admin:formula_driver_changelist"))
+
+    @action(description=_("Rebuild cache index"), icon="book_4")
+    def changelist_action4(self, request):
+        messages.success(
+            request, _("Changelist action has been successfully executed.")
+        )
+        return redirect(reverse_lazy("admin:formula_driver_changelist"))
+
+    @action(description=_("Optimize queries"), icon="database")
+    def changelist_action5(self, request):
+        messages.success(
+            request, _("Changelist action has been successfully executed.")
+        )
+        return redirect(reverse_lazy("admin:formula_driver_changelist"))
+
+    @action(
+        description=_("Should not be visible"), permissions=["should_not_be_visible"]
+    )
+    def changelist_action_should_not_be_visible(self, request):
+        messages.success(
+            request, _("Changelist action has been successfully executed.")
+        )
+        return redirect(reverse_lazy("admin:formula_driver_changelist"))
+
+    def has_should_not_be_visible_permission(self, request):
+        return False
+
+    @action(
+        description=_("Action with form"),
+        url_path="change-detail-action",
+        permissions=["change_detail_action"],
+    )
     def change_detail_action(self, request, object_id):
         try:
             object_id = int(object_id)
@@ -547,6 +629,36 @@ class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, ModelAdmin):
                 **self.admin_site.each_context(request),
             },
         )
+
+    def has_change_detail_action_permission(self, request, object_id=None):
+        return request.user.is_superuser
+
+    @action(description=_("Revalidate cache"))
+    def change_detail_action1(self, request, object_id):
+        messages.success(
+            request, _("Change detail action has been successfully executed.")
+        )
+        return redirect(reverse_lazy("admin:formula_driver_change", args=[object_id]))
+
+    @action(description=_("Deactivate object"))
+    def change_detail_action2(self, request, object_id):
+        messages.success(
+            request, _("Change detail action has been successfully executed.")
+        )
+        return redirect(reverse_lazy("admin:formula_driver_change", args=[object_id]))
+
+    @action(
+        description=_("Never visible"),
+        permissions=["change_detail_false"],
+    )
+    def change_detail_action3(self, request, object_id):
+        messages.success(
+            request, _("Change detail action has been successfully executed.")
+        )
+        return redirect(reverse_lazy("admin:formula_driver_change", args=[object_id]))
+
+    def has_change_detail_false_permission(self, request, object_id=None):
+        return False
 
     @display(description=_("Driver"), header=True)
     def display_header(self, instance: Driver):
@@ -756,4 +868,70 @@ class CohortComponent(BaseComponent):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["data"] = cohort_random_data()
+        return context
+
+
+@register_component
+class DriverActiveComponent(BaseComponent):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context["children"] = render_to_string(
+            "formula/helpers/kpi_progress.html",
+            {
+                "total": Driver.objects.filter(status=DriverStatus.ACTIVE).count(),
+                "progress": "positive",
+                "percentage": "2.8%",
+            },
+        )
+        return context
+
+
+@register_component
+class DriverInactiveComponent(BaseComponent):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context["children"] = render_to_string(
+            "formula/helpers/kpi_progress.html",
+            {
+                "total": Driver.objects.filter(status=DriverStatus.INACTIVE).count(),
+                "progress": "negative",
+                "percentage": "-12.8%",
+            },
+        )
+        return context
+
+
+@register_component
+class DriverTotalPointsComponent(BaseComponent):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context["children"] = render_to_string(
+            "formula/helpers/kpi_progress.html",
+            {
+                "total": Standing.objects.aggregate(total_points=Sum("points"))[
+                    "total_points"
+                ],
+                "progress": "positive",
+                "percentage": "24.2%",
+            },
+        )
+        return context
+
+
+@register_component
+class DriverRacesComponent(BaseComponent):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context["children"] = render_to_string(
+            "formula/helpers/kpi_progress.html",
+            {
+                "total": Race.objects.count(),
+                "progress": "negative",
+                "percentage": "-10.0%",
+            },
+        )
         return context

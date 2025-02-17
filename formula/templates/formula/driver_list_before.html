@@ -1,3 +1,39 @@
-<div class="border border-base-200 border-dashed mb-4 p-3 rounded dark:border-base-700">
-    Driver before template
+{% load unfold i18n %}
+
+<div class="border border-base-300 border-dashed mb-4 p-3 rounded dark:border-base-700">
+    {% trans "Driver before template" %}
+</div>
+
+<div class="grid gap-4 mb-4 md:grid-cols-2 lg:grid-cols-4 ">
+    {% component "unfold/components/card.html" %}
+        {% component "unfold/components/text.html" %}
+            {% trans "Active drivers" %}
+        {% endcomponent %}
+
+        {% component "unfold/components/title.html" with component_class="DriverActiveComponent" %}{% endcomponent %}
+    {% endcomponent %}
+
+    {% component "unfold/components/card.html" %}
+        {% component "unfold/components/text.html" %}
+            {% trans "Inactive drivers" %}
+        {% endcomponent %}
+
+        {% component "unfold/components/title.html" with component_class="DriverInactiveComponent" %}{% endcomponent %}
+    {% endcomponent %}
+
+    {% component "unfold/components/card.html" %}
+        {% component "unfold/components/text.html" %}
+            {% trans "Total points" %}
+        {% endcomponent %}
+
+        {% component "unfold/components/title.html" with component_class="DriverTotalPointsComponent" %}{% endcomponent %}
+    {% endcomponent %}
+
+    {% component "unfold/components/card.html" %}
+        {% component "unfold/components/text.html" %}
+            {% trans "Total races" %}
+        {% endcomponent %}
+
+        {% component "unfold/components/title.html" with component_class="DriverRacesComponent" %}{% endcomponent %}
+    {% endcomponent %}
 </div>

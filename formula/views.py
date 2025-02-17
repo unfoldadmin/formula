@@ -15,7 +15,13 @@ class HomeView(RedirectView):
 
 class MyClassBasedView(UnfoldModelAdminViewMixin, TemplateView):
     title = "Custom Title"  # required: custom page header title
-    permission_required = ()  # required: tuple of permissions
+    # required: tuple of permissions
+    permission_required = (
+        "formula.view_driver",
+        "formula.add_driver",
+        "formula.change_driver",
+        "formula.delete_driver",
+    )
     template_name = "formula/driver_custom_page.html"
 
 

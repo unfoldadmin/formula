@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
+    "django.contrib.humanize",
     "whitenoise.runserver_nostatic",
     "django.contrib.staticfiles",
     "debug_toolbar",
@@ -272,13 +273,6 @@ UNFOLD = {
                     "link": lambda request: f"{
                         reverse_lazy('admin:formula_driver_changelist')
                     }?status__exact=ACTIVE",
-                },
-                {
-                    "title": _("Inactive drivers"),
-                    "icon": "sports_motorsports",
-                    "link": lambda request: f"{
-                        reverse_lazy('admin:formula_driver_changelist')
-                    }?status__exact=INACTIVE",
                 },
                 {
                     "title": _("Constructors"),
