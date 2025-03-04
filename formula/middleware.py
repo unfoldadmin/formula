@@ -24,6 +24,4 @@ class ReadonlyExceptionHandlerMiddleware:
                     "Database is operating in readonly mode. Not possible to save any data."
                 ),
             )
-            return redirect(
-                request.META.get("HTTP_REFERER", reverse_lazy("admin:login"))
-            )
+            return redirect(request.headers.get("referer", reverse_lazy("admin:login")))
