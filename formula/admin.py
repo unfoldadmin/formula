@@ -1,3 +1,4 @@
+import json
 import random
 from functools import lru_cache
 
@@ -52,6 +53,7 @@ from unfold.contrib.import_export.forms import ExportForm, ImportForm
 from unfold.contrib.inlines.admin import NonrelatedStackedInline
 from unfold.decorators import action, display
 from unfold.forms import AdminPasswordChangeForm, UserChangeForm, UserCreationForm
+from unfold.sections import TableSection, TemplateSection
 from unfold.widgets import (
     UnfoldAdminCheckboxSelectMultiple,
     UnfoldAdminColorInputWidget,
@@ -444,8 +446,54 @@ class DriverAdminForm(forms.ModelForm):
     )
 
 
+class StandingTableSection(TableSection):
+    verbose_name = _("Standings - One to many relationship")
+    related_name = "standing_set"
+    fields = [
+        "pk",
+        "race",
+        "position",
+    ]
+
+
+class ContructorTableSection(TableSection):
+    # verbose_name = _("Constructors - Many to many relationship")
+    related_name = "constructors"
+    height = 380
+    fields = [
+        "name",
+        "custom_field",
+    ]
+
+    def custom_field(self, instance):
+        return random.randint(0, 50)
+
+    custom_field.short_description = _("Points")
+
+
+class RaceTableSection(TableSection):
+    verbose_name = _("Race won - One to many relationship")
+    related_name = "race_set"
+    fields = [
+        "pk",
+        "circuit",
+        "year",
+    ]
+
+
+class ChartSection(TemplateSection):
+    template_name = "formula/driver_section.html"
+
+
 @admin.register(Driver, site=formula_admin_site)
 class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, ModelAdmin):
+    list_sections = [
+        ContructorTableSection,
+        ChartSection,
+        # StandingTableSection,
+        # RaceTableSection,
+    ]
+    list_sections_classes = "grid-cols-2"
     form = DriverAdminForm
     history_list_per_page = 10
     search_fields = ["last_name", "first_name", "code"]
@@ -469,7 +517,10 @@ class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, ModelAdmin):
         "display_status",
         "display_code",
     ]
-    inlines = [DriverStandingInline, RaceWinnerInline]
+    inlines = [
+        DriverStandingInline,
+        RaceWinnerInline,
+    ]
     autocomplete_fields = ["constructors"]
     radio_fields = {"status": admin.VERTICAL}
     readonly_fields = ["author", "data", "is_active", "is_hidden"]
@@ -530,7 +581,13 @@ class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, ModelAdmin):
                     standing__driver_id=OuterRef("pk")
                 ).values("name")[:1]
             )
-            .prefetch_related("race_set", "standing_set")
+            .prefetch_related(
+                "race_set",
+                "race_set__circuit",
+                "standing_set",
+                "standing_set__race",
+                "standing_set__race__circuit",
+            )
         )
 
     @action(description=_("Initialize nodes"), icon="hub")
@@ -933,5 +990,36 @@ class DriverRacesComponent(BaseComponent):
                 "progress": "negative",
                 "percentage": "-10.0%",
             },
+        )
+        return context
+
+
+@register_component
+class DriverSectionChangeComponent(BaseComponent):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        WEEKDAYS = [
+            "Mon",
+            "Tue",
+            "Wed",
+            "Thu",
+            "Fri",
+            "Sat",
+            "Sun",
+        ]
+        OF_DAYS = 21
+
+        context["data"] = json.dumps(
+            {
+                "labels": [WEEKDAYS[day % 7] for day in range(1, OF_DAYS)],
+                "datasets": [
+                    {
+                        "data": [
+                            [1, random.randrange(8, OF_DAYS)] for i in range(1, OF_DAYS)
+                        ],
+                        "backgroundColor": "var(--color-primary-600)",
+                    }
+                ],
+            }
         )
         return context
