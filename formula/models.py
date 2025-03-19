@@ -97,7 +97,25 @@ class Driver(AuditedModel):
         max_digits=14, decimal_places=2, null=True, blank=True, default_currency=None
     )
     status = models.CharField(
-        _("status"), choices=DriverStatus.choices, null=True, blank=True, max_length=255
+        _("status - CONDITIONAL FIELD"),
+        choices=DriverStatus.choices,
+        null=True,
+        blank=True,
+        max_length=255,
+    )
+    conditional_field_active = models.CharField(
+        _("conditional field active"),
+        null=True,
+        blank=True,
+        max_length=255,
+        help_text="This field is only visible if the status is ACTIVE",
+    )
+    conditional_field_inactive = models.CharField(
+        _("conditional field inactive"),
+        null=True,
+        blank=True,
+        max_length=255,
+        help_text="This field is only visible if the status is INACTIVE",
     )
     constructors = models.ManyToManyField(
         "Constructor", verbose_name=_("constructors"), blank=True

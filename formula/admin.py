@@ -16,6 +16,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 from django.templatetags.static import static
 from django.urls import path, reverse_lazy
+from django.utils.html import format_html
 from django.utils.timezone import now, timedelta
 from django.utils.translation import gettext_lazy as _
 from django_celery_beat.admin import ClockedScheduleAdmin as BaseClockedScheduleAdmin
@@ -52,6 +53,7 @@ from unfold.contrib.forms.widgets import WysiwygWidget
 from unfold.contrib.import_export.forms import ExportForm, ImportForm
 from unfold.contrib.inlines.admin import NonrelatedStackedInline
 from unfold.decorators import action, display
+from unfold.enums import ActionVariant
 from unfold.forms import AdminPasswordChangeForm, UserChangeForm, UserCreationForm
 from unfold.sections import TableSection, TemplateSection
 from unfold.widgets import (
@@ -143,6 +145,7 @@ class UserAdmin(BaseUserAdmin, ModelAdmin):
     add_form = UserCreationForm
     change_password_form = AdminPasswordChangeForm
     inlines = [CircuitNonrelatedStackedInline, TagGenericTabularInline]
+    compressed_fields = True
     list_display = [
         "display_header",
         "is_active",
@@ -493,7 +496,7 @@ class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, ModelAdmin):
         # StandingTableSection,
         # RaceTableSection,
     ]
-    list_sections_classes = "grid-cols-2"
+    list_sections_classes = "lg:grid-cols-2"
     form = DriverAdminForm
     history_list_per_page = 10
     search_fields = ["last_name", "first_name", "code"]
@@ -521,8 +524,14 @@ class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, ModelAdmin):
         DriverStandingInline,
         RaceWinnerInline,
     ]
+    conditional_fields = {
+        "conditional_field_active": "status == 'ACTIVE'",
+        "conditional_field_inactive": "status == 'INACTIVE'",
+    }
     autocomplete_fields = ["constructors"]
-    radio_fields = {"status": admin.VERTICAL}
+    radio_fields = {
+        "status": admin.VERTICAL,
+    }
     readonly_fields = ["author", "data", "is_active", "is_hidden"]
     actions_list = [
         "changelist_action_should_not_be_visible",
@@ -530,6 +539,7 @@ class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, ModelAdmin):
         "changelist_action4",
         {
             "title": _("More"),
+            "variant": ActionVariant.PRIMARY,
             "items": [
                 "changelist_action3",
                 "changelist_action4",
@@ -582,6 +592,7 @@ class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, ModelAdmin):
                 ).values("name")[:1]
             )
             .prefetch_related(
+                "constructors",
                 "race_set",
                 "race_set__circuit",
                 "standing_set",
@@ -690,12 +701,15 @@ class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, ModelAdmin):
     def has_change_detail_action_permission(self, request, object_id=None):
         return request.user.is_superuser
 
-    @action(description=_("Revalidate cache"))
+    @action(description=_("Revalidate cache"), permissions=["revalidate_cache"])
     def change_detail_action1(self, request, object_id):
         messages.success(
             request, _("Change detail action has been successfully executed.")
         )
         return redirect(reverse_lazy("admin:formula_driver_change", args=[object_id]))
+
+    def has_revalidate_cache_permission(self, request, object_id):
+        return request.user.is_superuser
 
     @action(description=_("Deactivate object"))
     def change_detail_action2(self, request, object_id):
@@ -735,9 +749,41 @@ class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, ModelAdmin):
                 },
             ]
 
-    @display(description=_("Constructor"))
+    @display(description=_("Constructor"), dropdown=True)
     def display_constructor(self, instance: Driver):
-        return instance.constructor_name
+        total = instance.constructors.all().count()
+        items = []
+
+        for constructor in instance.constructors.all():
+            title = format_html(
+                """
+                <div class="flex flex-row gap-2 items-center">
+                    <span class="truncate">{}</span>
+                    <a href="" class="leading-none ml-auto">
+                        <span class="material-symbols-outlined leading-none text-base-500">ungroup</span>
+                    </a>
+                </div>
+                """,
+                constructor.name,
+            )
+            items.append(
+                {
+                    "title": title,
+                    # "link": "#",  # Optional: Add a href attribute
+                }
+            )
+
+        # Display custom string if no records found
+        if total == 0:
+            return "-"
+
+        return {
+            "title": f"{total} contructors",
+            "items": items,
+            "striped": True,
+            # "height": 202,  # Optional, max line height 30px
+            # "width": 320,  # Optional
+        }
 
     @display(description=_("Total points"), ordering="total_points")
     def display_total_points(self, instance: Driver):
