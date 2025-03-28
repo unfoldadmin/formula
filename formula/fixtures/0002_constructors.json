@@ -3,231 +3,297 @@
     "model": "formula.constructor",
     "pk": 1,
     "fields": {
-      "name": "Red Bull Racing Honda RBPT"
+      "name": "Red Bull Racing Honda RBPT",
+      "created_at": "2021-01-01",
+      "modified_at": "2021-01-01"
     }
   },
   {
     "model": "formula.constructor",
     "pk": 2,
     "fields": {
-      "name": "Aston Martin Aramco Mercedes"
+      "name": "Aston Martin Aramco Mercedes",
+      "created_at": "2021-01-01",
+      "modified_at": "2021-01-01"
     }
   },
   {
     "model": "formula.constructor",
     "pk": 3,
     "fields": {
-      "name": "Ferrari"
+      "name": "Ferrari",
+      "created_at": "2021-01-01",
+      "modified_at": "2021-01-01"
     }
   },
   {
     "model": "formula.constructor",
     "pk": 4,
     "fields": {
-      "name": "Mercedes"
+      "name": "Mercedes",
+      "created_at": "2021-01-01",
+      "modified_at": "2021-01-01"
     }
   },
   {
     "model": "formula.constructor",
     "pk": 5,
     "fields": {
-      "name": "Alfa Romeo Ferrari"
+      "name": "Alfa Romeo Ferrari",
+      "created_at": "2021-01-01",
+      "modified_at": "2021-01-01"
     }
   },
   {
     "model": "formula.constructor",
     "pk": 6,
     "fields": {
-      "name": "Alpine Renault"
+      "name": "Alpine Renault",
+      "created_at": "2021-01-01",
+      "modified_at": "2021-01-01"
     }
   },
   {
     "model": "formula.constructor",
     "pk": 7,
     "fields": {
-      "name": "Williams Mercedes"
+      "name": "Williams Mercedes",
+      "created_at": "2021-01-01",
+      "modified_at": "2021-01-01"
     }
   },
   {
     "model": "formula.constructor",
     "pk": 8,
     "fields": {
-      "name": "AlphaTauri Honda RBPT"
+      "name": "AlphaTauri Honda RBPT",
+      "created_at": "2021-01-01",
+      "modified_at": "2021-01-01"
     }
   },
   {
     "model": "formula.constructor",
     "pk": 9,
     "fields": {
-      "name": "Haas Ferrari"
+      "name": "Haas Ferrari",
+      "created_at": "2021-01-01",
+      "modified_at": "2021-01-01"
     }
   },
   {
     "model": "formula.constructor",
     "pk": 10,
     "fields": {
-      "name": "McLaren Mercedes"
+      "name": "McLaren Mercedes",
+      "created_at": "2021-01-01",
+      "modified_at": "2021-01-01"
     }
   },
   {
     "model": "formula.constructor",
     "pk": 11,
     "fields": {
-      "name": "Red Bull Racing RBPT"
+      "name": "Red Bull Racing RBPT",
+      "created_at": "2021-01-01",
+      "modified_at": "2021-01-01"
     }
   },
   {
     "model": "formula.constructor",
     "pk": 12,
     "fields": {
-      "name": "AlphaTauri RBPT"
+      "name": "AlphaTauri RBPT",
+      "created_at": "2021-01-01",
+      "modified_at": "2021-01-01"
     }
   },
   {
     "model": "formula.constructor",
     "pk": 13,
     "fields": {
-      "name": "Red Bull Racing TAG Heuer"
+      "name": "Red Bull Racing TAG Heuer",
+      "created_at": "2021-01-01",
+      "modified_at": "2021-01-01"
     }
   },
   {
     "model": "formula.constructor",
     "pk": 14,
     "fields": {
-      "name": "Force India Mercedes"
+      "name": "Force India Mercedes",
+      "created_at": "2021-01-01",
+      "modified_at": "2021-01-01"
     }
   },
   {
     "model": "formula.constructor",
     "pk": 15,
     "fields": {
-      "name": "McLaren Honda"
+      "name": "McLaren Honda",
+      "created_at": "2021-01-01",
+      "modified_at": "2021-01-01"
     }
   },
   {
     "model": "formula.constructor",
     "pk": 16,
     "fields": {
-      "name": "MRT Mercedes"
+      "name": "MRT Mercedes",
+      "created_at": "2021-01-01",
+      "modified_at": "2021-01-01"
     }
   },
   {
     "model": "formula.constructor",
     "pk": 17,
     "fields": {
-      "name": "Sauber Ferrari"
+      "name": "Sauber Ferrari",
+      "created_at": "2021-01-01",
+      "modified_at": "2021-01-01"
     }
   },
   {
     "model": "formula.constructor",
     "pk": 18,
     "fields": {
-      "name": "Renault"
+      "name": "Renault",
+      "created_at": "2021-01-01",
+      "modified_at": "2021-01-01"
     }
   },
   {
     "model": "formula.constructor",
     "pk": 19,
     "fields": {
-      "name": "Toro Rosso Ferrari"
+      "name": "Toro Rosso Ferrari",
+      "created_at": "2021-01-01",
+      "modified_at": "2021-01-01"
     }
   },
   {
     "model": "formula.constructor",
     "pk": 20,
     "fields": {
-      "name": "Red Bull Racing Honda"
+      "name": "Red Bull Racing Honda",
+      "created_at": "2021-01-01",
+      "modified_at": "2021-01-01"
     }
   },
   {
     "model": "formula.constructor",
     "pk": 21,
     "fields": {
-      "name": "AlphaTauri Honda"
+      "name": "AlphaTauri Honda",
+      "created_at": "2021-01-01",
+      "modified_at": "2021-01-01"
     }
   },
   {
     "model": "formula.constructor",
     "pk": 22,
     "fields": {
-      "name": "Aston Martin Mercedes"
+      "name": "Aston Martin Mercedes",
+      "created_at": "2021-01-01",
+      "modified_at": "2021-01-01"
     }
   },
   {
     "model": "formula.constructor",
     "pk": 23,
     "fields": {
-      "name": "Alfa Romeo Racing Ferrari"
+      "name": "Alfa Romeo Racing Ferrari",
+      "created_at": "2021-01-01",
+      "modified_at": "2021-01-01"
     }
   },
   {
     "model": "formula.constructor",
     "pk": 24,
     "fields": {
-      "name": "McLaren Renault"
+      "name": "McLaren Renault",
+      "created_at": "2021-01-01",
+      "modified_at": "2021-01-01"
     }
   },
   {
     "model": "formula.constructor",
     "pk": 25,
     "fields": {
-      "name": "Racing Point BWT Mercedes"
+      "name": "Racing Point BWT Mercedes",
+      "created_at": "2021-01-01",
+      "modified_at": "2021-01-01"
     }
   },
   {
     "model": "formula.constructor",
     "pk": 26,
     "fields": {
-      "name": "Red Bull Racing Renault"
+      "name": "Red Bull Racing Renault",
+      "created_at": "2021-01-01",
+      "modified_at": "2021-01-01"
     }
   },
   {
     "model": "formula.constructor",
     "pk": 27,
     "fields": {
-      "name": "Lotus Mercedes"
+      "name": "Lotus Mercedes",
+      "created_at": "2021-01-01",
+      "modified_at": "2021-01-01"
     }
   },
   {
     "model": "formula.constructor",
     "pk": 28,
     "fields": {
-      "name": "STR Renault"
+      "name": "STR Renault",
+      "created_at": "2021-01-01",
+      "modified_at": "2021-01-01"
     }
   },
   {
     "model": "formula.constructor",
     "pk": 29,
     "fields": {
-      "name": "Marussia Ferrari"
+      "name": "Marussia Ferrari",
+      "created_at": "2021-01-01",
+      "modified_at": "2021-01-01"
     }
   },
   {
     "model": "formula.constructor",
     "pk": 30,
     "fields": {
-      "name": "Lotus Renault"
+      "name": "Lotus Renault",
+      "created_at": "2021-01-01",
+      "modified_at": "2021-01-01"
     }
   },
   {
     "model": "formula.constructor",
     "pk": 31,
     "fields": {
-      "name": "Caterham Renault"
+      "name": "Caterham Renault",
+      "created_at": "2021-01-01",
+      "modified_at": "2021-01-01"
     }
   },
   {
     "model": "formula.constructor",
     "pk": 32,
     "fields": {
-      "name": "Scuderia Toro Rosso Honda"
+      "name": "Scuderia Toro Rosso Honda",
+      "created_at": "2021-01-01",
+      "modified_at": "2021-01-01"
     }
   },
   {
     "model": "formula.constructor",
     "pk": 33,
     "fields": {
-      "name": "Toro Rosso"
+      "name": "Toro Rosso",
+      "created_at": "2021-01-01",
+      "modified_at": "2021-01-01"
     }
   }
 ]
