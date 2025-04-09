@@ -434,7 +434,7 @@ django = ">=4.2"
 type = "git"
 url = "https://github.com/unfoldadmin/django-unfold.git"
 reference = "HEAD"
-resolved_reference = "f9f73312954617463a470bc48c296343da10cf35"
+resolved_reference = "f0644e688145eacde5a7f8ded5e3fec4074a3fea"
 
 [[package]]
 name = "gunicorn"

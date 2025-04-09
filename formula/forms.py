@@ -1,5 +1,5 @@
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Column, Fieldset, Layout
+from crispy_forms.layout import Column, Div, Fieldset, Layout, Row
 from django import forms
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
@@ -10,15 +10,18 @@ from unfold.widgets import (
     UnfoldAdminCheckboxSelectMultiple,
     UnfoldAdminDateWidget,
     UnfoldAdminEmailInputWidget,
+    UnfoldAdminExpandableTextareaWidget,
     UnfoldAdminFileFieldWidget,
     UnfoldAdminImageFieldWidget,
     UnfoldAdminIntegerFieldWidget,
+    UnfoldAdminMoneyWidget,
     UnfoldAdminRadioSelectWidget,
-    UnfoldAdminSelectWidget,
+    UnfoldAdminSelect2Widget,
     UnfoldAdminSplitDateTimeWidget,
     UnfoldAdminTextareaWidget,
     UnfoldAdminTextInputWidget,
     UnfoldAdminTimeWidget,
+    UnfoldAdminURLInputWidget,
     UnfoldBooleanSwitchWidget,
 )
 
@@ -32,13 +35,11 @@ class CustomForm(forms.Form):
         max_length=100,
         label=_("Name"),
         required=True,
-        help_text=_("Enter your full name"),
         widget=UnfoldAdminTextInputWidget(),
     )
     email = forms.EmailField(
         label=_("Email"),
         required=True,
-        help_text=_("Enter your email address"),
         widget=UnfoldAdminEmailInputWidget(),
     )
     age = forms.IntegerField(
@@ -46,13 +47,27 @@ class CustomForm(forms.Form):
         required=True,
         min_value=18,
         max_value=120,
-        help_text=_("Enter your age"),
         widget=UnfoldAdminIntegerFieldWidget(),
+    )
+    url = forms.URLField(
+        label=_("URL"),
+        required=True,
+        widget=UnfoldAdminURLInputWidget(),
+    )
+    salary = forms.DecimalField(
+        label=_("Salary"),
+        required=True,
+        help_text=_("Enter your salary"),
+        widget=UnfoldAdminMoneyWidget(),
+    )
+    title = forms.CharField(
+        label=_("Title"),
+        required=True,
+        widget=UnfoldAdminExpandableTextareaWidget(),
     )
     message = forms.CharField(
         label=_("Message"),
         required=True,
-        help_text=_("Enter your message"),
         widget=UnfoldAdminTextareaWidget(),
     )
     subscribe = forms.BooleanField(
@@ -105,36 +120,31 @@ class CustomForm(forms.Form):
         required=True,
         initial=2,
         help_text=_("Select the priority of your message"),
-        widget=UnfoldAdminSelectWidget,
+        widget=UnfoldAdminSelect2Widget,
     )
     date = forms.DateField(
         label=_("Date"),
         required=True,
-        help_text=_("Select a date"),
         widget=UnfoldAdminDateWidget,
     )
     time = forms.TimeField(
         label=_("Time"),
         required=True,
-        help_text=_("Select a time"),
         widget=UnfoldAdminTimeWidget,
     )
     datetime = forms.SplitDateTimeField(
         label=_("Date and Time"),
         required=True,
-        help_text=_("Select a date and time"),
         widget=UnfoldAdminSplitDateTimeWidget,
     )
     file = forms.FileField(
         label=_("File"),
         required=True,
-        help_text=_("Upload a file if needed"),
         widget=UnfoldAdminFileFieldWidget,
     )
     image = forms.ImageField(
         label=_("Image"),
         required=True,
-        help_text=_("Upload a image if needed"),
         widget=UnfoldAdminImageFieldWidget,
     )
 
@@ -149,25 +159,65 @@ class CustomForm(forms.Form):
             "novalidate": "novalidate",
         }
         self.helper.layout = Layout(
-            Fieldset(
-                _("Custom form"),
+            Row(
                 Column(
-                    "name",
-                    "email",
-                    "age",
-                    "message",
-                    "subscribe",
-                    "notifications",
-                    "department",
-                    "category",
-                    "file",
-                    "image",
-                    "date",
-                    "time",
-                    "datetime",
-                    css_class="flex flex-col gap-5",
+                    Fieldset(
+                        _("Custom form"),
+                        Column(
+                            Row(
+                                Div("name", css_class="w-1/2"),
+                                Div("email", css_class="w-1/2"),
+                            ),
+                            Row(
+                                Div("age", css_class="w-1/2"),
+                                Div("url", css_class="w-1/2"),
+                            ),
+                            "salary",
+                            "priority",
+                            css_class="gap-5",
+                        ),
+                    ),
+                    Fieldset(
+                        _("Textarea & expandable textarea widgets"),
+                        "title",
+                        "message",
+                    ),
+                    css_class="lg:w-1/2",
                 ),
-            )
+                Column(
+                    Fieldset(
+                        _("Radio & checkbox widgets"),
+                        Column(
+                            "subscribe",
+                            "notifications",
+                            Row(
+                                Div("department", css_class="w-1/2"),
+                                Div("category", css_class="w-1/2"),
+                            ),
+                            css_class="gap-5",
+                        ),
+                    ),
+                    Fieldset(
+                        _("File upload widgets"),
+                        Column(
+                            "file",
+                            "image",
+                            css_class="gap-5",
+                        ),
+                    ),
+                    Fieldset(
+                        _("Date & time widgets"),
+                        Column(
+                            "date",
+                            "time",
+                            "datetime",
+                            css_class="gap-5",
+                        ),
+                    ),
+                    css_class="lg:w-1/2",
+                ),
+                css_class="mb-8",
+            ),
         )
 
 
