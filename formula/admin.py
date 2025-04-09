@@ -732,22 +732,24 @@ class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, ModelAdmin):
         return False
 
     @display(description=_("Driver"), header=True)
-    def display_header(self, instance: Driver):
+    def display_header(self, instance: Driver) -> list:
         standing = instance.standing_set.all().first()
 
-        if standing:
-            return [
-                instance.full_name,
-                None,
-                instance.initials,
-                {
-                    "path": static("images/avatar.jpg"),
-                    "height": 24,
-                    "width": 24,
-                    "borderless": True,
-                    # "squared": True,
-                },
-            ]
+        if not standing:
+            return []
+
+        return [
+            instance.full_name,
+            None,
+            instance.initials,
+            {
+                "path": static("images/avatar.jpg"),
+                "height": 24,
+                "width": 24,
+                "borderless": True,
+                # "squared": True,
+            },
+        ]
 
     @display(description=_("Constructor"), dropdown=True)
     def display_constructor(self, instance: Driver):
