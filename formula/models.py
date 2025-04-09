@@ -14,6 +14,13 @@ class DriverStatus(models.TextChoices):
     INACTIVE = "INACTIVE", _("Inactive")
 
 
+class DriverCategory(models.TextChoices):
+    ROOKIE = "ROOKIE", _("Rookie")
+    EXPERIENCED = "EXPERIENCED", _("Experienced")
+    VETERAN = "VETERAN", _("Veteran")
+    CHAMPION = "CHAMPION", _("Champion")
+
+
 class AuditedModel(models.Model):
     created_at = models.DateTimeField(_("created at"), auto_now_add=True)
     modified_at = models.DateTimeField(_("modified at"), auto_now=True)
@@ -96,8 +103,15 @@ class Driver(AuditedModel):
     salary = MoneyField(
         max_digits=14, decimal_places=2, null=True, blank=True, default_currency=None
     )
+    category = models.CharField(
+        _("category"),
+        choices=DriverCategory.choices,
+        null=True,
+        blank=True,
+        max_length=255,
+    )
     status = models.CharField(
-        _("status - CONDITIONAL FIELD"),
+        _("status"),
         choices=DriverStatus.choices,
         null=True,
         blank=True,
@@ -147,6 +161,11 @@ class Driver(AuditedModel):
             return f"{self.first_name[0]}{self.last_name[0]}"
 
         return None
+
+
+class DriverWithFilters(Driver):
+    class Meta:
+        proxy = True
 
 
 class Constructor(AuditedModel):

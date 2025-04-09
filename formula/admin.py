@@ -40,12 +40,16 @@ from simple_history.admin import SimpleHistoryAdmin
 from unfold.admin import ModelAdmin, StackedInline, TabularInline
 from unfold.components import BaseComponent, register_component
 from unfold.contrib.filters.admin import (
+    AllValuesCheckboxFilter,
     AutocompleteSelectMultipleFilter,
-    ChoicesDropdownFilter,
-    MultipleRelatedDropdownFilter,
+    BooleanRadioFilter,
+    CheckboxFilter,
+    ChoicesCheckboxFilter,
     RangeDateFilter,
     RangeDateTimeFilter,
     RangeNumericFilter,
+    RelatedCheckboxFilter,
+    RelatedDropdownFilter,
     SingleNumericFilter,
     TextFilter,
 )
@@ -69,6 +73,7 @@ from formula.models import (
     Constructor,
     Driver,
     DriverStatus,
+    DriverWithFilters,
     Race,
     Standing,
     Tag,
@@ -144,6 +149,15 @@ class UserAdmin(BaseUserAdmin, ModelAdmin):
     form = UserChangeForm
     add_form = UserCreationForm
     change_password_form = AdminPasswordChangeForm
+    list_fullwidth = True
+    list_filter = [
+        ("is_staff", BooleanRadioFilter),
+        ("is_superuser", BooleanRadioFilter),
+        ("is_active", BooleanRadioFilter),
+        ("groups", RelatedCheckboxFilter),
+    ]
+    list_filter_submit = True
+    list_filter_sheet = False
     inlines = [CircuitNonrelatedStackedInline, TagGenericTabularInline]
     compressed_fields = True
     list_display = [
@@ -255,10 +269,16 @@ class CircuitAdmin(ModelAdmin, TabbedTranslationAdmin):
     inlines = [CircuitRaceInline]
 
 
+class DriverTableSection(TableSection):
+    related_name = "driver_set"
+    fields = ["first_name", "last_name", "code"]
+
+
 @admin.register(Constructor, site=formula_admin_site)
 class ConstructorAdmin(ModelAdmin, ImportExportModelAdmin, ExportActionModelAdmin):
     search_fields = ["name"]
     list_display = ["name"]
+    list_sections = [DriverTableSection]
     resource_classes = [ConstructorResource, AnotherConstructorResource]
     save_as = True
     import_form_class = ImportForm
@@ -424,7 +444,14 @@ class DriverStandingInline(TabularInline):
     readonly_fields = ["race"]
     ordering_field = "weight"
     show_change_link = True
-    tab = True
+
+    def get_queryset(self, request):
+        return (
+            super()
+            .get_queryset(request)
+            .select_related("race", "driver")
+            .prefetch_related("race__circuit")
+        )
 
 
 class RaceWinnerInline(StackedInline):
@@ -432,8 +459,8 @@ class RaceWinnerInline(StackedInline):
     fields = ["winner", "year", "laps", "picture", "weight"]
     readonly_fields = ["winner", "year", "laps"]
     ordering_field = "weight"
-    extra = 1
-    classes = ["collapse"]
+    extra = 3
+    # classes = ["collapse"]
 
 
 class DriverAdminForm(forms.ModelForm):
@@ -447,16 +474,6 @@ class DriverAdminForm(forms.ModelForm):
         required=False,
         widget=UnfoldAdminCheckboxSelectMultiple,
     )
-
-
-class StandingTableSection(TableSection):
-    verbose_name = _("Standings - One to many relationship")
-    related_name = "standing_set"
-    fields = [
-        "pk",
-        "race",
-        "position",
-    ]
 
 
 class ContructorTableSection(TableSection):
@@ -474,49 +491,25 @@ class ContructorTableSection(TableSection):
     custom_field.short_description = _("Points")
 
 
-class RaceTableSection(TableSection):
-    verbose_name = _("Race won - One to many relationship")
-    related_name = "race_set"
-    fields = [
-        "pk",
-        "circuit",
-        "year",
-    ]
-
-
 class ChartSection(TemplateSection):
     template_name = "formula/driver_section.html"
 
 
 @admin.register(Driver, site=formula_admin_site)
 class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, ModelAdmin):
-    list_sections = [
-        ContructorTableSection,
-        ChartSection,
-        # StandingTableSection,
-        # RaceTableSection,
-    ]
+    list_sections = [ContructorTableSection, ChartSection]
     list_sections_classes = "lg:grid-cols-2"
     form = DriverAdminForm
     history_list_per_page = 10
     search_fields = ["last_name", "first_name", "code"]
     warn_unsaved_form = True
     compressed_fields = True
-    list_filter = [
-        FullNameFilter,
-        ("constructors", AutocompleteSelectMultipleFilter),
-        "is_active",
-        "is_hidden",
-        ("salary", RangeNumericFilter),
-        ("status", ChoicesDropdownFilter),
-        ("created_at", RangeDateTimeFilter),
-    ]
-    list_filter_submit = True
     list_display = [
         "display_header",
         "display_constructor",
         "display_total_points",
         "display_total_wins",
+        "category",
         "display_status",
         "display_code",
     ]
@@ -532,7 +525,10 @@ class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, ModelAdmin):
     radio_fields = {
         "status": admin.VERTICAL,
     }
-    readonly_fields = ["author", "data", "is_active", "is_hidden"]
+    readonly_fields = [
+        "author",
+        "data",
+    ]
     actions_list = [
         "changelist_action_should_not_be_visible",
         "changelist_action1",
@@ -811,6 +807,40 @@ class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, ModelAdmin):
         return instance.code
 
 
+class DriverCustomCheckboxFilter(CheckboxFilter):
+    title = _("Custom status")
+    parameter_name = "custom_status"
+
+    def lookups(self, request, model_admin):
+        return DriverStatus.choices
+
+    def queryset(self, request, queryset):
+        if self.value() not in EMPTY_VALUES:
+            return queryset.filter(status__in=self.value())
+        elif self.parameter_name in self.used_parameters:
+            return queryset.filter(status=self.used_parameters[self.parameter_name])
+
+        return queryset
+
+
+@admin.register(DriverWithFilters, site=formula_admin_site)
+class DriverWithFiltersAdmin(DriverAdmin):
+    list_fullwidth = True
+    list_filter = [
+        FullNameFilter,
+        ("constructors", AutocompleteSelectMultipleFilter),
+        ("race__circuit", RelatedDropdownFilter),
+        ("salary", RangeNumericFilter),
+        ("status", ChoicesCheckboxFilter),
+        ("category", AllValuesCheckboxFilter),
+        DriverCustomCheckboxFilter,
+        ("is_hidden", BooleanRadioFilter),
+        ("is_active", BooleanRadioFilter),
+    ]
+    list_filter_sheet = False
+    list_filter_submit = True
+
+
 @admin.register(Race, site=formula_admin_site)
 class RaceAdmin(ModelAdmin):
     date_hierarchy = "date"
@@ -822,7 +852,7 @@ class RaceAdmin(ModelAdmin):
         "winner__last_name",
     ]
     list_filter = [
-        ("circuit", MultipleRelatedDropdownFilter),
+        ("circuit", RelatedCheckboxFilter),
         ("year", RangeNumericFilter),
         ("laps", SingleNumericFilter),
         ("date", RangeDateFilter),

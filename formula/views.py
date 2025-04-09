@@ -3,18 +3,23 @@ import random
 from functools import lru_cache
 
 from django.contrib.humanize.templatetags.humanize import intcomma
+from django.urls import reverse_lazy
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import RedirectView, TemplateView
+from django.views.generic import FormView, RedirectView
 from unfold.views import UnfoldModelAdminViewMixin
+
+from formula.forms import CustomForm
 
 
 class HomeView(RedirectView):
     pattern_name = "admin:index"
 
 
-class MyClassBasedView(UnfoldModelAdminViewMixin, TemplateView):
+class MyClassBasedView(UnfoldModelAdminViewMixin, FormView):
     title = "Custom Title"  # required: custom page header title
+    form_class = CustomForm
+    success_url = reverse_lazy("admin:index")
     # required: tuple of permissions
     permission_required = (
         "formula.view_driver",

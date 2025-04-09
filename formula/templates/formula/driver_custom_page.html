@@ -1,6 +1,6 @@
 {% extends "admin/base.html" %}
 
-{% load admin_urls i18n unfold %}
+{% load admin_urls crispy_forms_tags i18n unfold %}
 
 {% block breadcrumbs %}{% if not is_popup %}
     <div class="px-4 lg:px-8">
@@ -21,10 +21,14 @@
     </div>
 {% endif %}{% endblock %}
 
+{% block extrahead %}
+    {{ block.super }}
+    <script src="{% url 'admin:jsi18n' %}"></script>
+    {{ form.media }}
+{% endblock %}
+
 {% block content %}
     {% tab_list "drivers" %}
 
-    <p>
-        {% trans "Hello from custom page" %}
-    </p>
+    {% crispy form "unfold_crispy" %}
 {% endblock %}

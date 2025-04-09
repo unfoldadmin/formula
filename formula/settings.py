@@ -22,6 +22,8 @@ WSGI_APPLICATION = "formula.wsgi.application"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 10_000
+
 ######################################################################
 # Domains
 ######################################################################
@@ -52,6 +54,7 @@ INSTALLED_APPS = [
     "whitenoise.runserver_nostatic",
     "django.contrib.staticfiles",
     "debug_toolbar",
+    "crispy_forms",
     "import_export",
     "guardian",
     "simple_history",
@@ -308,6 +311,13 @@ UNFOLD = {
                         "link": reverse_lazy("admin:formula_driver_changelist"),
                     },
                     {
+                        "title": _("Drivers with filters"),
+                        "icon": "filter_list",
+                        "link": reverse_lazy(
+                            "admin:formula_driverwithfilters_changelist"
+                        ),
+                    },
+                    {
                         "title": _("Circuits"),
                         "icon": "circle",
                         "link": reverse_lazy("admin:formula_circuit_changelist"),
@@ -428,3 +438,10 @@ if SENTRY_DSN:
         dsn=SENTRY_DSN,
         enable_tracing=False,
     )
+
+######################################################################
+# Crispy forms
+######################################################################
+CRISPY_TEMPLATE_PACK = "unfold_crispy"
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = ["unfold_crispy"]
