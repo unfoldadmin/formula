@@ -264,7 +264,6 @@ UNFOLD = {
             "items": [
                 {
                     "title": _("Drivers"),
-                    "icon": "sports_motorsports",
                     "link": reverse_lazy("admin:formula_driver_changelist"),
                     "active": lambda request: request.path
                     == reverse_lazy("admin:formula_driver_changelist")
@@ -272,19 +271,16 @@ UNFOLD = {
                 },
                 {
                     "title": _("Active drivers"),
-                    "icon": "sports_motorsports",
                     "link": lambda request: f"{
                         reverse_lazy('admin:formula_driver_changelist')
                     }?status__exact=ACTIVE",
                 },
                 {
                     "title": _("Constructors"),
-                    "icon": "precision_manufacturing",
                     "link": reverse_lazy("admin:formula_constructor_changelist"),
                 },
                 {
-                    "title": _("Custom page"),
-                    "icon": "grade",
+                    "title": _("Crispy Form"),
                     "link": reverse_lazy("admin:custom_view"),
                 },
             ],

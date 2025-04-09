@@ -164,6 +164,8 @@ class Driver(AuditedModel):
 
 
 class DriverWithFilters(Driver):
+    history = HistoricalRecords()
+
     class Meta:
         proxy = True
 

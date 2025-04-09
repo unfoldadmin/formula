@@ -485,18 +485,16 @@ class ContructorTableSection(TableSection):
         "custom_field",
     ]
 
+    @admin.display(description=_("Points"))
     def custom_field(self, instance):
         return random.randint(0, 50)
-
-    custom_field.short_description = _("Points")
 
 
 class ChartSection(TemplateSection):
     template_name = "formula/driver_section.html"
 
 
-@admin.register(Driver, site=formula_admin_site)
-class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, ModelAdmin):
+class DriverAdminMixin(ModelAdmin):
     list_sections = [ContructorTableSection, ChartSection]
     list_sections_classes = "lg:grid-cols-2"
     form = DriverAdminForm
@@ -529,6 +527,124 @@ class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, ModelAdmin):
         "author",
         "data",
     ]
+    list_before_template = "formula/driver_list_before.html"
+    list_after_template = "formula/driver_list_after.html"
+    change_form_show_cancel_button = True
+    change_form_before_template = "formula/driver_change_form_before.html"
+    change_form_after_template = "formula/driver_change_form_after.html"
+
+    def get_form(self, request, obj=None, change=False, **kwargs):
+        form = super().get_form(request, obj, change, **kwargs)
+        form.base_fields["color"].widget = UnfoldAdminColorInputWidget()
+        form.base_fields["first_name"].widget = UnfoldAdminTextInputWidget(
+            attrs={"class": "first-name-input"}
+        )
+        return form
+
+    def get_queryset(self, request):
+        return (
+            super()
+            .get_queryset(request)
+            .annotate(total_points=Sum("standing__points"))
+            .annotate(
+                constructor_name=Constructor.objects.filter(
+                    standing__driver_id=OuterRef("pk")
+                ).values("name")[:1]
+            )
+            .prefetch_related(
+                "constructors",
+                "race_set",
+                "race_set__circuit",
+                "standing_set",
+                "standing_set__race",
+                "standing_set__race__circuit",
+            )
+        )
+
+    @display(description=_("Driver"), header=True)
+    def display_header(self, instance: Driver) -> list:
+        standing = instance.standing_set.all().first()
+
+        if not standing:
+            return []
+
+        return [
+            instance.full_name,
+            None,
+            instance.initials,
+            {
+                "path": static("images/avatar.jpg"),
+                "height": 24,
+                "width": 24,
+                "borderless": True,
+                # "squared": True,
+            },
+        ]
+
+    @display(description=_("Constructor"), dropdown=True)
+    def display_constructor(self, instance: Driver):
+        total = instance.constructors.all().count()
+        items = []
+
+        for constructor in instance.constructors.all():
+            title = format_html(
+                """
+                <div class="flex flex-row gap-2 items-center">
+                    <span class="truncate">{}</span>
+                    <a href="" class="leading-none ml-auto">
+                        <span class="material-symbols-outlined leading-none text-base-500">ungroup</span>
+                    </a>
+                </div>
+                """,
+                constructor.name,
+            )
+            items.append(
+                {
+                    "title": title,
+                    # "link": "#",  # Optional: Add a href attribute
+                }
+            )
+
+        # Display custom string if no records found
+        if total == 0:
+            return "-"
+
+        return {
+            "title": f"{total} contructors",
+            "items": items,
+            "striped": True,
+            # "height": 202,  # Optional, max line height 30px
+            # "width": 320,  # Optional
+        }
+
+    @display(description=_("Total points"), ordering="total_points")
+    def display_total_points(self, instance: Driver):
+        return instance.total_points
+
+    @display(description=_("Total wins"))
+    def display_total_wins(self, instance: Driver):
+        return instance.race_set.count()
+
+    @display(
+        description=_("Status"),
+        label={
+            DriverStatus.INACTIVE: "danger",
+            DriverStatus.ACTIVE: "success",
+        },
+    )
+    def display_status(self, instance: Driver):
+        if instance.status:
+            return instance.status
+
+        return None
+
+    @display(description=_("Code"), label=True)
+    def display_code(self, instance: Driver):
+        return instance.code
+
+
+@admin.register(Driver, site=formula_admin_site)
+class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, DriverAdminMixin):
     actions_list = [
         "changelist_action_should_not_be_visible",
         "changelist_action1",
@@ -554,19 +670,6 @@ class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, ModelAdmin):
             ],
         },
     ]
-    list_before_template = "formula/driver_list_before.html"
-    list_after_template = "formula/driver_list_after.html"
-    change_form_show_cancel_button = True
-    change_form_before_template = "formula/driver_change_form_before.html"
-    change_form_after_template = "formula/driver_change_form_after.html"
-
-    def get_form(self, request, obj=None, change=False, **kwargs):
-        form = super().get_form(request, obj, change, **kwargs)
-        form.base_fields["color"].widget = UnfoldAdminColorInputWidget()
-        form.base_fields["first_name"].widget = UnfoldAdminTextInputWidget(
-            attrs={"class": "first-name-input"}
-        )
-        return form
 
     def get_urls(self):
         return super().get_urls() + [
@@ -576,26 +679,6 @@ class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, ModelAdmin):
                 name="custom_view",
             ),
         ]
-
-    def get_queryset(self, request):
-        return (
-            super()
-            .get_queryset(request)
-            .annotate(total_points=Sum("standing__points"))
-            .annotate(
-                constructor_name=Constructor.objects.filter(
-                    standing__driver_id=OuterRef("pk")
-                ).values("name")[:1]
-            )
-            .prefetch_related(
-                "constructors",
-                "race_set",
-                "race_set__circuit",
-                "standing_set",
-                "standing_set__race",
-                "standing_set__race__circuit",
-            )
-        )
 
     @action(description=_("Initialize nodes"), icon="hub")
     def changelist_action1(self, request):
@@ -727,87 +810,6 @@ class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, ModelAdmin):
     def has_change_detail_false_permission(self, request, object_id=None):
         return False
 
-    @display(description=_("Driver"), header=True)
-    def display_header(self, instance: Driver) -> list:
-        standing = instance.standing_set.all().first()
-
-        if not standing:
-            return []
-
-        return [
-            instance.full_name,
-            None,
-            instance.initials,
-            {
-                "path": static("images/avatar.jpg"),
-                "height": 24,
-                "width": 24,
-                "borderless": True,
-                # "squared": True,
-            },
-        ]
-
-    @display(description=_("Constructor"), dropdown=True)
-    def display_constructor(self, instance: Driver):
-        total = instance.constructors.all().count()
-        items = []
-
-        for constructor in instance.constructors.all():
-            title = format_html(
-                """
-                <div class="flex flex-row gap-2 items-center">
-                    <span class="truncate">{}</span>
-                    <a href="" class="leading-none ml-auto">
-                        <span class="material-symbols-outlined leading-none text-base-500">ungroup</span>
-                    </a>
-                </div>
-                """,
-                constructor.name,
-            )
-            items.append(
-                {
-                    "title": title,
-                    # "link": "#",  # Optional: Add a href attribute
-                }
-            )
-
-        # Display custom string if no records found
-        if total == 0:
-            return "-"
-
-        return {
-            "title": f"{total} contructors",
-            "items": items,
-            "striped": True,
-            # "height": 202,  # Optional, max line height 30px
-            # "width": 320,  # Optional
-        }
-
-    @display(description=_("Total points"), ordering="total_points")
-    def display_total_points(self, instance: Driver):
-        return instance.total_points
-
-    @display(description=_("Total wins"))
-    def display_total_wins(self, instance: Driver):
-        return instance.race_set.count()
-
-    @display(
-        description=_("Status"),
-        label={
-            DriverStatus.INACTIVE: "danger",
-            DriverStatus.ACTIVE: "success",
-        },
-    )
-    def display_status(self, instance: Driver):
-        if instance.status:
-            return instance.status
-
-        return None
-
-    @display(description=_("Code"), label=True)
-    def display_code(self, instance: Driver):
-        return instance.code
-
 
 class DriverCustomCheckboxFilter(CheckboxFilter):
     title = _("Custom status")
@@ -826,7 +828,7 @@ class DriverCustomCheckboxFilter(CheckboxFilter):
 
 
 @admin.register(DriverWithFilters, site=formula_admin_site)
-class DriverWithFiltersAdmin(DriverAdmin):
+class DriverWithFiltersAdmin(DriverAdminMixin):
     list_fullwidth = True
     list_filter = [
         FullNameFilter,

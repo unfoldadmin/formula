@@ -17,7 +17,7 @@ class HomeView(RedirectView):
 
 
 class MyClassBasedView(UnfoldModelAdminViewMixin, FormView):
-    title = "Custom Title"  # required: custom page header title
+    title = "Crispy Form"  # required: custom page header title
     form_class = CustomForm
     success_url = reverse_lazy("admin:index")
     # required: tuple of permissions
