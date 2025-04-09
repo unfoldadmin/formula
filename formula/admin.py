@@ -306,7 +306,7 @@ class ConstructorAdmin(ModelAdmin, ImportExportModelAdmin, ExportActionModelAdmi
     )
     def custom_actions_list(self, request):
         messages.success(request, "List action has been successfully executed.")
-        return redirect(request.META["HTTP_REFERER"])
+        return redirect(request.headers["referer"])
 
     def has_custom_actions_list_permission(self, request):
         return request.user.is_superuser
@@ -327,7 +327,7 @@ class ConstructorAdmin(ModelAdmin, ImportExportModelAdmin, ExportActionModelAdmi
             request, f"Row action has been successfully executed. Object ID {object_id}"
         )
         return redirect(
-            request.META.get("HTTP_REFERER")
+            request.headers.get("referer")
             or reverse_lazy("admin:formula_constructor_changelist")
         )
 
@@ -343,7 +343,7 @@ class ConstructorAdmin(ModelAdmin, ImportExportModelAdmin, ExportActionModelAdmi
             request, f"Row action has been successfully executed. Object ID {object_id}"
         )
         return redirect(
-            request.META.get("HTTP_REFERER")
+            request.headers.get("referer")
             or reverse_lazy("admin:formula_constructor_changelist")
         )
 
@@ -353,7 +353,7 @@ class ConstructorAdmin(ModelAdmin, ImportExportModelAdmin, ExportActionModelAdmi
             request, f"Row action has been successfully executed. Object ID {object_id}"
         )
         return redirect(
-            request.META.get("HTTP_REFERER")
+            request.headers.get("referer")
             or reverse_lazy("admin:formula_constructor_changelist")
         )
 
@@ -363,7 +363,7 @@ class ConstructorAdmin(ModelAdmin, ImportExportModelAdmin, ExportActionModelAdmi
             request, f"Row action has been successfully executed. Object ID {object_id}"
         )
         return redirect(
-            request.META.get("HTTP_REFERER")
+            request.headers.get("referer")
             or reverse_lazy("admin:formula_constructor_changelist")
         )
 
@@ -377,7 +377,7 @@ class ConstructorAdmin(ModelAdmin, ImportExportModelAdmin, ExportActionModelAdmi
             request, f"Row action has been successfully executed. Object ID {object_id}"
         )
         return redirect(
-            request.META.get("HTTP_REFERER")
+            request.headers.get("referer")
             or reverse_lazy("admin:formula_constructor_changelist")
         )
 
@@ -397,7 +397,7 @@ class ConstructorAdmin(ModelAdmin, ImportExportModelAdmin, ExportActionModelAdmi
             request,
             f"Detail action has been successfully executed. Object ID {object_id}",
         )
-        return redirect(request.META["HTTP_REFERER"])
+        return redirect(request.headers["referer"])
 
     def has_custom_actions_detail_permission(self, request, object_id):
         return request.user.is_superuser
@@ -728,22 +728,24 @@ class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, ModelAdmin):
         return False
 
     @display(description=_("Driver"), header=True)
-    def display_header(self, instance: Driver):
+    def display_header(self, instance: Driver) -> list:
         standing = instance.standing_set.all().first()
 
-        if standing:
-            return [
-                instance.full_name,
-                None,
-                instance.initials,
-                {
-                    "path": static("images/avatar.jpg"),
-                    "height": 24,
-                    "width": 24,
-                    "borderless": True,
-                    # "squared": True,
-                },
-            ]
+        if not standing:
+            return []
+
+        return [
+            instance.full_name,
+            None,
+            instance.initials,
+            {
+                "path": static("images/avatar.jpg"),
+                "height": 24,
+                "width": 24,
+                "borderless": True,
+                # "squared": True,
+            },
+        ]
 
     @display(description=_("Constructor"), dropdown=True)
     def display_constructor(self, instance: Driver):

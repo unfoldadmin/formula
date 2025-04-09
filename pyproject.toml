@@ -26,7 +26,7 @@ django-crispy-forms = "^2.3"
 [tool.ruff]
 fix = true
 line-length = 88
-select = [
+lint.select = [
     "E",  # pycodestyle errors
     "W",  # pycodestyle warnings
     "F",  # pyflakes
@@ -35,7 +35,7 @@ select = [
     "B",  # flake8-bugbear
     "UP", # pyupgrade
 ]
-ignore = [
+lint.ignore = [
     "E501", # line too long, handled by black
     "B008", # do not perform function calls in argument defaults
     "C901", # too complex
