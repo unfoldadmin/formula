@@ -226,6 +226,7 @@ UNFOLD = {
     "SITE_TITLE": _("Formula Admin"),
     "SITE_HEADER": _("Formula Admin"),
     "SITE_SUBHEADER": _("Unfold demo project"),
+    # "SITE_URL": None,
     "SITE_DROPDOWN": [
         {
             "icon": "diamond",
@@ -281,7 +282,11 @@ UNFOLD = {
                 },
                 {
                     "title": _("Crispy Form"),
-                    "link": reverse_lazy("admin:custom_view"),
+                    "link": reverse_lazy("admin:crispy_form"),
+                },
+                {
+                    "title": _("Crispy Formset"),
+                    "link": reverse_lazy("admin:crispy_formset"),
                 },
             ],
         },
@@ -308,14 +313,14 @@ UNFOLD = {
                     },
                     {
                         "title": _("Drivers with filters"),
-                        "icon": "filter_list",
+                        "icon": "stacks",
                         "link": reverse_lazy(
                             "admin:formula_driverwithfilters_changelist"
                         ),
                     },
                     {
                         "title": _("Circuits"),
-                        "icon": "circle",
+                        "icon": "sports_score",
                         "link": reverse_lazy("admin:formula_circuit_changelist"),
                     },
                     {
@@ -326,7 +331,7 @@ UNFOLD = {
                     },
                     {
                         "title": _("Standings"),
-                        "icon": "grade",
+                        "icon": "trophy",
                         "link": reverse_lazy("admin:formula_standing_changelist"),
                         "permission": "formula.utils.permission_callback",
                         # "permission": lambda request: request.user.is_superuser,
@@ -339,7 +344,7 @@ UNFOLD = {
                 "items": [
                     {
                         "title": _("Users"),
-                        "icon": "person",
+                        "icon": "account_circle",
                         "link": reverse_lazy("admin:formula_user_changelist"),
                     },
                     {
@@ -369,7 +374,7 @@ UNFOLD = {
                     },
                     {
                         "title": _("Intervals"),
-                        "icon": "arrow_range",
+                        "icon": "timer",
                         "link": reverse_lazy(
                             "admin:django_celery_beat_intervalschedule_changelist"
                         ),

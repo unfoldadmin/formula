@@ -86,20 +86,8 @@ class Circuit(AuditedModel):
 
 
 class Driver(AuditedModel):
-    author = models.ForeignKey(
-        "User",
-        verbose_name=_("author"),
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-    )
     first_name = models.CharField(_("first name"), max_length=255)
     last_name = models.CharField(_("last name"), max_length=255)
-    resume = models.FileField(_("resume"), null=True, blank=True, default=None)
-    picture = models.ImageField(_("picture"), null=True, blank=True, default=None)
-    code = models.CharField(_("code"), max_length=3)
-    color = models.CharField(_("color"), null=True, blank=True, max_length=255)
-    link = models.URLField(_("link"), null=True, blank=True)
     salary = MoneyField(
         max_digits=14, decimal_places=2, null=True, blank=True, default_currency=None
     )
@@ -110,6 +98,33 @@ class Driver(AuditedModel):
         blank=True,
         max_length=255,
     )
+    picture = models.ImageField(_("picture"), null=True, blank=True, default=None)
+    born_at = models.DateField(_("born"), null=True, blank=True)
+    last_race_at = models.DateField(_("last race"), null=True, blank=True)
+    best_time = models.TimeField(_("best time"), null=True, blank=True)
+    first_race_at = models.DateTimeField(_("first race"), null=True, blank=True)
+    resume = models.FileField(_("resume"), null=True, blank=True, default=None)
+    author = models.ForeignKey(
+        "User",
+        verbose_name=_("author"),
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+    )
+    editor = models.ForeignKey(
+        "User",
+        verbose_name=_("editor"),
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="driver_editor",
+    )
+    constructors = models.ManyToManyField(
+        "Constructor", verbose_name=_("constructors"), blank=True
+    )
+    code = models.CharField(_("code"), max_length=3)
+    color = models.CharField(_("color"), null=True, blank=True, max_length=255)
+    link = models.URLField(_("link"), null=True, blank=True)
     status = models.CharField(
         _("status"),
         choices=DriverStatus.choices,
@@ -130,9 +145,6 @@ class Driver(AuditedModel):
         blank=True,
         max_length=255,
         help_text="This field is only visible if the status is INACTIVE",
-    )
-    constructors = models.ManyToManyField(
-        "Constructor", verbose_name=_("constructors"), blank=True
     )
     data = models.JSONField(_("data"), null=True, blank=True, encoder=PrettyJSONEncoder)
     history = HistoricalRecords()

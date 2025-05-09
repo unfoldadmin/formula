@@ -81,7 +81,7 @@ from formula.models import (
 )
 from formula.resources import AnotherConstructorResource, ConstructorResource
 from formula.sites import formula_admin_site
-from formula.views import MyClassBasedView
+from formula.views import CrispyFormsetView, CrispyFormView
 
 admin.site.unregister(PeriodicTask)
 admin.site.unregister(IntervalSchedule)
@@ -444,6 +444,7 @@ class DriverStandingInline(TabularInline):
     readonly_fields = ["race"]
     ordering_field = "weight"
     show_change_link = True
+    tab = True
 
     def get_queryset(self, request):
         return (
@@ -460,6 +461,7 @@ class RaceWinnerInline(StackedInline):
     readonly_fields = ["winner", "year", "laps"]
     ordering_field = "weight"
     extra = 3
+    tab = True
     # classes = ["collapse"]
 
 
@@ -519,12 +521,15 @@ class DriverAdminMixin(ModelAdmin):
         "conditional_field_active": "status == 'ACTIVE'",
         "conditional_field_inactive": "status == 'INACTIVE'",
     }
-    autocomplete_fields = ["constructors"]
+    autocomplete_fields = [
+        "constructors",
+        "editor",
+    ]
     radio_fields = {
         "status": admin.VERTICAL,
     }
     readonly_fields = [
-        "author",
+        # "author",
         "data",
     ]
     list_before_template = "formula/driver_list_before.html"
@@ -674,9 +679,14 @@ class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, DriverAdminMixin):
     def get_urls(self):
         return super().get_urls() + [
             path(
-                "custom-url-path",
-                self.admin_site.admin_view(MyClassBasedView.as_view(model_admin=self)),
-                name="custom_view",
+                "crispy-with-formset",
+                self.admin_site.admin_view(CrispyFormsetView.as_view(model_admin=self)),
+                name="crispy_formset",
+            ),
+            path(
+                "crispy-form",
+                self.admin_site.admin_view(CrispyFormView.as_view(model_admin=self)),
+                name="crispy_form",
             ),
         ]
 
@@ -883,6 +893,7 @@ class StandingAdmin(ModelAdmin):
     list_display = ["race", "driver", "constructor", "position", "points"]
     list_filter = ["driver"]
     autocomplete_fields = ["driver", "constructor", "race"]
+    readonly_fields = ["laps"]
 
 
 try:
