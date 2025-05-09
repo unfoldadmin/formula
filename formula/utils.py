@@ -12,7 +12,7 @@ def environment_callback(request):
 
 
 def badge_callback(request):
-    return f"+{random.randint(1, 99)}"
+    return f"{random.randint(1, 9)}"
 
 
 def permission_callback(request):

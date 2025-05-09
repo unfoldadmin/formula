@@ -2,6 +2,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Column, Div, Fieldset, Layout, Row
 from django import forms
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import RedirectView
 from unfold.forms import AuthenticationForm
@@ -24,6 +25,8 @@ from unfold.widgets import (
     UnfoldAdminURLInputWidget,
     UnfoldBooleanSwitchWidget,
 )
+
+from formula.models import Driver
 
 
 class HomeView(RedirectView):
@@ -219,6 +222,42 @@ class CustomForm(forms.Form):
                 css_class="mb-8",
             ),
         )
+
+
+class DriverFormHelper(FormHelper):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.template = "unfold_crispy/layout/table_inline_formset.html"
+        self.form_id = "driver-formset"
+        self.form_add = True
+        self.attrs = {
+            "novalidate": "novalidate",
+        }
+        self.add_input(Submit("submit", _("Another submit")))
+        self.add_input(Submit("submit", _("Submit")))
+
+
+class DriverForm(forms.ModelForm):
+    class Meta:
+        model = Driver
+        fields = [
+            "first_name",
+            "last_name",
+            "code",
+        ]
+        widgets = {
+            "first_name": UnfoldAdminTextInputWidget(),
+            "last_name": UnfoldAdminTextInputWidget(),
+            "code": UnfoldAdminTextInputWidget(),
+        }
+
+    def clean(self):
+        raise ValidationError("Testing form wide error messages.")
+
+
+class DriverFormSet(forms.BaseModelFormSet):
+    def clean(self):
+        raise ValidationError("Testing formset wide error messages.")
 
 
 class LoginForm(AuthenticationForm):

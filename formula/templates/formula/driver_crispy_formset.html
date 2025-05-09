@@ -14,7 +14,7 @@
                 {% trans 'Drivers' as name %}
                 {% include 'unfold/helpers/breadcrumb_item.html' with link=link name=name %}
 
-                {% trans 'Custom page' as name %}
+                {% trans 'Crispy formset' as name %}
                 {% include 'unfold/helpers/breadcrumb_item.html' with name=name %}
             </ul>
         </div>
@@ -29,5 +29,7 @@
 {% block content %}
     {% tab_list "drivers" %}
 
-    {% crispy form "unfold_crispy" %}
+    <div class="flex flex-col gap-8">
+        {% crispy form driver_formset_helper "unfold_crispy" %}
+    </div>
 {% endblock %}

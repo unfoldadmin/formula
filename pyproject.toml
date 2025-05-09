@@ -7,10 +7,11 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.13"
-django = "^5.1"
-django-celery-beat = "^2.7"
-django-debug-toolbar = "^5.1"
-django-guardian = "^2.4"
+django = "^5.2"
+django-celery-beat = "^2.8"
+django-crispy-forms = "^2.4"
+django-debug-toolbar = "^5.2"
+django-guardian = "^3.0"
 django-import-export = "^4.3"
 django-simple-history = "^3.8"
 django-modeltranslation = "^0.19"
@@ -18,10 +19,9 @@ django-money = "^3.5"
 django-unfold = { git = "https://github.com/unfoldadmin/django-unfold.git" }
 whitenoise = "^6.9"
 gunicorn = "^23.0"
-pillow = "^11.1"
-sentry-sdk = { extras = ["django"], version = "^2.25" }
+pillow = "^11.2"
+sentry-sdk = { extras = ["django"], version = "^2.27" }
 pygments = "^2.19"
-django-crispy-forms = "^2.3"
 
 [tool.ruff]
 fix = true
