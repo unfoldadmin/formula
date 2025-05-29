@@ -51,6 +51,7 @@ from unfold.contrib.filters.admin import (
     RelatedCheckboxFilter,
     RelatedDropdownFilter,
     SingleNumericFilter,
+    SliderNumericFilter,
     TextFilter,
 )
 from unfold.contrib.forms.widgets import WysiwygWidget
@@ -59,6 +60,7 @@ from unfold.contrib.inlines.admin import NonrelatedStackedInline
 from unfold.decorators import action, display
 from unfold.enums import ActionVariant
 from unfold.forms import AdminPasswordChangeForm, UserChangeForm, UserCreationForm
+from unfold.paginator import InfinitePaginator
 from unfold.sections import TableSection, TemplateSection
 from unfold.widgets import (
     UnfoldAdminCheckboxSelectMultiple,
@@ -144,6 +146,13 @@ class TagGenericTabularInline(TabularInline, GenericTabularInline):
     model = Tag
 
 
+class UserDriverTabularInline(TabularInline):
+    model = Driver
+    fk_name = "author"
+    autocomplete_fields = ["standing"]
+    fields = ["first_name", "last_name", "code", "status", "salary", "category"]
+
+
 @admin.register(User, site=formula_admin_site)
 class UserAdmin(BaseUserAdmin, ModelAdmin):
     form = UserChangeForm
@@ -158,7 +167,11 @@ class UserAdmin(BaseUserAdmin, ModelAdmin):
     ]
     list_filter_submit = True
     list_filter_sheet = False
-    inlines = [CircuitNonrelatedStackedInline, TagGenericTabularInline]
+    inlines = [
+        CircuitNonrelatedStackedInline,
+        TagGenericTabularInline,
+        UserDriverTabularInline,
+    ]
     compressed_fields = True
     list_display = [
         "display_header",
@@ -207,6 +220,7 @@ class UserAdmin(BaseUserAdmin, ModelAdmin):
         }
     }
     readonly_fields = ["last_login", "date_joined"]
+    show_full_result_count = False
 
     @display(description=_("User"))
     def display_header(self, instance: User):
@@ -476,6 +490,20 @@ class DriverAdminForm(forms.ModelForm):
         required=False,
         widget=UnfoldAdminCheckboxSelectMultiple,
     )
+    first_name = forms.CharField(
+        label=_("First name"),
+        widget=UnfoldAdminTextInputWidget,
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields["first_name"].widget.attrs.update(
+            {
+                "prefix_icon": "search",
+                "suffix_icon": "euro",
+            }
+        )
 
 
 class ContructorTableSection(TableSection):
@@ -499,6 +527,7 @@ class ChartSection(TemplateSection):
 class DriverAdminMixin(ModelAdmin):
     list_sections = [ContructorTableSection, ChartSection]
     list_sections_classes = "lg:grid-cols-2"
+    list_editable = ["category"]
     form = DriverAdminForm
     history_list_per_page = 10
     search_fields = ["last_name", "first_name", "code"]
@@ -524,6 +553,7 @@ class DriverAdminMixin(ModelAdmin):
     autocomplete_fields = [
         "constructors",
         "editor",
+        "standing",
     ]
     radio_fields = {
         "status": admin.VERTICAL,
@@ -560,15 +590,15 @@ class DriverAdminMixin(ModelAdmin):
                 "constructors",
                 "race_set",
                 "race_set__circuit",
-                "standing_set",
-                "standing_set__race",
-                "standing_set__race__circuit",
+                "standings",
+                "standings__race",
+                "standings__race__circuit",
             )
         )
 
     @display(description=_("Driver"), header=True)
     def display_header(self, instance: Driver) -> list:
-        standing = instance.standing_set.all().first()
+        standing = instance.standings.all().first()
 
         if not standing:
             return []
@@ -650,6 +680,54 @@ class DriverAdminMixin(ModelAdmin):
 
 @admin.register(Driver, site=formula_admin_site)
 class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, DriverAdminMixin):
+    fieldsets = [
+        (
+            None,
+            {
+                "fields": [
+                    "first_name",
+                    "last_name",
+                    "salary",
+                    "category",
+                    "picture",
+                    "born_at",
+                    "last_race_at",
+                    "best_time",
+                    "first_race_at",
+                    "resume",
+                    "author",
+                    "editor",
+                    "standing",
+                    "constructors",
+                    "code",
+                    "color",
+                    "link",
+                    "data",
+                ]
+            },
+        ),
+        (
+            _("Conditional fields"),
+            {
+                "classes": ["tab"],
+                "fields": [
+                    "status",
+                    "conditional_field_active",
+                    "conditional_field_inactive",
+                ],
+            },
+        ),
+        (
+            _("Boolean fields"),
+            {
+                "classes": ["tab"],
+                "fields": [
+                    "is_active",
+                    "is_hidden",
+                ],
+            },
+        ),
+    ]
     actions_list = [
         "changelist_action_should_not_be_visible",
         "changelist_action1",
@@ -844,7 +922,7 @@ class DriverWithFiltersAdmin(DriverAdminMixin):
         FullNameFilter,
         ("constructors", AutocompleteSelectMultipleFilter),
         ("race__circuit", RelatedDropdownFilter),
-        ("salary", RangeNumericFilter),
+        ("salary", SliderNumericFilter),
         ("status", ChoicesCheckboxFilter),
         ("category", AllValuesCheckboxFilter),
         DriverCustomCheckboxFilter,
@@ -882,7 +960,7 @@ class RaceAdmin(ModelAdmin):
 
 @admin.register(Standing, site=formula_admin_site)
 class StandingAdmin(ModelAdmin):
-    list_disable_select_all = True
+    # list_disable_select_all = True
     search_fields = [
         "race__circuit__name",
         "race__circuit__city",
@@ -894,6 +972,10 @@ class StandingAdmin(ModelAdmin):
     list_filter = ["driver"]
     autocomplete_fields = ["driver", "constructor", "race"]
     readonly_fields = ["laps"]
+    paginator = InfinitePaginator
+    show_full_result_count = False
+    list_disable_select_all = True
+    list_paginate_by = 10
 
 
 try:

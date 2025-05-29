@@ -230,6 +230,7 @@ class DriverFormHelper(FormHelper):
         self.template = "unfold_crispy/layout/table_inline_formset.html"
         self.form_id = "driver-formset"
         self.form_add = True
+        self.form_show_labels = False
         self.attrs = {
             "novalidate": "novalidate",
         }

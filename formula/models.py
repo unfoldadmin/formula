@@ -119,6 +119,14 @@ class Driver(AuditedModel):
         on_delete=models.SET_NULL,
         related_name="driver_editor",
     )
+    standing = models.ForeignKey(
+        "Standing",
+        verbose_name=_("standing"),
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="standing",
+    )
     constructors = models.ManyToManyField(
         "Constructor", verbose_name=_("constructors"), blank=True
     )
@@ -220,7 +228,10 @@ class Race(AuditedModel):
 class Standing(AuditedModel):
     race = models.ForeignKey(Race, verbose_name=_("race"), on_delete=models.PROTECT)
     driver = models.ForeignKey(
-        Driver, verbose_name=_("driver"), on_delete=models.PROTECT
+        Driver,
+        verbose_name=_("driver"),
+        on_delete=models.PROTECT,
+        related_name="standings",
     )
     constructor = models.ForeignKey(
         Constructor, verbose_name=_("constructor"), on_delete=models.PROTECT

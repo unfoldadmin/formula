@@ -145,52 +145,42 @@ def random_data():
         ],
         "progress": [
             {
-                "title": "🦆 Social marketing e-book",
+                "title": "Social marketing e-book",
                 "description": f"${intcomma(f'{random.uniform(1000, 9999):.02f}')}",
                 "value": random.randint(10, 90),
             },
             {
-                "title": "🦍 Freelancing tasks",
+                "title": "Freelancing tasks",
                 "description": f"${intcomma(f'{random.uniform(1000, 9999):.02f}')}",
                 "value": random.randint(10, 90),
             },
             {
-                "title": "🐋 Development coaching",
+                "title": "Development coaching",
                 "description": f"${intcomma(f'{random.uniform(1000, 9999):.02f}')}",
                 "value": random.randint(10, 90),
             },
             {
-                "title": "🦑 Product consulting",
+                "title": "Product consulting",
                 "description": f"${intcomma(f'{random.uniform(1000, 9999):.02f}')}",
                 "value": random.randint(10, 90),
             },
             {
-                "title": "🐨 Other income",
+                "title": "Other income",
                 "description": f"${intcomma(f'{random.uniform(1000, 9999):.02f}')}",
                 "value": random.randint(10, 90),
             },
             {
-                "title": "🐶 Course sales",
+                "title": "Course sales",
                 "description": f"${intcomma(f'{random.uniform(1000, 9999):.02f}')}",
                 "value": random.randint(10, 90),
             },
             {
-                "title": "🐻‍❄️ Ads revenue",
+                "title": "Ads revenue",
                 "description": f"${intcomma(f'{random.uniform(1000, 9999):.02f}')}",
                 "value": random.randint(10, 90),
             },
             {
-                "title": "🦩 Customer Retention Rate",
-                "description": f"${intcomma(f'{random.uniform(1000, 9999):.02f}')}",
-                "value": random.randint(10, 90),
-            },
-            {
-                "title": "🦊 Marketing ROI",
-                "description": f"${intcomma(f'{random.uniform(1000, 9999):.02f}')}",
-                "value": random.randint(10, 90),
-            },
-            {
-                "title": "🦁 Affiliate partnerships",
+                "title": "Customer Retention Rate",
                 "description": f"${intcomma(f'{random.uniform(1000, 9999):.02f}')}",
                 "value": random.randint(10, 90),
             },
@@ -256,4 +246,16 @@ def random_data():
                 ),
             },
         ],
+        "table_data": {
+            "headers": [_("Day"), _("Income"), _("Expenses")],
+            "rows": [
+                ["22-10-2025", "$2,341.89", "$1,876.45"],
+                ["23-10-2025", "$1,987.23", "$2,109.67"],
+                ["24-10-2025", "$3,456.78", "$1,543.21"],
+                ["25-10-2025", "$1,765.43", "$2,987.65"],
+                ["26-10-2025", "$2,876.54", "$1,234.56"],
+                ["27-10-2025", "$1,543.21", "$2,765.43"],
+                ["28-10-2025", "$3,210.98", "$1,987.65"],
+            ],
+        },
     }

@@ -253,7 +253,7 @@ UNFOLD = {
         "image": lambda request: static("images/login-bg.jpg"),
     },
     "STYLES": [
-        # lambda request: static("css/styles.css"),
+        lambda request: static("css/styles.css"),
     ],
     "SCRIPTS": [
         # lambda request: static("js/chart.min.js"),
@@ -261,7 +261,7 @@ UNFOLD = {
     "TABS": [
         {
             "page": "drivers",
-            "models": ["formula.driver", "formula.constructor"],
+            "models": ["formula.driver"],
             "items": [
                 {
                     "title": _("Drivers"),
@@ -275,10 +275,6 @@ UNFOLD = {
                     "link": lambda request: f"{
                         reverse_lazy('admin:formula_driver_changelist')
                     }?status__exact=ACTIVE",
-                },
-                {
-                    "title": _("Constructors"),
-                    "link": reverse_lazy("admin:formula_constructor_changelist"),
                 },
                 {
                     "title": _("Crispy Form"),
@@ -306,22 +302,41 @@ UNFOLD = {
                     {
                         "title": _("Drivers"),
                         "icon": "sports_motorsports",
-                        # "link": lambda request: reverse_lazy(
-                        #     "admin:formula_driver_changelist"
-                        # ),
-                        "link": reverse_lazy("admin:formula_driver_changelist"),
-                    },
-                    {
-                        "title": _("Drivers with filters"),
-                        "icon": "stacks",
-                        "link": reverse_lazy(
-                            "admin:formula_driverwithfilters_changelist"
-                        ),
+                        "active": "formula.utils.driver_list_link_callback",
+                        ###########################################################
+                        # Works only with Studio: https://unfoldadmin.com/studio/
+                        ###########################################################
+                        "items": [
+                            {
+                                "title": _("List drivers"),
+                                "link": reverse_lazy("admin:formula_driver_changelist"),
+                                "active": "formula.utils.driver_list_link_callback",
+                            },
+                            {
+                                "title": _("Advanced filters"),
+                                "link": reverse_lazy(
+                                    "admin:formula_driverwithfilters_changelist"
+                                ),
+                            },
+                            {
+                                "title": _("Crispy form"),
+                                "link": reverse_lazy("admin:crispy_form"),
+                            },
+                            {
+                                "title": _("Crispy formset"),
+                                "link": reverse_lazy("admin:crispy_formset"),
+                            },
+                        ],
                     },
                     {
                         "title": _("Circuits"),
                         "icon": "sports_score",
                         "link": reverse_lazy("admin:formula_circuit_changelist"),
+                    },
+                    {
+                        "title": _("Constructors"),
+                        "icon": "engineering",
+                        "link": reverse_lazy("admin:formula_constructor_changelist"),
                     },
                     {
                         "title": _("Races"),
