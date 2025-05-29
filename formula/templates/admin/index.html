@@ -51,12 +51,20 @@
                 {% component "unfold/components/chart/cohort.html" with component_class="CohortComponent" %}{% endcomponent %}
             {% endcomponent %}
 
-            {% component "unfold/components/card.html" with title=_("Product performance in last 28 days") %}
-                {% component "unfold/components/chart/bar.html" with data=chart height=320 %}{% endcomponent %}
-            {% endcomponent %}
+            <div class="flex flex-col lg:flex-row gap-4">
+                <div class="lg:w-5/7">
+                    {% component "unfold/components/card.html" with title=_("Product performance in last 28 days") %}
+                        {% component "unfold/components/chart/bar.html" with data=chart height=320 %}{% endcomponent %}
+                    {% endcomponent %}
+                </div>
+
+                {% component "unfold/components/card.html" with title=_("Top earnings") class="lg:w-2/7" %}
+                    {% component "unfold/components/table.html" with table=table_data card_included=1 %}{% endcomponent %}
+                {% endcomponent %}
+            </div>
 
             <div class="flex flex-col gap-8 lg:flex-row">
-                {% component "unfold/components/card.html" with class="lg:w-1/2" title=_("The most trending products in last 2 weeks") %}
+                {% component "unfold/components/card.html" with class="lg:w-2/5" title=_("The most trending products in last 2 weeks") %}
                     {% component "unfold/components/title.html" with class="mb-2" %}
                         $1,234,567.89
                     {% endcomponent %}
@@ -84,8 +92,7 @@
                     </div>
                 {% endcomponent %}
 
-
-                <div class="flex flex-col gap-8 lg:w-1/2">
+                <div class="flex flex-col gap-8 lg:w-3/5">
                     {% component "unfold/components/card.html" with class="grow-0" %}
                         <div class="flex flex-row items-center mb-2">
                             <h3 class="font-semibold text-font-important-light dark:text-font-important-dark">
