@@ -65,7 +65,6 @@ from unfold.sections import TableSection, TemplateSection
 from unfold.widgets import (
     UnfoldAdminCheckboxSelectMultiple,
     UnfoldAdminColorInputWidget,
-    UnfoldAdminMoneyWidget,
     UnfoldAdminSelectWidget,
     UnfoldAdminSplitDateTimeWidget,
     UnfoldAdminTextInputWidget,
@@ -574,12 +573,6 @@ class DriverAdminMixin(ModelAdmin):
         form.base_fields["color"].widget = UnfoldAdminColorInputWidget()
         form.base_fields["first_name"].widget = UnfoldAdminTextInputWidget(
             attrs={"class": "first-name-input"}
-        )
-        form.base_fields["salary"].widget = UnfoldAdminMoneyWidget(
-            attrs={
-                "class": "aaa",
-                "aaa": "bbb",
-            }
         )
         return form
 
