@@ -33,7 +33,7 @@ class HomeView(RedirectView):
     pattern_name = "admin:index"
 
 
-class CustomForm(forms.Form):
+class CustomFormMixin(forms.Form):
     name = forms.CharField(
         max_length=100,
         label=_("Name"),
@@ -151,6 +151,34 @@ class CustomForm(forms.Form):
         widget=UnfoldAdminImageFieldWidget,
     )
 
+
+class CustomHorizontalForm(CustomFormMixin):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_class = "form-horizontal"
+        self.helper.layout = Layout(
+            Fieldset(
+                _("Custom horizontal form"),
+                "name",
+                "email",
+                "age",
+                "url",
+                "salary",
+                "title",
+                "message",
+                "subscribe",
+                "notifications",
+                "department",
+                "category",
+                "date",
+                "time",
+                "datetime",
+            ),
+        )
+
+
+class CustomForm(CustomFormMixin):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 

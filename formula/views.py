@@ -11,7 +11,13 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import FormView, RedirectView
 from unfold.views import UnfoldModelAdminViewMixin
 
-from formula.forms import CustomForm, DriverForm, DriverFormHelper, DriverFormSet
+from formula.forms import (
+    CustomForm,
+    CustomHorizontalForm,
+    DriverForm,
+    DriverFormHelper,
+    DriverFormSet,
+)
 from formula.models import Driver
 
 
@@ -31,6 +37,11 @@ class CrispyFormView(UnfoldModelAdminViewMixin, FormView):
         "formula.delete_driver",
     )
     template_name = "formula/driver_crispy_form.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["horizontal_form"] = CustomHorizontalForm()
+        return context
 
 
 class CrispyFormsetView(UnfoldModelAdminViewMixin, FormView):

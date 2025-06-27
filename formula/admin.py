@@ -7,7 +7,6 @@ from django.contrib import admin, messages
 from django.contrib.auth.admin import GroupAdmin as BaseGroupAdmin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import Group
-from django.contrib.contenttypes.admin import GenericTabularInline
 from django.core.validators import EMPTY_VALUES
 from django.db import models
 from django.db.models import OuterRef, Q, Sum
@@ -31,13 +30,10 @@ from django_celery_beat.models import (
     SolarSchedule,
 )
 from guardian.admin import GuardedModelAdmin
-from import_export.admin import (
-    ExportActionModelAdmin,
-    ImportExportModelAdmin,
-)
+from import_export.admin import ExportActionModelAdmin, ImportExportModelAdmin
 from modeltranslation.admin import TabbedTranslationAdmin
 from simple_history.admin import SimpleHistoryAdmin
-from unfold.admin import ModelAdmin, StackedInline, TabularInline
+from unfold.admin import GenericTabularInline, ModelAdmin, StackedInline, TabularInline
 from unfold.components import BaseComponent, register_component
 from unfold.contrib.filters.admin import (
     AllValuesCheckboxFilter,
@@ -76,6 +72,7 @@ from formula.models import (
     Driver,
     DriverStatus,
     DriverWithFilters,
+    Profile,
     Race,
     Standing,
     Tag,
@@ -134,6 +131,7 @@ class CircuitNonrelatedStackedInline(NonrelatedStackedInline):
     fields = ["name", "city", "country"]
     extra = 1
     tab = True
+    per_page = 10
 
     def get_form_queryset(self, obj):
         return self.model.objects.all().distinct()
@@ -142,7 +140,7 @@ class CircuitNonrelatedStackedInline(NonrelatedStackedInline):
         pass
 
 
-class TagGenericTabularInline(TabularInline, GenericTabularInline):
+class TagGenericTabularInline(GenericTabularInline):
     model = Tag
 
 
@@ -151,6 +149,10 @@ class UserDriverTabularInline(TabularInline):
     fk_name = "author"
     autocomplete_fields = ["standing"]
     fields = ["first_name", "last_name", "code", "status", "salary", "category"]
+
+
+class UserProfileTabularInline(TabularInline):
+    model = Profile
 
 
 @admin.register(User, site=formula_admin_site)
@@ -171,6 +173,7 @@ class UserAdmin(BaseUserAdmin, ModelAdmin):
         CircuitNonrelatedStackedInline,
         TagGenericTabularInline,
         UserDriverTabularInline,
+        UserProfileTabularInline,
     ]
     compressed_fields = True
     list_display = [
@@ -458,6 +461,8 @@ class DriverStandingInline(TabularInline):
     readonly_fields = ["race"]
     ordering_field = "weight"
     show_change_link = True
+    extra = 0
+    per_page = 5
     tab = True
 
     def get_queryset(self, request):
@@ -474,9 +479,9 @@ class RaceWinnerInline(StackedInline):
     fields = ["winner", "year", "laps", "picture", "weight"]
     readonly_fields = ["winner", "year", "laps"]
     ordering_field = "weight"
-    extra = 3
+    extra = 0
+    per_page = 15
     tab = True
-    # classes = ["collapse"]
 
 
 class DriverAdminForm(forms.ModelForm):
@@ -722,6 +727,7 @@ class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, DriverAdminMixin):
             {
                 "classes": ["tab"],
                 "fields": [
+                    "is_retired",
                     "is_active",
                     "is_hidden",
                 ],
@@ -975,7 +981,7 @@ class StandingAdmin(ModelAdmin):
     paginator = InfinitePaginator
     show_full_result_count = False
     list_disable_select_all = True
-    list_paginate_by = 10
+    list_per_page = 10
 
 
 try:

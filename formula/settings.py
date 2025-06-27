@@ -422,6 +422,8 @@ UNFOLD_STUDIO_ENABLE_FILEUPLOAD = False
 
 UNFOLD_STUDIO_ALWAYS_OPEN = True
 
+UNFOLD_STUDIO_ENABLE_RESET_PASSWORD = True
+
 ######################################################################
 # Money
 ######################################################################
