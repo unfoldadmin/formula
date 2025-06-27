@@ -70,6 +70,19 @@ class User(AbstractUser, AuditedModel):
         return None
 
 
+class Profile(AuditedModel):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    picture = models.ImageField(_("picture"), null=True, blank=True, default=None)
+    resume = models.FileField(_("resume"), null=True, blank=True, default=None)
+    link = models.URLField(_("link"), null=True, blank=True)
+    data = models.JSONField(_("data"), null=True, blank=True)
+
+    class Meta:
+        db_table = "profiles"
+        verbose_name = _("profile")
+        verbose_name_plural = _("profiles")
+
+
 class Circuit(AuditedModel):
     name = models.CharField(_("name"), max_length=255)
     city = models.CharField(_("city"), max_length=255)
@@ -157,6 +170,15 @@ class Driver(AuditedModel):
     data = models.JSONField(_("data"), null=True, blank=True, encoder=PrettyJSONEncoder)
     history = HistoricalRecords()
     is_active = models.BooleanField(_("active"), default=False)
+    is_retired = models.BooleanField(
+        _("retired"),
+        choices=(
+            (None, ""),
+            (True, _("Active")),
+            (False, _("Inactive")),
+        ),
+        null=True,
+    )
     is_hidden = models.BooleanField(_("hidden"), default=False)
 
     class Meta:
