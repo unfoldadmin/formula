@@ -2,6 +2,7 @@ import json
 import random
 from functools import lru_cache
 
+from constance.admin import Config, ConstanceAdmin
 from django import forms
 from django.contrib import admin, messages
 from django.contrib.auth.admin import GroupAdmin as BaseGroupAdmin
@@ -532,7 +533,6 @@ class ChartSection(TemplateSection):
 class DriverAdminMixin(ModelAdmin):
     list_sections = [ContructorTableSection, ChartSection]
     list_sections_classes = "lg:grid-cols-2"
-    list_editable = ["category"]
     form = DriverAdminForm
     history_list_per_page = 10
     search_fields = ["last_name", "first_name", "code"]
@@ -1052,7 +1052,10 @@ def cohort_random_data():
                 )
 
             if color_index >= 4:
-                col_classes.append("text-white dark:text-base-600")
+                col_classes.append("text-white")
+
+            if color_index >= 6:
+                col_classes.append("dark:text-base-800")
 
             value = random.randint(
                 4000 - (col_index * row_index * 225),
@@ -1202,3 +1205,8 @@ class DriverSectionChangeComponent(BaseComponent):
             }
         )
         return context
+
+
+@admin.register(Config, site=formula_admin_site)
+class ConstanceConfigAdmin(ConstanceAdmin):
+    pass

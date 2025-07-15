@@ -25,13 +25,13 @@
 
     {% component "unfold/components/container.html" %}
         <div class="flex flex-col gap-8 mb-12">
+            {% include "formula/support.html" %}
+
             <div class="flex flex-col gap-4 sm:flex-row">
                 {% component "unfold/components/navigation.html" with items=navigation %}{% endcomponent %}
 
                 {% component "unfold/components/navigation.html" with class="sm:ml-auto" items=filters %}{% endcomponent %}
             </div>
-
-            {% include "formula/service.html" %}
 
             <div class="flex flex-col gap-8 lg:flex-row">
                 {% for stats in kpi %}
