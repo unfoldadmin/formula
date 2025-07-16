@@ -314,7 +314,7 @@ UNFOLD = {
                             {
                                 "title": _("List drivers"),
                                 "link": reverse_lazy("admin:formula_driver_changelist"),
-                                "active": "formula.utils.driver_list_link_callback",
+                                "active": "formula.utils.driver_list_sublink_callback",
                             },
                             {
                                 "title": _("Advanced filters"),
