@@ -11,17 +11,17 @@ django = "^5.2"
 django-celery-beat = "^2.8"
 django-crispy-forms = "^2.4"
 django-constance = "^4.3"
-django-debug-toolbar = "^5.2"
-django-guardian = "^3.0"
+django-debug-toolbar = "^6.1"
+django-guardian = "^3.2"
 django-import-export = "^4.3"
-django-simple-history = "^3.8"
+django-simple-history = "^3.10"
 django-modeltranslation = "^0.19"
 django-money = "^3.5"
 django-unfold = { git = "https://github.com/unfoldadmin/django-unfold.git" }
-whitenoise = "^6.9"
+whitenoise = "^6.11"
 gunicorn = "^23.0"
-pillow = "^11.2"
-sentry-sdk = { extras = ["django"], version = "^2.27" }
+pillow = "^12.0"
+sentry-sdk = { extras = ["django"], version = "^2.43" }
 pygments = "^2.19"
 
 [tool.ruff]

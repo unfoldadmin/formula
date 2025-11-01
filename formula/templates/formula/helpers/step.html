@@ -1,0 +1,17 @@
+<div class="flex flex-col gap-4">
+    {% if icon %}
+        <span class="material-symbols-outlined text-primary-600 dark:text-primary-500 text-2xl">
+            {{ icon }}
+        </span>
+    {% endif %}
+
+    <div class="flex flex-col gap-2">
+        <h3 class="font-semibold text-base text-important tracking-tight">
+            {{ title }}
+        </h3>
+
+        <p class="leading-relaxed">
+            {{ description }}
+        </p>
+    </div>
+</div>

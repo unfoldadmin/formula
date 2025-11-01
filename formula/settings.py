@@ -227,9 +227,19 @@ STORAGES = {
 # Unfold
 ######################################################################
 UNFOLD = {
+    "STUDIO": {
+        # "header_sticky": True,
+        # "layout_style": "boxed",
+        # "header_variant": "dark",
+        # "sidebar_style": "minimal",
+        # "sidebar_variant": "dark",
+        # "site_banner": "Custom global message",
+    },
     "SITE_TITLE": _("Formula Admin"),
     "SITE_HEADER": _("Formula Admin"),
     "SITE_SUBHEADER": _("Unfold demo project"),
+    "SITE_SYMBOL": "dashboard",
+    "SITE_ICON": lambda request: static("formula/images/logo.svg"),
     # "SITE_URL": None,
     "SITE_DROPDOWN": [
         {
@@ -248,21 +258,37 @@ UNFOLD = {
             "link": "https://unfoldadmin.com/docs/",
         },
     ],
-    "SITE_SYMBOL": "settings",
     # "SHOW_HISTORY": True,
     "SHOW_LANGUAGES": True,
     "ENVIRONMENT": "formula.utils.environment_callback",
     "DASHBOARD_CALLBACK": "formula.views.dashboard_callback",
     "LOGIN": {
-        "image": lambda request: static("images/login-bg.jpg"),
+        "image": lambda request: static("formula/images/login-bg.jpg"),
+        "form": "formula.forms.LoginForm",
     },
     "STYLES": [
-        lambda request: static("css/styles.css"),
+        # lambda request: static("css/styles.css"),
     ],
     "SCRIPTS": [
         # lambda request: static("js/chart.min.js"),
     ],
     "TABS": [
+        {
+            "models": [
+                "formula.race",
+                "formula.constructor",
+            ],
+            "items": [
+                {
+                    "title": _("Races"),
+                    "link": reverse_lazy("admin:formula_race_changelist"),
+                },
+                {
+                    "title": _("Constructors"),
+                    "link": reverse_lazy("admin:formula_constructor_changelist"),
+                },
+            ],
+        },
         {
             "page": "drivers",
             "models": ["formula.driver"],
@@ -291,9 +317,14 @@ UNFOLD = {
             ],
         },
     ],
+    "COMMAND": {
+        "search_models": "formula.utils.search_models_callback",
+        "show_history": "formula.utils.show_history_callback",
+    },
     "SIDEBAR": {
         "show_search": True,
         "show_all_applications": True,
+        "command_search": True,
         "navigation": [
             {
                 "title": _("Navigation"),
@@ -336,11 +367,6 @@ UNFOLD = {
                         "title": _("Circuits"),
                         "icon": "sports_score",
                         "link": reverse_lazy("admin:formula_circuit_changelist"),
-                    },
-                    {
-                        "title": _("Constructors"),
-                        "icon": "engineering",
-                        "link": reverse_lazy("admin:formula_constructor_changelist"),
                     },
                     {
                         "title": _("Races"),
@@ -422,6 +448,8 @@ UNFOLD = {
         ],
     },
 }
+
+UNFOLD_STUDIO_ENABLE_CUSTOMIZER = True
 
 UNFOLD_STUDIO_DEFAULT_FRAGMENT = "color-schemes"
 

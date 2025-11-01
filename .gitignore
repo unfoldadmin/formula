@@ -14,6 +14,6 @@ static
 media
 requirements.txt
 .dockerignore
-database.sqlite
+*.sqlite
 unfold_studio
 docker-compose.dev.yml
