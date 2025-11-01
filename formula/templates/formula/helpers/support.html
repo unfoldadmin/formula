@@ -1,0 +1,51 @@
+{% load unfold i18n %}
+
+<div class="flex flex-col gap-3 mb-6">
+    <div class="border border-transparent rounded-default flex flex-col overflow-hidden text-white lg:flex-row lg:items-center" style="background-color: #5865F2;">
+        <span class="p-3 pr-0 flex flex-row items-center">
+            <span class="material-symbols-outlined mr-2">
+                forum
+            </span>
+
+            <h2 class="font-semibold">
+                {% trans "Join the community chat now" %}
+            </h2>
+        </span>
+
+        <div class="border-t border-primary-700 flex flex-row gap-3 grow p-3 lg:border-t-0">
+            <p>
+                {% trans "Connect with other users, share feedback, and ask questions in real time." %}
+            </p>
+
+            <a href="https://discord.gg/9sQj9MEbNz" class="flex items-center group font-semibold ml-auto whitespace-nowrap" target="_blank">
+                {% trans "Join Discord" %}
+
+                <span class="material-symbols-outlined ml-2 relative right-0 transition-all text-sm group-hover:-right-1">arrow_forward</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="bg-base-800 border border-transparent rounded-default flex flex-col overflow-hidden text-white lg:flex-row lg:items-center">
+        <span class="p-3 pr-0 flex flex-row items-center">
+            <span class="material-symbols-outlined mr-2" style="color: #FFD700;">
+                star_shine
+            </span>
+
+            <h2 class="font-semibold">
+                {% trans "Give the project a GitHub star" %}
+            </h2>
+        </span>
+
+        <div class="border-t border-base-200 flex flex-row gap-3 grow p-3 lg:border-t-0">
+            <p>
+                {% trans "Starring shows appreciation and helps others discover the project." %}
+            </p>
+
+            <a href="https://github.com/unfoldadmin/django-unfold" class="flex items-center group font-semibold ml-auto whitespace-nowrap" target="_blank">
+                {% trans "Star project" %}
+
+                <span class="material-symbols-outlined ml-2 relative right-0 transition-all text-sm group-hover:-right-1">arrow_forward</span>
+            </a>
+        </div>
+    </div>
+</div>

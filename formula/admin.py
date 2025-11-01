@@ -1,8 +1,6 @@
 import json
 import random
-from functools import lru_cache
 
-from constance.admin import Config, ConstanceAdmin
 from django import forms
 from django.contrib import admin, messages
 from django.contrib.auth.admin import GroupAdmin as BaseGroupAdmin
@@ -17,7 +15,6 @@ from django.template.loader import render_to_string
 from django.templatetags.static import static
 from django.urls import path, reverse_lazy
 from django.utils.html import format_html
-from django.utils.timezone import now, timedelta
 from django.utils.translation import gettext_lazy as _
 from django_celery_beat.admin import ClockedScheduleAdmin as BaseClockedScheduleAdmin
 from django_celery_beat.admin import CrontabScheduleAdmin as BaseCrontabScheduleAdmin
@@ -34,7 +31,12 @@ from guardian.admin import GuardedModelAdmin
 from import_export.admin import ExportActionModelAdmin, ImportExportModelAdmin
 from modeltranslation.admin import TabbedTranslationAdmin
 from simple_history.admin import SimpleHistoryAdmin
-from unfold.admin import GenericTabularInline, ModelAdmin, StackedInline, TabularInline
+from unfold.admin import (
+    GenericStackedInline,
+    ModelAdmin,
+    StackedInline,
+    TabularInline,
+)
 from unfold.components import BaseComponent, register_component
 from unfold.contrib.filters.admin import (
     AllValuesCheckboxFilter,
@@ -52,8 +54,13 @@ from unfold.contrib.filters.admin import (
     TextFilter,
 )
 from unfold.contrib.forms.widgets import WysiwygWidget
-from unfold.contrib.import_export.forms import ExportForm, ImportForm
+from unfold.contrib.import_export.forms import (
+    ExportForm,
+    ImportForm,
+    SelectableFieldsExportForm,
+)
 from unfold.contrib.inlines.admin import NonrelatedStackedInline
+from unfold.datasets import BaseDataset
 from unfold.decorators import action, display
 from unfold.enums import ActionVariant
 from unfold.forms import AdminPasswordChangeForm, UserChangeForm, UserCreationForm
@@ -71,8 +78,10 @@ from formula.models import (
     Circuit,
     Constructor,
     Driver,
+    DriverCategory,
     DriverStatus,
     DriverWithFilters,
+    PitStop,
     Profile,
     Race,
     Standing,
@@ -80,7 +89,6 @@ from formula.models import (
     User,
 )
 from formula.resources import AnotherConstructorResource, ConstructorResource
-from formula.sites import formula_admin_site
 from formula.views import CrispyFormsetView, CrispyFormView
 
 admin.site.unregister(PeriodicTask)
@@ -102,27 +110,27 @@ class UnfoldPeriodicTaskForm(PeriodicTaskForm):
         self.fields["regtask"].widget = UnfoldTaskSelectWidget()
 
 
-@admin.register(PeriodicTask, site=formula_admin_site)
+@admin.register(PeriodicTask)
 class PeriodicTaskAdmin(BasePeriodicTaskAdmin, ModelAdmin):
     form = UnfoldPeriodicTaskForm
 
 
-@admin.register(IntervalSchedule, site=formula_admin_site)
+@admin.register(IntervalSchedule)
 class IntervalScheduleAdmin(ModelAdmin):
     pass
 
 
-@admin.register(CrontabSchedule, site=formula_admin_site)
+@admin.register(CrontabSchedule)
 class CrontabScheduleAdmin(BaseCrontabScheduleAdmin, ModelAdmin):
     pass
 
 
-@admin.register(SolarSchedule, site=formula_admin_site)
+@admin.register(SolarSchedule)
 class SolarScheduleAdmin(ModelAdmin):
     pass
 
 
-@admin.register(ClockedSchedule, site=formula_admin_site)
+@admin.register(ClockedSchedule)
 class ClockedScheduleAdmin(BaseClockedScheduleAdmin, ModelAdmin):
     pass
 
@@ -141,7 +149,7 @@ class CircuitNonrelatedStackedInline(NonrelatedStackedInline):
         pass
 
 
-class TagGenericTabularInline(GenericTabularInline):
+class TagGenericTabularInline(GenericStackedInline):
     model = Tag
 
 
@@ -154,9 +162,64 @@ class UserDriverTabularInline(TabularInline):
 
 class UserProfileTabularInline(TabularInline):
     model = Profile
+    fields = ["user", "picture", "resume", "link"]
 
 
-@admin.register(User, site=formula_admin_site)
+class CircuitDatasetAdmin(ModelAdmin):
+    list_display = ["name", "city", "country"]
+    search_fields = ["name", "city", "country"]
+    actions = [
+        "some_action",
+    ]
+
+    def some_action(self, request, queryset):
+        messages.success(request, "Selected circuits have been successfully updated.")
+        return redirect(request.headers.get("referer"))
+
+    def get_queryset(self, request):
+        obj = self.extra_context.get("object")
+
+        if not obj:
+            return super().get_queryset(request).none()
+
+        return super().get_queryset(request)
+
+
+class CircuitDataset(BaseDataset):
+    model = Circuit
+    model_admin = CircuitDatasetAdmin
+    tab = True
+
+
+class ConstructorDatasetAdmin(ModelAdmin):
+    list_display = ["name"]
+    search_fields = ["name"]
+    actions = [
+        "some_action",
+    ]
+
+    def some_action(self, request, queryset):
+        messages.success(
+            request, "Selected constructors have been successfully updated."
+        )
+        return redirect(request.headers.get("referer"))
+
+    def get_queryset(self, request):
+        obj = self.extra_context.get("object")
+
+        if not obj:
+            return super().get_queryset(request).none()
+
+        return super().get_queryset(request)
+
+
+class ConstructorDataset(BaseDataset):
+    model = Constructor
+    model_admin = ConstructorDatasetAdmin
+    # tab = True
+
+
+@admin.register(User)
 class UserAdmin(BaseUserAdmin, ModelAdmin):
     form = UserChangeForm
     add_form = UserCreationForm
@@ -170,6 +233,10 @@ class UserAdmin(BaseUserAdmin, ModelAdmin):
     ]
     list_filter_submit = True
     list_filter_sheet = False
+    change_form_datasets = [
+        CircuitDataset,
+        ConstructorDataset,
+    ]
     inlines = [
         CircuitNonrelatedStackedInline,
         TagGenericTabularInline,
@@ -243,7 +310,7 @@ class UserAdmin(BaseUserAdmin, ModelAdmin):
         return instance.created_at
 
 
-@admin.register(Group, site=formula_admin_site)
+@admin.register(Group)
 class GroupAdmin(BaseGroupAdmin, ModelAdmin):
     def changelist_view(self, request, extra_context=None):
         messages.success(
@@ -273,18 +340,55 @@ class GroupAdmin(BaseGroupAdmin, ModelAdmin):
         return super().changelist_view(request, extra_context=extra_context)
 
 
-class CircuitRaceInline(StackedInline):
+class RaceStandingInline(StackedInline):
+    model = Standing
+    fields = ["driver", "constructor", "position", "points", "laps", "number", "weight"]
+    ordering_field = "weight"
+    fk_name = "race"
+    ordering = ["position"]
+    extra = 2
+    hide_title = True
+    per_page = 5
+    autocomplete_fields = ["driver", "constructor"]
+    # min_num = 6
+    max_num = 10
+    show_change_link = True
+    # classes = ["collapse"]
+    collapsible = True
+
+
+class RacePitStopInline(TabularInline):
+    model = PitStop
+    fk_name = "race"
+    fields = ["driver", "time", "duration", "lap"]
+    extra = 1
+    autocomplete_fields = ["driver"]
+    classes = ["collapse"]
+
+
+class CircuitRaceInline(TabularInline):
     model = Race
     autocomplete_fields = ["winner"]
+    fields = ["winner", "year", "laps", "date", "weight"]
+    ordering_field = "weight"
+    inlines = [
+        RaceStandingInline,
+        RacePitStopInline,
+    ]
+    extra = 0
+    show_change_link = True
 
 
-@admin.register(Circuit, site=formula_admin_site)
+@admin.register(Circuit)
 class CircuitAdmin(ModelAdmin, TabbedTranslationAdmin):
     show_facets = admin.ShowFacets.ALLOW
     search_fields = ["name", "city", "country"]
     list_display = ["name", "city", "country"]
     list_filter = ["country"]
     inlines = [CircuitRaceInline]
+    ordering_field = "weight"
+    hide_ordering_field = True
+    compressed_fields = True
 
 
 class DriverTableSection(TableSection):
@@ -292,7 +396,7 @@ class DriverTableSection(TableSection):
     fields = ["first_name", "last_name", "code"]
 
 
-@admin.register(Constructor, site=formula_admin_site)
+@admin.register(Constructor)
 class ConstructorAdmin(ModelAdmin, ImportExportModelAdmin, ExportActionModelAdmin):
     search_fields = ["name"]
     list_display = ["name"]
@@ -301,7 +405,9 @@ class ConstructorAdmin(ModelAdmin, ImportExportModelAdmin, ExportActionModelAdmi
     save_as = True
     import_form_class = ImportForm
     export_form_class = ExportForm
-    # export_form_class = SelectableFieldsExportForm
+    export_form_class = SelectableFieldsExportForm
+    ordering_field = "weight"
+    hide_ordering_field = True
 
     actions_list = ["custom_actions_list"]
     actions_row = [
@@ -541,11 +647,12 @@ class DriverAdminMixin(ModelAdmin):
     list_display = [
         "display_header",
         "display_constructor",
-        "display_total_points",
+        # "display_total_points",
         "display_total_wins",
-        "category",
+        "display_category",
         "display_status",
         "display_code",
+        "is_active",
     ]
     inlines = [
         DriverStandingInline,
@@ -565,6 +672,8 @@ class DriverAdminMixin(ModelAdmin):
     }
     readonly_fields = [
         # "author",
+        "picture",
+        "resume",
         "data",
     ]
     list_before_template = "formula/driver_list_before.html"
@@ -613,7 +722,7 @@ class DriverAdminMixin(ModelAdmin):
             None,
             instance.initials,
             {
-                "path": static("images/avatar.jpg"),
+                "path": static("formula/images/avatar.jpg"),
                 "height": 24,
                 "width": 24,
                 "borderless": True,
@@ -666,6 +775,18 @@ class DriverAdminMixin(ModelAdmin):
         return instance.race_set.count()
 
     @display(
+        description=_("Category"),
+        label={
+            DriverCategory.ROOKIE: "danger",
+            DriverCategory.EXPERIENCED: "warning",
+            DriverCategory.VETERAN: "info",
+            DriverCategory.CHAMPION: "success",
+        },
+    )
+    def display_category(self, instance: Driver):
+        return instance.category
+
+    @display(
         description=_("Status"),
         label={
             DriverStatus.INACTIVE: "danger",
@@ -683,7 +804,7 @@ class DriverAdminMixin(ModelAdmin):
         return instance.code
 
 
-@admin.register(Driver, site=formula_admin_site)
+@admin.register(Driver)
 class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, DriverAdminMixin):
     fieldsets = [
         (
@@ -695,11 +816,11 @@ class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, DriverAdminMixin):
                     "salary",
                     "category",
                     "picture",
+                    "resume",
                     "born_at",
                     "last_race_at",
                     "best_time",
                     "first_race_at",
-                    "resume",
                     "author",
                     "editor",
                     "standing",
@@ -921,14 +1042,18 @@ class DriverCustomCheckboxFilter(CheckboxFilter):
         return queryset
 
 
-@admin.register(DriverWithFilters, site=formula_admin_site)
+class SalarySliderNumericFilter(SliderNumericFilter):
+    MAX_DECIMALS = 2
+
+
+@admin.register(DriverWithFilters)
 class DriverWithFiltersAdmin(DriverAdminMixin):
     list_fullwidth = True
     list_filter = [
         FullNameFilter,
         ("constructors", AutocompleteSelectMultipleFilter),
         ("race__circuit", RelatedDropdownFilter),
-        ("salary", SliderNumericFilter),
+        ("salary", SalarySliderNumericFilter),
         ("status", ChoicesCheckboxFilter),
         ("category", AllValuesCheckboxFilter),
         DriverCustomCheckboxFilter,
@@ -939,7 +1064,7 @@ class DriverWithFiltersAdmin(DriverAdminMixin):
     list_filter_submit = True
 
 
-@admin.register(Race, site=formula_admin_site)
+@admin.register(Race)
 class RaceAdmin(ModelAdmin):
     date_hierarchy = "date"
     search_fields = [
@@ -964,7 +1089,7 @@ class RaceAdmin(ModelAdmin):
     autocomplete_fields = ["circuit", "winner"]
 
 
-@admin.register(Standing, site=formula_admin_site)
+@admin.register(Standing)
 class StandingAdmin(ModelAdmin):
     # list_disable_select_all = True
     search_fields = [
@@ -982,132 +1107,6 @@ class StandingAdmin(ModelAdmin):
     show_full_result_count = False
     list_disable_select_all = True
     list_per_page = 10
-
-
-try:
-    from unfold_studio.admin import StudioOptionAdmin
-    from unfold_studio.models import StudioOption
-
-    @admin.register(StudioOption, site=formula_admin_site)
-    class StudioOptionAdmin(StudioOptionAdmin, ModelAdmin):
-        pass
-except (ImportError, RuntimeError):
-    # unfold_studio is not installed
-    pass
-
-
-@lru_cache
-def tracker_random_data():
-    data = []
-
-    for _i in range(1, 64):
-        has_value = random.choice([True, True, True, True, False])
-        color = None
-        tooltip = None
-
-        if has_value:
-            value = random.randint(2, 6)
-            color = "bg-primary-500"
-            tooltip = f"Value {value}"
-
-        data.append(
-            {
-                "color": color,
-                "tooltip": tooltip,
-            }
-        )
-
-    return data
-
-
-@register_component
-class TrackerComponent(BaseComponent):
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["data"] = tracker_random_data()
-        return context
-
-
-@lru_cache
-def cohort_random_data():
-    rows = []
-    headers = []
-    cols = []
-
-    dates = reversed(
-        [(now() - timedelta(days=x)).strftime("%B %d, %Y") for x in range(8)]
-    )
-    groups = range(1, 10)
-
-    for row_index, date in enumerate(dates):
-        cols = []
-
-        for col_index, _col in enumerate(groups):
-            color_index = 8 - row_index - col_index
-            col_classes = []
-
-            if color_index > 0:
-                col_classes.append(
-                    f"bg-primary-{color_index}00 dark:bg-primary-{9 - color_index}00"
-                )
-
-            if color_index >= 4:
-                col_classes.append("text-white")
-
-            if color_index >= 6:
-                col_classes.append("dark:text-base-800")
-
-            value = random.randint(
-                4000 - (col_index * row_index * 225),
-                5000 - (col_index * row_index * 225),
-            )
-
-            subtitle = f"{random.randint(10, 100)}%"
-
-            if value <= 0:
-                value = 0
-                subtitle = None
-
-            cols.append(
-                {
-                    "value": value,
-                    "color": " ".join(col_classes),
-                    "subtitle": subtitle,
-                }
-            )
-
-        rows.append(
-            {
-                "header": {
-                    "title": date,
-                    "subtitle": f"Total {sum(col['value'] for col in cols):,}",
-                },
-                "cols": cols,
-            }
-        )
-
-    for index, group in enumerate(groups):
-        total = sum(row["cols"][index]["value"] for row in rows)
-
-        headers.append(
-            {
-                "title": f"Group #{group}",
-                "subtitle": f"Total {total:,}",
-            }
-        )
-
-    return {
-        "headers": headers,
-        "rows": rows,
-    }
-
-
-@register_component
-class CohortComponent(BaseComponent):
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["data"] = cohort_random_data()
-        return context
 
 
 @register_component
@@ -1207,6 +1206,8 @@ class DriverSectionChangeComponent(BaseComponent):
         return context
 
 
-@admin.register(Config, site=formula_admin_site)
-class ConstanceConfigAdmin(ConstanceAdmin):
+try:
+    from unfold_studio.dashboards import *  # noqa
+except (ImportError, RuntimeError):
+    # unfold_studio is not installed
     pass

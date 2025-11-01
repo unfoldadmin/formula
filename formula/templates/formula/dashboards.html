@@ -1,0 +1,80 @@
+{% load i18n unfold static %}
+
+{% include "formula/helpers/support.html" %}
+
+<div class="flex flex-col gap-12">
+    <div class="bg-topography border border-base-200 overflow-hidden rounded-default dark:border-base-800">
+        <div class="bg-linear-to-tl from-base-50 to-white dark:from-base-900 dark:to-base-800">
+            <div class="p-6 lg:p-12">
+                <div class="border-b border-base-200 flex flex-row items-center mb-12 pb-12 dark:border-base-700">
+                    <div class="grow">
+                        <h1 class="font-semibold leading-tight text-important tracking-tight text-2xl mb-2">
+                            {% blocktrans %}
+                                Discover your perfect dashboard <br> experience with <span class="text-primary-600">Unfold Studio</span>
+                            {% endblocktrans %}
+                        </h1>
+
+                        <p class="leading-relaxed max-w-2xl">
+                            {% trans "Transform your Django admin with professionally designed dashboards that deliver actionable insights for user engagement, system performance, and sales analytics." %}
+                        </p>
+                    </div>
+
+                    <div>
+                        {% component "unfold/components/button.html" with href="https://unfoldadmin.com/studio/" target="_blank" %}
+                            {% trans "All Studio features" %}
+                        {% endcomponent %}
+                    </div>
+                </div>
+
+                <div class="grid gap-4 lg:grid-cols-2 xl:grid-cols-4">
+                    {% trans "Retention" as title %}
+                    {% trans "Quick marketing insights" as description %}
+                    {% include "formula/helpers/template.html" with title=title description=description slug="retention" %}
+
+                    {% trans "System" as title %}
+                    {% trans "Server performance metrics" as description %}
+                    {% include "formula/helpers/template.html" with title=title description=description slug="system" %}
+
+                    {% trans "Commerce" as title %}
+                    {% trans "Sales and revenue analytics" as description %}
+                    {% include "formula/helpers/template.html" with title=title description=description slug="commerce" %}
+
+                    {% trans "Spending" as title %}
+                    {% trans "Money spending analytics" as description %}
+                    {% include "formula/helpers/template.html" with title=title description=description slug="spending" %}
+                </div>
+            </div>
+
+            <div class="border-t border-base-200 px-6 py-2 lg:px-12 dark:border-base-800">
+                <span class="text-red-500">*</span> <span class="text-subtle">{% trans "Dashboard templates are part of the Unfold Studio package and are not included in the open source django-unfold package."%}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="border border-base-300 border-dashed rounded-default p-12 dark:border-base-700">
+        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4">
+            {% trans "Purchase Unfold Studio" as title %}
+            {% trans "Get access to premium dashboard templates and components specifically designed for Django applications." as description %}
+            {% include "formula/helpers/step.html" with title=title description=description icon="add_shopping_cart" %}
+
+            {% trans "Explore the dashboard templates" as title %}
+            {% trans "Browse through the pre-built dashboard templates located in the src/unfold_studio/dashboards directory." as description %}
+            {% include "formula/helpers/step.html" with title=title description=description icon="explore" %}
+
+            {% trans "Integrate into your project" as title %}
+            {% trans "Copy the template code and paste it into your custom dashboard callback function to get started quickly." as description %}
+            {% include "formula/helpers/step.html" with title=title description=description icon="code_blocks" %}
+
+            {% trans "Customize with your data" as title %}
+            {% trans "Replace the sample data with your actual application data to create meaningful insights and analytics." as description %}
+            {% include "formula/helpers/step.html" with title=title description=description icon="database" %}
+        </div>
+    </div>
+
+    <div class="border-t border-base-200 pb-4 pt-8 text-center dark:border-base-800">
+        © 2023 - {% now "Y" %}
+        {% blocktrans %}
+            Created by <a href="https://unfoldadmin.com" target="_blank">unfoldadmin.com</a>. All rights reserved. Made in the EU 🇪🇺
+        {% endblocktrans %}
+    </div>
+</div>

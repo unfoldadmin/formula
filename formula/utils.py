@@ -21,13 +21,15 @@ def permission_callback(request):
 
 
 def driver_link_callback(request):
-    return (
-        lambda request: str(reverse_lazy("admin:formula_driver_changelist"))
-        in request.path
+    if (
+        reverse_lazy("admin:formula_driver_changelist") in request.path
         or request.path == reverse_lazy("admin:formula_driverwithfilters_changelist")
         or request.path == reverse_lazy("admin:crispy_form")
         or request.path == reverse_lazy("admin:crispy_formset")
-    )
+    ):
+        return True
+
+    return False
 
 
 def driver_list_link_callback(request):
@@ -57,3 +59,13 @@ def driver_list_sublink_callback(request):
         return True
 
     return False
+
+
+def search_models_callback(request):
+    return [
+        "formula.driver",
+    ]
+
+
+def show_history_callback(request):
+    return True
