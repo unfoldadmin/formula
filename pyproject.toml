@@ -18,6 +18,7 @@ django-simple-history = "^3.10"
 django-modeltranslation = "^0.19"
 django-money = "^3.5"
 django-unfold = { git = "https://github.com/unfoldadmin/django-unfold.git" }
+djangoql = "^0.18"
 whitenoise = "^6.11"
 gunicorn = "^23.0"
 pillow = "^12.0"
