@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractUser
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
+from django.templatetags.static import static
 from django.utils.translation import gettext_lazy as _
 from djmoney.models.fields import MoneyField
 from simple_history.models import HistoricalRecords
@@ -61,6 +62,10 @@ class User(AbstractUser, AuditedModel):
 
     def __str__(self):
         return self.email if self.email else self.username
+
+    @property
+    def avatar_url(self):
+        return static("formula/images/avatar.jpg")
 
     @property
     def full_name(self):

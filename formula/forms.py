@@ -18,12 +18,14 @@ from unfold.widgets import (
     UnfoldAdminMoneyWidget,
     UnfoldAdminRadioSelectWidget,
     UnfoldAdminSelect2Widget,
+    UnfoldAdminSelectMultipleWidget,
     UnfoldAdminSplitDateTimeWidget,
     UnfoldAdminTextareaWidget,
     UnfoldAdminTextInputWidget,
     UnfoldAdminTimeWidget,
     UnfoldAdminURLInputWidget,
     UnfoldBooleanSwitchWidget,
+    UnfoldBooleanWidget,
 )
 
 from formula.models import Driver
@@ -85,7 +87,7 @@ class CustomFormMixin(forms.Form):
         required=True,
         initial=False,
         help_text=_("Toggle to receive notifications about your inquiry status"),
-        widget=UnfoldBooleanSwitchWidget,
+        widget=UnfoldBooleanWidget,
     )
     department = forms.ChoiceField(
         label=_("Department"),
@@ -124,6 +126,62 @@ class CustomFormMixin(forms.Form):
         initial=2,
         help_text=_("Select the priority of your message"),
         widget=UnfoldAdminSelect2Widget,
+    )
+    multi_select = forms.MultipleChoiceField(
+        label=_("Select Multiple Options"),
+        choices=[
+            (
+                "option_a",
+                _(
+                    "Option A – Receive timely updates on race schedules, driver announcements, and changes in race venues throughout the season."
+                ),
+            ),
+            (
+                "option_b",
+                _(
+                    "Option B – Get exclusive insights into detailed team strategies, pit stop analytics, and pre-race analyses from experts."
+                ),
+            ),
+            (
+                "option_c",
+                _(
+                    "Option C – Access extensive behind-the-scenes footage, in-depth interviews with top drivers, and special team documentaries."
+                ),
+            ),
+            (
+                "option_d",
+                _(
+                    "Option D – Join VIP events and participate in interactive fan voting for awards with additional community activities."
+                ),
+            ),
+            (
+                "option_e",
+                _(
+                    "Option E – Subscribe to technical analysis, expert commentary, and comprehensive engineering breakdowns of the latest F1 cars."
+                ),
+            ),
+            (
+                "option_f",
+                _(
+                    "Option F – Be the first to know about special promotions, early bird ticket sales, and new official merchandise launches."
+                ),
+            ),
+            (
+                "option_g",
+                _(
+                    "Option G – Receive personalized notifications about your favorite teams, their race results, and tailored race-day summaries."
+                ),
+            ),
+            (
+                "option_h",
+                _(
+                    "Option H – Get early access to new platform features, closed beta program invitations, and direct feedback opportunities."
+                ),
+            ),
+        ],
+        required=False,
+        help_text=_("You can select more than one option"),
+        widget=UnfoldAdminSelectMultipleWidget,
     )
     date = forms.DateField(
         label=_("Date"),
@@ -205,6 +263,7 @@ class CustomForm(CustomFormMixin):
                             ),
                             "salary",
                             "priority",
+                            "multi_select",
                             css_class="gap-5",
                         ),
                     ),

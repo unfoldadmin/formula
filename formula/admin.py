@@ -27,6 +27,7 @@ from django_celery_beat.models import (
     PeriodicTask,
     SolarSchedule,
 )
+from djangoql.admin import DjangoQLSearchMixin
 from guardian.admin import GuardedModelAdmin
 from import_export.admin import ExportActionModelAdmin, ImportExportModelAdmin
 from modeltranslation.admin import TabbedTranslationAdmin
@@ -69,6 +70,7 @@ from unfold.sections import TableSection, TemplateSection
 from unfold.widgets import (
     UnfoldAdminCheckboxSelectMultiple,
     UnfoldAdminColorInputWidget,
+    UnfoldAdminSelect2Widget,
     UnfoldAdminSelectWidget,
     UnfoldAdminSplitDateTimeWidget,
     UnfoldAdminTextInputWidget,
@@ -606,6 +608,21 @@ class DriverAdminForm(forms.ModelForm):
         label=_("First name"),
         widget=UnfoldAdminTextInputWidget,
     )
+    # Custom select field for DriverAdminForm
+    custom_select = forms.ChoiceField(
+        label=_("Conditional select"),
+        choices=[
+            ("show", _("Show conditional field")),
+            ("hide", _("Hide conditional field")),
+        ],
+        required=False,
+        widget=UnfoldAdminSelect2Widget,
+    )
+    custom_text_input = forms.CharField(
+        label=_("Custom Text Input"),
+        required=False,
+        widget=UnfoldAdminTextInputWidget,
+    )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -636,7 +653,8 @@ class ChartSection(TemplateSection):
     template_name = "formula/driver_section.html"
 
 
-class DriverAdminMixin(ModelAdmin):
+class DriverAdminMixin(DjangoQLSearchMixin, ModelAdmin):
+    list_horizontal_scrollbar_top = True
     list_sections = [ContructorTableSection, ChartSection]
     list_sections_classes = "lg:grid-cols-2"
     form = DriverAdminForm
@@ -661,6 +679,7 @@ class DriverAdminMixin(ModelAdmin):
     conditional_fields = {
         "conditional_field_active": "status == 'ACTIVE'",
         "conditional_field_inactive": "status == 'INACTIVE'",
+        "custom_text_input": "custom_select == 'show'",
     }
     autocomplete_fields = [
         "constructors",
@@ -672,8 +691,8 @@ class DriverAdminMixin(ModelAdmin):
     }
     readonly_fields = [
         # "author",
-        "picture",
-        "resume",
+        # "picture",
+        # "resume",
         "data",
     ]
     list_before_template = "formula/driver_list_before.html"
@@ -686,7 +705,9 @@ class DriverAdminMixin(ModelAdmin):
         form = super().get_form(request, obj, change, **kwargs)
         form.base_fields["color"].widget = UnfoldAdminColorInputWidget()
         form.base_fields["first_name"].widget = UnfoldAdminTextInputWidget(
-            attrs={"class": "first-name-input"}
+            attrs={
+                "class": "first-name-input",
+            }
         )
         return form
 
@@ -762,6 +783,8 @@ class DriverAdminMixin(ModelAdmin):
             "title": f"{total} contructors",
             "items": items,
             "striped": True,
+            "height": 600,
+            "max_height": 200,
             # "height": 202,  # Optional, max line height 30px
             # "width": 320,  # Optional
         }
@@ -840,6 +863,8 @@ class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, DriverAdminMixin):
                     "status",
                     "conditional_field_active",
                     "conditional_field_inactive",
+                    "custom_select",
+                    "custom_text_input",
                 ],
             },
         ),

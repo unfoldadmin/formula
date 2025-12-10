@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     "simple_history",
     "django_celery_beat",
     "djmoney",
+    "djangoql",
     "formula",
 ]
 
@@ -260,6 +261,10 @@ UNFOLD = {
     ],
     # "SHOW_HISTORY": True,
     "SHOW_LANGUAGES": True,
+    "LANGUAGE_FLAGS": {
+        "de": "🇩🇪",
+        "en": "🇺🇸",
+    },
     "ENVIRONMENT": "formula.utils.environment_callback",
     "DASHBOARD_CALLBACK": "formula.views.dashboard_callback",
     "LOGIN": {
@@ -373,6 +378,8 @@ UNFOLD = {
                         "icon": "stadium",
                         "link": reverse_lazy("admin:formula_race_changelist"),
                         "badge": "formula.utils.badge_callback",
+                        "badge_variant": "danger",
+                        "badge_style": "solid",
                     },
                     {
                         "title": _("Standings"),
@@ -385,6 +392,8 @@ UNFOLD = {
                         "title": _("Constance"),
                         "icon": "settings",
                         "link": reverse_lazy("admin:constance_config_changelist"),
+                        "badge": _("New"),
+                        "badge_variant": "primary",
                     },
                 ],
             },
