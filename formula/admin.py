@@ -694,7 +694,13 @@ class DriverAdminMixin(DjangoQLSearchMixin, ModelAdmin):
         # "picture",
         # "resume",
         "data",
+        "has_wins",
     ]
+
+    @display(description=_("Has wins"), boolean=True)
+    def has_wins(self, instance: Driver):
+        return instance.race_set.exists()
+
     list_before_template = "formula/driver_list_before.html"
     list_after_template = "formula/driver_list_after.html"
     change_form_show_cancel_button = True
@@ -873,6 +879,7 @@ class DriverAdmin(GuardedModelAdmin, SimpleHistoryAdmin, DriverAdminMixin):
             {
                 "classes": ["tab"],
                 "fields": [
+                    "has_wins",
                     "is_retired",
                     "is_active",
                     "is_hidden",
